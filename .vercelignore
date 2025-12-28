@@ -8,7 +8,8 @@ supabase/.branches/
 .output/
 node_modules/
 
-# Capacitor
+# Capacitor (native only - not needed for web build)
 ios/
 android/
 capacitor.config.ts
+capacitor.config.json
