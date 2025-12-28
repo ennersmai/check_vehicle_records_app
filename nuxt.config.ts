@@ -10,11 +10,27 @@ export default defineNuxtConfig({
 
   typescript: {
     typeCheck: false,
-    strict: false
+    strict: false,
+    tsConfig: {
+      compilerOptions: {
+        strict: false,
+        skipLibCheck: true
+      }
+    }
   },
 
   vite: {
-    logLevel: 'error'
+    logLevel: 'error',
+    vue: {
+      script: {
+        defineModel: true,
+        propsDestructure: true
+      }
+    }
+  },
+
+  nitro: {
+    preset: 'vercel'
   },
 
   css: ['~/assets/css/main.css'],
