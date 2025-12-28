@@ -1,0 +1,14 @@
+# Supabase local files
+supabase/.temp/
+supabase/.branches/
+.env.local
+
+# Development files
+.nuxt/
+.output/
+node_modules/
+
+# Capacitor
+ios/
+android/
+capacitor.config.ts

@@ -1,0 +1,38 @@
+{
+  "name": "cvr",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "cap:init": "npx cap init",
+    "cap:add:ios": "npx cap add ios",
+    "cap:add:android": "npx cap add android",
+    "cap:sync": "npm run build && npx cap sync",
+    "cap:open:ios": "npx cap open ios",
+    "cap:open:android": "npx cap open android"
+  },
+  "dependencies": {
+    "@capacitor-mlkit/text-recognition": "^6.0.0",
+    "@capacitor/camera": "^8.0.0",
+    "@pinia/nuxt": "^0.5.1",
+    "@supabase/supabase-js": "^2.89.0",
+    "chart.js": "^4.4.1",
+    "vue-chartjs": "^5.3.0",
+    "magic-string": "^0.30.21",
+    "nuxt": "3.13.0",
+    "pinia": "^3.0.4",
+    "vue": "^3.5.26",
+    "vue-router": "^4.6.4"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^8.0.0",
+    "@nuxtjs/tailwindcss": "^6.12.1",
+    "autoprefixer": "^10.4.17",
+    "postcss": "^8.4.33",
+    "tailwindcss": "^3.4.1"
+  }
+}
