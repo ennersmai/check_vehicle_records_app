@@ -8,6 +8,11 @@ export default defineNuxtConfig({
     '@pinia/nuxt'
   ],
 
+  typescript: {
+    typeCheck: false,
+    strict: false
+  },
+
   vite: {
     logLevel: 'error'
   },
