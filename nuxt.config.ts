@@ -26,6 +26,22 @@ export default defineNuxtConfig({
         defineModel: true,
         propsDestructure: true
       }
+    },
+    build: {
+      rollupOptions: {
+        external: [
+          '@capacitor/core',
+          '@capacitor/camera',
+          '@capacitor-mlkit/text-recognition'
+        ]
+      }
+    },
+    optimizeDeps: {
+      exclude: [
+        '@capacitor/core',
+        '@capacitor/camera',
+        '@capacitor-mlkit/text-recognition'
+      ]
     }
   },
 
