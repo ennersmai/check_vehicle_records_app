@@ -100,9 +100,17 @@ SUPABASE_ANON_KEY=your_supabase_anon_key_here
 ```
 
 **How to add them:**
-1. In Vercel project settings → Environment Variables
-2. Add each variable for **Production**, **Preview**, and **Development**
-3. Click "Save"
+1. In Vercel Dashboard → Your Project → Settings → Environment Variables
+2. Add each variable:
+   - **Key**: `SUPABASE_URL`
+   - **Value**: Your actual Supabase URL (e.g., `https://xxxxx.supabase.co`)
+   - **Environments**: Select all (Production, Preview, Development)
+3. Add second variable:
+   - **Key**: `SUPABASE_ANON_KEY`
+   - **Value**: Your actual Supabase anon key
+   - **Environments**: Select all (Production, Preview, Development)
+4. Click "Save"
+5. **Important**: Redeploy your project after adding environment variables
 
 **⚠️ IMPORTANT:** 
 - Do NOT add `DVLA_API_KEY` or `CHECKCAR_API_KEY` to Vercel
