@@ -35,7 +35,7 @@
         >
           <div class="flex items-start gap-4 mb-4">
             <div class="w-20 h-20 bg-gray-800 rounded flex items-center justify-center flex-shrink-0 overflow-hidden" @click="vehicle.imageUrl && openFullscreen(vehicle.imageUrl)">
-              <img v-if="vehicle.imageUrl" :src="vehicle.imageUrl" alt="Vehicle" class="w-full h-full object-cover cursor-pointer" />
+              <img v-if="vehicle.imageUrl" :src="vehicle.imageUrl" alt="Vehicle" class="w-full h-full object-contain cursor-pointer" />
               <CarSilhouette v-else :bodyStyle="vehicle.bodyStyle" class="w-12 h-12 text-white" />
             </div>
             
