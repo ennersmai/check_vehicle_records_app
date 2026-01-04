@@ -142,16 +142,19 @@ export interface NormalizedPremiumData extends NormalizedVehicleData {
 export function mapDvlaData(data: any): Partial<NormalizedVehicleData> {
   if (!data) return {}
   
+  // Helper to check if a value is a placeholder or empty
+  const isPlaceholder = (val: any) => !val || val === 'XX XXXX' || val === 'N/A' || val === '';
+  
   // DVLA doesn't provide model - only make
-  // We'll leave model empty and it should show N/A in UI
+  // Filter out placeholder values like "XX XXXX"
   return {
     registrationNumber: data.registrationNumber || '',
     make: data.make || '',
-    model: '', // DVLA doesn't provide model
+    model: isPlaceholder(data.model) ? '' : data.model, // Filter out placeholders
     colour: data.colour || '',
     yearOfManufacture: data.yearOfManufacture || '',
     fuelType: data.fuelType || '',
-    bodyStyle: inferBodyStyle(data.wheelplan, data.typeApproval),
+    bodyStyle: isPlaceholder(data.bodyStyle) ? inferBodyStyle(data.wheelplan, data.typeApproval) : data.bodyStyle,
     engineCapacity: formatEngineCapacity(data.engineCapacity),
     
     co2Emissions: data.co2Emissions ? `${data.co2Emissions} g/km` : '',
