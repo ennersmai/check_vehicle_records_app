@@ -499,13 +499,37 @@ const tabs = [
 ];
 
 // Traffic light status indicators - will be updated from real data
-const statusIndicators = ref([
-  { id: 1, label: 'Outstanding Finance', status: 'green' },
-  { id: 2, label: 'Previous Accidents', status: 'green' },
-  { id: 3, label: 'Stolen Market', status: 'green' },
-  { id: 4, label: 'Mileage Discrepancy', status: 'green' },
-  { id: 5, label: 'Valid MOT', status: 'green' },
-  { id: 6, label: 'Import/Export', status: 'green' }
+const statusIndicators = computed(() => [
+  { 
+    id: 1, 
+    label: premiumData.value?.outstandingFinance === 'No' ? 'No Outstanding Finance' : 'Outstanding Finance',
+    status: premiumData.value?.outstandingFinance === 'No' ? 'green' : 'red'
+  },
+  { 
+    id: 2, 
+    label: premiumData.value?.previousAccidents === 'No' ? 'No Previous Accidents' : 'Previous Accidents Found',
+    status: premiumData.value?.previousAccidents === 'No' ? 'green' : 'yellow'
+  },
+  { 
+    id: 3, 
+    label: premiumData.value?.stolen === 'No' ? 'Not Stolen' : 'Stolen Record',
+    status: premiumData.value?.stolen === 'No' ? 'green' : 'red'
+  },
+  { 
+    id: 4, 
+    label: premiumData.value?.mileageDiscrepancy === 'No' ? 'No Mileage Issues' : 'Mileage Discrepancy',
+    status: premiumData.value?.mileageDiscrepancy === 'No' ? 'green' : 'yellow'
+  },
+  { 
+    id: 5, 
+    label: premiumData.value?.motStatus === 'Valid' ? 'Valid MOT' : 'MOT Expired',
+    status: premiumData.value?.motStatus === 'Valid' ? 'green' : 'red'
+  },
+  { 
+    id: 6, 
+    label: premiumData.value?.imported === 'No' && premiumData.value?.exported === 'No' ? 'Not Imported/Exported' : 'Import/Export Record',
+    status: premiumData.value?.imported === 'No' && premiumData.value?.exported === 'No' ? 'green' : 'yellow'
+  }
 ]);
 
 // MOT History computed - sorted oldest first
