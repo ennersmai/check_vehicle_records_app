@@ -296,9 +296,25 @@
               <span class="text-gray-700 text-sm">0-60 mph</span>
               <span class="font-medium text-gray-900 text-sm">{{ premiumData?.performance?.acceleration || 'N/A' }}</span>
             </div>
-            <div class="flex justify-between py-3">
+            <div class="flex justify-between py-3 border-b border-gray-200">
               <span class="text-gray-700 text-sm">Power (kW)</span>
               <span class="font-medium text-gray-900 text-sm">{{ premiumData?.performance?.powerKw || 'N/A' }}</span>
+            </div>
+            <div class="flex justify-between py-3 border-b border-gray-200" v-if="premiumData?.performance?.powerRpm">
+              <span class="text-gray-700 text-sm">Power @ RPM</span>
+              <span class="font-medium text-gray-900 text-sm">{{ premiumData?.performance?.powerRpm }}</span>
+            </div>
+            <div class="flex justify-between py-3 border-b border-gray-200" v-if="premiumData?.performance?.torqueFtLb">
+              <span class="text-gray-700 text-sm">Torque (ft-lb)</span>
+              <span class="font-medium text-gray-900 text-sm">{{ premiumData?.performance?.torqueFtLb }}</span>
+            </div>
+            <div class="flex justify-between py-3 border-b border-gray-200" v-if="premiumData?.performance?.torqueRpm">
+              <span class="text-gray-700 text-sm">Torque @ RPM</span>
+              <span class="font-medium text-gray-900 text-sm">{{ premiumData?.performance?.torqueRpm }}</span>
+            </div>
+            <div class="flex justify-between py-3" v-if="premiumData?.performance?.co2">
+              <span class="text-gray-700 text-sm">CO2 Emissions</span>
+              <span class="font-medium text-gray-900 text-sm">{{ premiumData?.performance?.co2 }}</span>
             </div>
           </div>
 
@@ -322,7 +338,7 @@
             </div>
           </div>
 
-          <h3 class="font-bold text-gray-900 text-sm mb-4 uppercase border-b border-gray-900 pb-2 mt-6">Transmission</h3>
+          <h3 class="font-bold text-gray-900 text-sm mb-4 uppercase border-b border-gray-900 pb-2 mt-6">Transmission & Drivetrain</h3>
           <div class="space-y-0">
             <div class="flex justify-between py-3 border-b border-gray-200">
               <span class="text-gray-700 text-sm">Type</span>
@@ -332,9 +348,13 @@
               <span class="text-gray-700 text-sm">Gears</span>
               <span class="font-medium text-gray-900 text-sm">{{ premiumData?.transmission?.gears || 'N/A' }}</span>
             </div>
-            <div class="flex justify-between py-3">
+            <div class="flex justify-between py-3 border-b border-gray-200" v-if="premiumData?.transmission?.driveType">
               <span class="text-gray-700 text-sm">Drive Type</span>
-              <span class="font-medium text-gray-900 text-sm">{{ premiumData?.transmission?.driveType || 'N/A' }}</span>
+              <span class="font-medium text-gray-900 text-sm">{{ premiumData?.transmission?.driveType }}</span>
+            </div>
+            <div class="flex justify-between py-3" v-if="premiumData?.drivingAxle">
+              <span class="text-gray-700 text-sm">Driving Axle</span>
+              <span class="font-medium text-gray-900 text-sm">{{ premiumData?.drivingAxle }}</span>
             </div>
           </div>
 

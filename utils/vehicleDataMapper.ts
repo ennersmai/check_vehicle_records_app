@@ -271,8 +271,9 @@ export function mapPremiumData(
   const transmission = specsData?.Transmission || {}
   const vedDetails = specsData?.VehicleExciseDutyDetails || {}
   
-  // Get model from multiple sources (DVLA doesn't provide model)
-  const model = smmtDetails.ModelVariant || smmtDetails.Range || vehicleReg.Model || basicData?.model || ''
+  // Get make and model from multiple sources (DVLA doesn't provide model)
+  const make = mileageData?.make || basicData?.make || ''
+  const model = smmtDetails.ModelVariant || smmtDetails.Range || vehicleReg.Model || mileageData?.model || basicData?.model || ''
   
   // Get VIN from multiple sources
   const vin = vehicleReg.Vin || vehicleId.Vin || historyData?.VehicleRegistration?.Vin || ''
@@ -306,7 +307,8 @@ export function mapPremiumData(
   return {
     ...basic,
     
-    // Override model with data from premium sources
+    // Override make and model with data from premium sources
+    make: make || basic.make,
     model,
     
     // VIN and ownership
@@ -389,10 +391,14 @@ export function mapPremiumData(
     acceleration: formatAcceleration(performance.Statistics?.ZeroToSixtyMph || performance.Acceleration?.ZeroTo60Mph || performance.Acceleration?.Mph),
     performance: {
       bhp: formatBhp(performance.Power?.Bhp || smmtDetails.PowerBhp),
+      powerKw: performance.Power?.Kw ? `${performance.Power.Kw} kW` : (smmtDetails.PowerKw ? `${smmtDetails.PowerKw} kW` : ''),
+      powerRpm: performance.Power?.Rpm ? `${performance.Power.Rpm} rpm` : '',
       torque: formatTorque(performance.Torque?.Nm || smmtDetails.TorqueNm),
+      torqueFtLb: performance.Torque?.FtLb ? `${performance.Torque.FtLb} ft-lb` : '',
+      torqueRpm: performance.Torque?.Rpm ? `${performance.Torque.Rpm} rpm` : '',
       topSpeed: formatSpeed(performance.Statistics?.MaxSpeedMph || performance.MaxSpeed?.Mph || smmtDetails.MaxSpeedMph),
       acceleration: formatAcceleration(performance.Statistics?.ZeroToSixtyMph || performance.Acceleration?.ZeroTo60Mph || performance.Acceleration?.Mph),
-      powerKw: performance.Power?.Kw ? `${performance.Power.Kw} kW` : (smmtDetails.PowerKw ? `${smmtDetails.PowerKw} kW` : ''),
+      co2: smmtDetails.Co2 ? `${smmtDetails.Co2} g/km` : (performance.Co2 ? `${performance.Co2} g/km` : ''),
     },
     
     // Dimensions
@@ -433,7 +439,8 @@ export function mapPremiumData(
     aspiration: engine.Aspiration || smmtDetails.Aspiration || '',
     fuelDelivery: engine.FuelDelivery || '',
     
-    // Transmission
+    // Transmission and drivetrain
+    drivingAxle: general.DrivingAxle || general.DriveAxle || smmtDetails.DrivingAxle || '',
     transmission: {
       type: transmission.TransmissionType || smmtDetails.Transmission || '',
       gears: transmission.NumberOfGears?.toString() || smmtDetails.NumberOfGears?.toString() || '',
