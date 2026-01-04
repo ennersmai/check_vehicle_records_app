@@ -39,31 +39,31 @@
         <div class="space-y-2">
           <div class="flex justify-between py-2 border-b border-gray-100">
             <span class="text-gray-600 text-sm">Make</span>
-            <span class="font-medium text-gray-900 text-sm">{{ vehicleData.make || 'XX XXXX' }}</span>
+            <span class="font-medium text-gray-900 text-sm">{{ vehicleData.make || 'N/A' }}</span>
           </div>
-          <div class="flex justify-between py-2 border-b border-gray-100">
+          <div v-if="vehicleData.model" class="flex justify-between py-2 border-b border-gray-100">
             <span class="text-gray-600 text-sm">Model</span>
-            <span class="font-medium text-gray-900 text-sm">{{ vehicleData.model || 'XX XXXX' }}</span>
+            <span class="font-medium text-gray-900 text-sm">{{ vehicleData.model }}</span>
           </div>
           <div class="flex justify-between py-2 border-b border-gray-100">
             <span class="text-gray-600 text-sm">Colour</span>
-            <span class="font-medium text-gray-900 text-sm">{{ vehicleData.colour || 'XX XXXX' }}</span>
+            <span class="font-medium text-gray-900 text-sm">{{ vehicleData.colour || 'N/A' }}</span>
           </div>
           <div class="flex justify-between py-2 border-b border-gray-100">
             <span class="text-gray-600 text-sm">Year</span>
-            <span class="font-medium text-gray-900 text-sm">{{ vehicleData.yearOfManufacture || 'XX XXXX' }}</span>
+            <span class="font-medium text-gray-900 text-sm">{{ vehicleData.yearOfManufacture || 'N/A' }}</span>
           </div>
           <div class="flex justify-between py-2 border-b border-gray-100">
             <span class="text-gray-600 text-sm">Fuel type</span>
-            <span class="font-medium text-gray-900 text-sm">{{ vehicleData.fuelType || 'XX XXXX' }}</span>
+            <span class="font-medium text-gray-900 text-sm">{{ vehicleData.fuelType || 'N/A' }}</span>
           </div>
-          <div class="flex justify-between py-2 border-b border-gray-100">
+          <div v-if="vehicleData.bodyStyle" class="flex justify-between py-2 border-b border-gray-100">
             <span class="text-gray-600 text-sm">Body style</span>
-            <span class="font-medium text-gray-900 text-sm">{{ vehicleData.bodyStyle || 'XX XXXX' }}</span>
+            <span class="font-medium text-gray-900 text-sm">{{ vehicleData.bodyStyle }}</span>
           </div>
           <div class="flex justify-between py-2">
             <span class="text-gray-600 text-sm">Engine size</span>
-            <span class="font-medium text-gray-900 text-sm">{{ vehicleData.engineCapacity || 'XX XXXX' }}</span>
+            <span class="font-medium text-gray-900 text-sm">{{ vehicleData.engineCapacity || 'N/A' }}</span>
           </div>
         </div>
       </div>
@@ -78,6 +78,8 @@
 </template>
 
 <script setup lang="ts">
+import { mapDvlaData, mapCheckCarDetailsBasic } from '~/utils/vehicleDataMapper';
+
 const route = useRoute();
 const { getCachedVehicle } = useVehicle();
 
@@ -89,9 +91,24 @@ onMounted(async () => {
   if (vrm.value) {
     try {
       // Fetch from cached vehicle data
-      const cached = await getCachedVehicle(vrm.value);
-      if (cached) {
-        vehicleData.value = cached;
+      const cachedData = await getCachedVehicle(vrm.value);
+      if (cachedData) {
+        // Extract imageUrl before mapping
+        const imageUrl = cachedData.imageUrl;
+        
+        // Map the data to our normalized format
+        let mappedData: any = {};
+        
+        if (cachedData.tax || cachedData.motTests) {
+          // CheckCarDetails format
+          mappedData = mapCheckCarDetailsBasic(cachedData);
+        } else {
+          // DVLA format (default)
+          mappedData = mapDvlaData(cachedData);
+        }
+        
+        // Use only mapped data and add imageUrl back
+        vehicleData.value = { ...mappedData, imageUrl };
       }
     } catch (err) {
       console.error('Error loading vehicle:', err);
