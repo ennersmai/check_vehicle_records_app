@@ -457,7 +457,7 @@
 
     <BottomNav />
 
-    <!-- Fullscreen Image Modal with Pinch-to-Zoom -->
+    <!-- Fullscreen Image Modal with Pinch-to-Zoom (Landscape) -->
     <div v-if="fullscreenImage" @click="closeFullscreen" class="fixed inset-0 bg-black z-50 overflow-hidden">
       <div 
         ref="imageContainer"
@@ -469,8 +469,8 @@
         <img 
           :src="fullscreenImage" 
           alt="Vehicle" 
-          class="w-full h-full object-contain transition-transform duration-200"
-          :style="{ transform: `scale(${imageScale}) translate(${imageTranslateX}px, ${imageTranslateY}px)` }"
+          class="h-screen object-contain transition-transform duration-200"
+          :style="{ transform: `rotate(90deg) scale(${imageScale}) translate(${imageTranslateX}px, ${imageTranslateY}px)` }"
         />
       </div>
     </div>
