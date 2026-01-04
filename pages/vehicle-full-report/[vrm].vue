@@ -203,7 +203,8 @@
             </div>
 
             <div>
-              <p class="text-sm font-medium text-gray-700 mb-2">MOT History</p>
+              <p class="text-sm font-medium text-gray-700 mb-1">MOT History Timeline</p>
+              <p class="text-xs text-gray-500 mb-2">{{ motHistory.length }} tests from {{ formatDate(motHistory[0]?.date) }} to {{ formatDate(motHistory[motHistory.length - 1]?.date) }}</p>
               <MotHistoryChart v-if="motChartData.length" :data="motChartData" />
               <div v-else class="bg-gray-100 rounded-lg h-40 flex items-center justify-center">
                 <p class="text-gray-500 text-sm">No MOT history available</p>
@@ -523,16 +524,13 @@ const mileageChartData = computed(() => {
 
 const motChartData = computed(() => {
   const history = premiumData.value?.motHistory || [];
-  console.log('MOT History for chart:', history);
-  const chartData = history.map((m: any) => ({
+  return history.map((m: any) => ({
     date: m.date,
     result: m.result,
     passed: m.result === 'PASS' ? 1 : 0,
     advisoryCount: m.advisories?.length || 0,
     failureCount: m.failures?.length || 0
   }));
-  console.log('MOT Chart Data:', chartData);
-  return chartData;
 });
 
 // Helper function to format dates

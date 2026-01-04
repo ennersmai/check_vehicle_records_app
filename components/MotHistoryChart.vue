@@ -49,7 +49,7 @@ const createChart = () => {
 
   const labels = sortedData.map(d => {
     const date = new Date(d.date);
-    return date.toLocaleDateString('en-GB', { month: 'short', year: '2-digit' });
+    return date.toLocaleDateString('en-GB', { month: 'short', year: 'numeric' });
   });
 
   const passed = sortedData.map(d => d.passed || 0);
