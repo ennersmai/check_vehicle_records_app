@@ -214,37 +214,62 @@
             </div>
           </div>
 
-          <!-- MOT History List -->
+          <!-- MOT History List with Timeline -->
           <div v-if="motHistory.length" class="mt-6">
             <h3 class="font-bold text-gray-900 text-sm uppercase border-b border-gray-900 pb-2 mb-4">MOT History</h3>
-            <div class="space-y-4">
-              <div v-for="(mot, idx) in motHistory" :key="idx" class="border border-gray-200 rounded-lg p-4">
-                <div class="flex justify-between items-start mb-2">
-                  <div>
-                    <p class="font-medium text-gray-900">{{ formatDate(mot.date) }}</p>
-                    <p class="text-sm text-gray-600">{{ mot.mileage?.toLocaleString() }} miles</p>
+            <div class="relative">
+              <!-- Timeline line -->
+              <div class="absolute left-4 top-0 bottom-0 w-0.5 bg-gray-300"></div>
+              
+              <div class="space-y-6">
+                <div v-for="(mot, idx) in motHistory" :key="idx" class="relative flex gap-4">
+                  <!-- Timeline node -->
+                  <div class="relative flex-shrink-0">
+                    <div 
+                      :class="[
+                        'w-8 h-8 rounded-full border-4 border-white flex items-center justify-center z-10',
+                        mot.result === 'PASS' ? 'bg-green-500' : 'bg-red-500'
+                      ]"
+                    >
+                      <svg v-if="mot.result === 'PASS'" class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                      </svg>
+                      <svg v-else class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </div>
                   </div>
-                  <span :class="['px-3 py-1 rounded-full text-xs font-medium', mot.result === 'PASS' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800']">
-                    {{ mot.result }}
-                  </span>
-                </div>
-                <div v-if="mot.advisories?.length" class="mt-2">
-                  <p class="text-xs text-yellow-700 font-medium mb-1">Advisories:</p>
-                  <ul class="text-xs text-gray-600 space-y-1">
-                    <li v-for="(adv, i) in mot.advisories" :key="i" class="flex items-start gap-1">
-                      <span class="text-yellow-500">•</span>
-                      {{ adv }}
-                    </li>
-                  </ul>
-                </div>
-                <div v-if="mot.failures?.length" class="mt-2">
-                  <p class="text-xs text-red-700 font-medium mb-1">Failures:</p>
-                  <ul class="text-xs text-gray-600 space-y-1">
-                    <li v-for="(fail, i) in mot.failures" :key="i" class="flex items-start gap-1">
-                      <span class="text-red-500">•</span>
-                      {{ fail }}
-                    </li>
-                  </ul>
+                  
+                  <!-- Content card -->
+                  <div class="flex-1 border border-gray-200 rounded-lg p-4 bg-white">
+                    <div class="flex justify-between items-start mb-2">
+                      <div>
+                        <p class="font-medium text-gray-900">{{ formatDate(mot.date) }}</p>
+                        <p class="text-sm text-gray-600">{{ mot.mileage?.toLocaleString() }} miles</p>
+                      </div>
+                      <span :class="['px-3 py-1 rounded-full text-xs font-medium', mot.result === 'PASS' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800']">
+                        {{ mot.result }}
+                      </span>
+                    </div>
+                    <div v-if="mot.advisories?.length" class="mt-2">
+                      <p class="text-xs text-yellow-700 font-medium mb-1">Advisories:</p>
+                      <ul class="text-xs text-gray-600 space-y-1">
+                        <li v-for="(adv, i) in mot.advisories" :key="i" class="flex items-start gap-1">
+                          <span class="text-yellow-500">•</span>
+                          {{ adv }}
+                        </li>
+                      </ul>
+                    </div>
+                    <div v-if="mot.failures?.length" class="mt-2">
+                      <p class="text-xs text-red-700 font-medium mb-1">Failures:</p>
+                      <ul class="text-xs text-gray-600 space-y-1">
+                        <li v-for="(fail, i) in mot.failures" :key="i" class="flex items-start gap-1">
+                          <span class="text-red-500">•</span>
+                          {{ fail }}
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
