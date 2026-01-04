@@ -34,6 +34,13 @@
         </button>
       </div>
 
+      <!-- Vehicle Image -->
+      <div v-if="vehicleData?.imageUrl" class="mb-6">
+        <div class="bg-gray-200 rounded-lg aspect-video flex items-center justify-center overflow-hidden" @click="openFullscreen(vehicleData.imageUrl)">
+          <img :src="vehicleData.imageUrl" alt="Vehicle" class="w-full h-full object-cover cursor-pointer" />
+        </div>
+      </div>
+
       <!-- Basic Vehicle Info -->
       <div v-if="vehicleData" class="bg-white border border-gray-200 rounded-lg p-4">
         <div class="space-y-2">
@@ -74,14 +81,38 @@
     </div>
 
     <BottomNav />
+
+    <!-- Fullscreen Image Modal -->
+    <FullscreenImageModal 
+      :imageUrl="fullscreenImage" 
+      :scale="imageScale" 
+      :translateX="imageTranslateX" 
+      :translateY="imageTranslateY"
+      @close="closeFullscreen"
+      @touchstart="handleTouchStart"
+      @touchmove="handleTouchMove"
+      @touchend="handleTouchEnd"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { mapDvlaData, mapCheckCarDetailsBasic } from '~/utils/vehicleDataMapper';
+import { useFullscreenImage } from '~/composables/useFullscreenImage';
 
 const route = useRoute();
 const { getCachedVehicle } = useVehicle();
+const { 
+  fullscreenImage, 
+  imageScale, 
+  imageTranslateX, 
+  imageTranslateY, 
+  openFullscreen, 
+  closeFullscreen, 
+  handleTouchStart, 
+  handleTouchMove, 
+  handleTouchEnd 
+} = useFullscreenImage();
 
 const vrm = computed(() => route.params.vrm as string);
 const vehicleData = ref<any>(null);

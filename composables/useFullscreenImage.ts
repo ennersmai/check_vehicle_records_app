@@ -59,13 +59,13 @@ export const useFullscreenImage = () => {
       const scale = (currentDistance / initialDistance) * initialScale
       imageScale.value = Math.max(1, Math.min(scale, 4)) // Limit between 1x and 4x
     } else if (e.touches.length === 1 && isDragging && imageScale.value > 1) {
-      // Pan (only when zoomed in) - swap X and Y because image is rotated 90 degrees
+      // Pan (only when zoomed in) - invert coordinates for 90-degree rotation
       e.preventDefault()
       const deltaX = e.touches[0].clientX - lastTouchX
       const deltaY = e.touches[0].clientY - lastTouchY
-      // Swap and invert coordinates for 90-degree rotation
-      imageTranslateX.value += deltaY / imageScale.value
-      imageTranslateY.value -= deltaX / imageScale.value
+      // For 90-degree clockwise rotation: horizontal drag = vertical translate, vertical drag = horizontal translate
+      imageTranslateX.value -= deltaX / imageScale.value
+      imageTranslateY.value -= deltaY / imageScale.value
       lastTouchX = e.touches[0].clientX
       lastTouchY = e.touches[0].clientY
     }
