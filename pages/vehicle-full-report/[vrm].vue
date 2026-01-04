@@ -499,38 +499,47 @@ const tabs = [
 ];
 
 // Traffic light status indicators - will be updated from real data
-const statusIndicators = computed(() => [
-  { 
-    id: 1, 
-    label: premiumData.value?.outstandingFinance === 'No' ? 'No Outstanding Finance' : 'Outstanding Finance',
-    status: premiumData.value?.outstandingFinance === 'No' ? 'green' : 'red'
-  },
-  { 
-    id: 2, 
-    label: premiumData.value?.previousAccidents === 'No' ? 'No Previous Accidents' : 'Previous Accidents Found',
-    status: premiumData.value?.previousAccidents === 'No' ? 'green' : 'yellow'
-  },
-  { 
-    id: 3, 
-    label: premiumData.value?.stolen === 'No' ? 'Not Stolen' : 'Stolen Record',
-    status: premiumData.value?.stolen === 'No' ? 'green' : 'red'
-  },
-  { 
-    id: 4, 
-    label: premiumData.value?.mileageDiscrepancy === 'No' ? 'No Mileage Issues' : 'Mileage Discrepancy',
-    status: premiumData.value?.mileageDiscrepancy === 'No' ? 'green' : 'yellow'
-  },
-  { 
-    id: 5, 
-    label: premiumData.value?.motStatus === 'Valid' ? 'Valid MOT' : 'MOT Expired',
-    status: premiumData.value?.motStatus === 'Valid' ? 'green' : 'red'
-  },
-  { 
-    id: 6, 
-    label: premiumData.value?.imported === 'No' && premiumData.value?.exported === 'No' ? 'Not Imported/Exported' : 'Import/Export Record',
-    status: premiumData.value?.imported === 'No' && premiumData.value?.exported === 'No' ? 'green' : 'yellow'
-  }
-]);
+const statusIndicators = computed(() => {
+  const hasFinance = premiumData.value?.outstandingFinance?.includes('Finance recorded');
+  const hasStolen = premiumData.value?.stolenRecord?.includes('Stolen record');
+  const hasWriteOff = premiumData.value?.writtenOffRecord?.includes('Write-off');
+  const hasMileageIssues = premiumData.value?.mileageSummary?.mileageIssues === 'Yes';
+  const hasValidMot = premiumData.value?.motStatus === 'Valid';
+  const isImportedExported = premiumData.value?.importedExported !== 'No';
+  
+  return [
+    { 
+      id: 1, 
+      label: hasFinance ? 'Outstanding Finance' : 'No Outstanding Finance',
+      status: hasFinance ? 'red' : 'green'
+    },
+    { 
+      id: 2, 
+      label: hasWriteOff ? 'Previous Accidents Found' : 'No Previous Accidents',
+      status: hasWriteOff ? 'yellow' : 'green'
+    },
+    { 
+      id: 3, 
+      label: hasStolen ? 'Stolen Record' : 'Not Stolen',
+      status: hasStolen ? 'red' : 'green'
+    },
+    { 
+      id: 4, 
+      label: hasMileageIssues ? 'Mileage Discrepancy' : 'No Mileage Issues',
+      status: hasMileageIssues ? 'yellow' : 'green'
+    },
+    { 
+      id: 5, 
+      label: hasValidMot ? 'Valid MOT' : 'MOT Expired',
+      status: hasValidMot ? 'green' : 'red'
+    },
+    { 
+      id: 6, 
+      label: isImportedExported ? 'Import/Export Record' : 'Not Imported/Exported',
+      status: isImportedExported ? 'yellow' : 'green'
+    }
+  ];
+});
 
 // MOT History computed - sorted oldest first
 const motHistory = computed(() => {
