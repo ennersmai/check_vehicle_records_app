@@ -41,10 +41,9 @@
 
         <!-- Category Dropdown -->
         <div class="mb-6">
-          <label class="block text-sm font-medium text-gray-700 mb-2">Select Category</label>
           <select
             v-model="activeTab"
-            class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-lg font-medium text-gray-900 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+            class="w-full px-4 py-3 bg-white border-2 border-primary rounded-lg font-medium text-gray-900 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
           >
             <option v-for="tab in tabs" :key="tab.id" :value="tab.id">
               {{ tab.label }}
@@ -58,8 +57,8 @@
         <!-- OVERVIEW Tab -->
         <div v-if="activeTab === 'overview'" class="space-y-6">
           <!-- Vehicle Photo -->
-          <div class="bg-gray-200 rounded-lg aspect-video flex items-center justify-center">
-            <img v-if="vehicleData?.photoUrl" :src="vehicleData.photoUrl" alt="Vehicle" class="w-full h-full object-cover rounded-lg" />
+          <div class="bg-gray-200 rounded-lg aspect-video flex items-center justify-center" @click="vehicleData?.photoUrl && openFullscreen(vehicleData.photoUrl)">
+            <img v-if="vehicleData?.photoUrl" :src="vehicleData.photoUrl" alt="Vehicle" class="w-full h-full object-cover rounded-lg cursor-pointer" />
             <CarSilhouette v-else-if="vehicleData" :bodyStyle="vehicleData.bodyStyle" class="w-32 h-32 text-gray-400" />
             <svg v-else class="w-20 h-20 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -377,7 +376,7 @@
           <div>
             <h3 class="font-semibold text-gray-900 mb-3">Vehicle Images</h3>
             <div v-if="premiumData?.vehicleImages?.length" class="grid grid-cols-2 gap-2">
-              <div v-for="(img, idx) in premiumData.vehicleImages" :key="idx" class="bg-gray-200 rounded-lg aspect-video">
+              <div v-for="(img, idx) in premiumData.vehicleImages" :key="idx" class="bg-gray-200 rounded-lg aspect-video cursor-pointer" @click="openFullscreen(img)">
                 <img :src="img" alt="Vehicle" class="w-full h-full object-cover rounded-lg" />
               </div>
             </div>
@@ -457,6 +456,11 @@
     </div>
 
     <BottomNav />
+
+    <!-- Fullscreen Image Modal -->
+    <div v-if="fullscreenImage" @click="closeFullscreen" class="fixed inset-0 bg-black z-50 flex items-center justify-center">
+      <img :src="fullscreenImage" alt="Vehicle" class="max-w-full max-h-full object-contain" />
+    </div>
   </div>
 </template>
 
@@ -475,6 +479,16 @@ const loading = ref(true);
 const loadingMessage = ref('Loading premium report...');
 const error = ref('');
 const errorTitle = ref('');
+const fullscreenImage = ref<string | null>(null);
+
+// Fullscreen image functions
+const openFullscreen = (imageUrl: string) => {
+  fullscreenImage.value = imageUrl;
+};
+
+const closeFullscreen = () => {
+  fullscreenImage.value = null;
+};
 
 const tabs = [
   { id: 'overview', label: 'OVERVIEW' },
