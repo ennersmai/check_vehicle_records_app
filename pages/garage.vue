@@ -34,8 +34,8 @@
           class="border border-gray-200 rounded-lg p-4"
         >
           <div class="flex items-start gap-4 mb-4">
-            <div class="w-20 h-20 bg-gray-800 rounded flex items-center justify-center flex-shrink-0 overflow-hidden">
-              <img v-if="vehicle.imageUrl" :src="vehicle.imageUrl" alt="Vehicle" class="w-full h-full object-cover" />
+            <div class="w-20 h-20 bg-gray-800 rounded flex items-center justify-center flex-shrink-0 overflow-hidden" @click="vehicle.imageUrl && openFullscreen(vehicle.imageUrl)">
+              <img v-if="vehicle.imageUrl" :src="vehicle.imageUrl" alt="Vehicle" class="w-full h-full object-cover cursor-pointer" />
               <CarSilhouette v-else :bodyStyle="vehicle.bodyStyle" class="w-12 h-12 text-white" />
             </div>
             
@@ -83,13 +83,37 @@
     </div>
 
     <BottomNav />
+
+    <!-- Fullscreen Image Modal -->
+    <FullscreenImageModal 
+      :imageUrl="fullscreenImage" 
+      :scale="imageScale" 
+      :translateX="imageTranslateX" 
+      :translateY="imageTranslateY"
+      @close="closeFullscreen"
+      @touchstart="handleTouchStart"
+      @touchmove="handleTouchMove"
+      @touchend="handleTouchEnd"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
+import { useFullscreenImage } from '~/composables/useFullscreenImage';
 const router = useRouter();
 const supabase = useSupabaseClient();
 const { user } = useAuth();
+const { 
+  fullscreenImage, 
+  imageScale, 
+  imageTranslateX, 
+  imageTranslateY, 
+  openFullscreen, 
+  closeFullscreen, 
+  handleTouchStart, 
+  handleTouchMove, 
+  handleTouchEnd 
+} = useFullscreenImage();
 
 const garageVehicles = ref<any[]>([]);
 const loading = ref(true);
