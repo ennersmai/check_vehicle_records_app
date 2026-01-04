@@ -125,11 +125,11 @@
               <span class="font-medium text-gray-900 text-sm">{{ vehicleData?.importedExported || 'N/A' }}</span>
             </div>
             <div class="flex justify-between py-3 border-b border-gray-200">
-              <span class="text-gray-700 text-sm">Number of owners</span>
-              <span class="font-medium text-gray-900 text-sm">{{ vehicleData?.previousOwners || 'N/A' }}</span>
+              <span class="text-gray-700 text-sm">Previous owners</span>
+              <span class="font-medium text-gray-900 text-sm">{{ vehicleData?.previousOwners !== undefined && vehicleData?.previousOwners !== '' ? vehicleData.previousOwners : 'N/A' }}</span>
             </div>
             <div class="flex justify-between py-3 border-b border-gray-200">
-              <span class="text-gray-700 text-sm">Last owner since</span>
+              <span class="text-gray-700 text-sm">Current owner since</span>
               <span class="font-medium text-gray-900 text-sm">{{ vehicleData?.lastOwnerSince || 'N/A' }}</span>
             </div>
             <div class="flex justify-between py-3 border-b border-gray-200">
