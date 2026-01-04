@@ -520,6 +520,7 @@ function formatDate(dateStr: string | undefined): string {
 function formatEngineCapacity(cc: number | string | undefined): string {
   if (!cc) return ''
   const ccNum = typeof cc === 'string' ? parseInt(cc) : cc
+  if (isNaN(ccNum)) return ''
   return `${ccNum}cc`
 }
 
