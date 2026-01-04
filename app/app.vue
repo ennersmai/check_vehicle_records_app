@@ -6,15 +6,19 @@
 
 <script setup lang="ts">
 const supabase = useSupabaseClient();
-const { user, checkAuth } = useAuth();
+const { user } = useAuth();
 
-// Restore auth session on app initialization
-onMounted(async () => {
-  await checkAuth();
+// Initialize auth immediately (before mount)
+const initAuth = async () => {
+  const { data } = await supabase.auth.getSession();
+  user.value = data.session?.user || null;
   
   // Listen for auth state changes
   supabase.auth.onAuthStateChange((event, session) => {
     user.value = session?.user || null;
   });
-});
+};
+
+// Run auth initialization immediately
+await initAuth();
 </script>
