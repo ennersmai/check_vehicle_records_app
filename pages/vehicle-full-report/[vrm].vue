@@ -39,25 +39,17 @@
         <h1 class="text-3xl font-bold text-primary text-center mb-1">Vehicle</h1>
         <p class="text-gray-900 text-xl text-center mb-6">Premium Details</p>
 
-        <!-- Tabs - Mobile friendly horizontal scroll -->
-        <div class="relative -mx-10 px-10">
-          <div class="flex gap-2 mb-6 overflow-x-auto pb-2 scrollbar-hide snap-x snap-mandatory">
-            <button
-              v-for="tab in tabs"
-              :key="tab.id"
-              @click="activeTab = tab.id"
-              :class="[
-                'px-4 py-2.5 rounded-full font-medium text-sm whitespace-nowrap transition-all snap-start flex-shrink-0',
-                activeTab === tab.id
-                  ? 'bg-primary text-white shadow-md'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-              ]"
-            >
+        <!-- Category Dropdown -->
+        <div class="mb-6">
+          <label class="block text-sm font-medium text-gray-700 mb-2">Select Category</label>
+          <select
+            v-model="activeTab"
+            class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-lg font-medium text-gray-900 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+          >
+            <option v-for="tab in tabs" :key="tab.id" :value="tab.id">
               {{ tab.label }}
-            </button>
-          </div>
-          <!-- Fade indicators for scroll -->
-          <div class="absolute right-10 top-0 bottom-2 w-8 bg-gradient-to-l from-white to-transparent pointer-events-none"></div>
+            </option>
+          </select>
         </div>
       </div>
 
@@ -498,8 +490,15 @@ const statusIndicators = ref([
   { id: 6, label: 'Import/Export', status: 'green' }
 ]);
 
-// MOT History computed
-const motHistory = computed(() => premiumData.value?.motHistory || []);
+// MOT History computed - sorted newest first
+const motHistory = computed(() => {
+  const history = premiumData.value?.motHistory || [];
+  return [...history].sort((a, b) => {
+    const dateA = new Date(a.date).getTime();
+    const dateB = new Date(b.date).getTime();
+    return dateB - dateA; // Descending order (newest first)
+  });
+});
 const motSummary = computed(() => premiumData.value?.motSummary || { totalTests: 0, passedTests: 0, failedTests: 0 });
 
 // Formatted MOT expiry date
@@ -524,12 +523,15 @@ const mileageChartData = computed(() => {
 
 const motChartData = computed(() => {
   const history = premiumData.value?.motHistory || [];
-  return history.map((m: any) => ({
+  console.log('MOT History for chart:', history);
+  const chartData = history.map((m: any) => ({
     date: m.date,
     result: m.result,
     advisoryCount: m.advisories?.length || 0,
     failureCount: m.failures?.length || 0
   }));
+  console.log('MOT Chart Data:', chartData);
+  return chartData;
 });
 
 // Helper function to format dates
