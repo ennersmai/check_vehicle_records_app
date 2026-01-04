@@ -55,9 +55,9 @@
             <span class="text-gray-600">Make</span>
             <span class="font-medium text-gray-900">{{ vehicleData.make || 'N/A' }}</span>
           </div>
-          <div class="flex justify-between py-2 border-b border-gray-100">
+          <div v-if="vehicleData.model" class="flex justify-between py-2 border-b border-gray-100">
             <span class="text-gray-600">Model</span>
-            <span class="font-medium text-gray-900">{{ vehicleData.model || 'N/A' }}</span>
+            <span class="font-medium text-gray-900">{{ vehicleData.model }}</span>
           </div>
           <div class="flex justify-between py-2 border-b border-gray-100">
             <span class="text-gray-600">Colour</span>
@@ -71,9 +71,9 @@
             <span class="text-gray-600">Fuel type</span>
             <span class="font-medium text-gray-900">{{ vehicleData.fuelType || 'N/A' }}</span>
           </div>
-          <div class="flex justify-between py-2 border-b border-gray-100">
+          <div v-if="vehicleData.bodyStyle" class="flex justify-between py-2 border-b border-gray-100">
             <span class="text-gray-600">Body style</span>
-            <span class="font-medium text-gray-900">{{ vehicleData.bodyStyle || 'N/A' }}</span>
+            <span class="font-medium text-gray-900">{{ vehicleData.bodyStyle }}</span>
           </div>
           <div class="flex justify-between py-2">
             <span class="text-gray-600">Engine size</span>
@@ -124,13 +124,20 @@ onMounted(async () => {
     
     if (cachedData) {
       // Map the data to our normalized format
-      // Check if it's DVLA format (has registrationNumber at root) or CheckCarDetails format
+      // DVLA data will have fields like registrationNumber, make, colour, etc.
+      // CheckCarDetails will have tax, motTests, etc.
       let mappedData: any = {};
-      if (cachedData.registrationNumber) {
-        mappedData = cachedData.tax ? mapCheckCarDetailsBasic(cachedData) : mapDvlaData(cachedData);
+      
+      if (cachedData.tax || cachedData.motTests) {
+        // CheckCarDetails format
+        mappedData = mapCheckCarDetailsBasic(cachedData);
+      } else if (cachedData.registrationNumber || cachedData.make) {
+        // DVLA format
+        mappedData = mapDvlaData(cachedData);
       }
-      // Merge: raw data first, then mapped data takes precedence for formatted fields
-      vehicleData.value = { ...cachedData, ...mappedData };
+      
+      // Use only mapped data to avoid showing raw field values
+      vehicleData.value = mappedData;
     } else {
       errorTitle.value = 'Data Not Found';
       error.value = 'Vehicle data could not be retrieved. Please try searching again.';

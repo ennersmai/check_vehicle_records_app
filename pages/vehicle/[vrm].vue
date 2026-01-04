@@ -54,9 +54,9 @@
           <span class="text-gray-700">Make</span>
           <span class="font-medium text-gray-900">{{ vehicleData.make || 'N/A' }}</span>
         </div>
-        <div class="flex justify-between py-3 border-b border-gray-200">
+        <div v-if="vehicleData.model" class="flex justify-between py-3 border-b border-gray-200">
           <span class="text-gray-700">Model</span>
-          <span class="font-medium text-gray-900">{{ vehicleData.model || 'N/A' }}</span>
+          <span class="font-medium text-gray-900">{{ vehicleData.model }}</span>
         </div>
         <div class="flex justify-between py-3 border-b border-gray-200">
           <span class="text-gray-700">Colour</span>
@@ -70,9 +70,9 @@
           <span class="text-gray-700">Fuel type</span>
           <span class="font-medium text-gray-900">{{ vehicleData.fuelType || 'N/A' }}</span>
         </div>
-        <div class="flex justify-between py-3 border-b border-gray-200">
+        <div v-if="vehicleData.bodyStyle" class="flex justify-between py-3 border-b border-gray-200">
           <span class="text-gray-700">Body style</span>
-          <span class="font-medium text-gray-900">{{ vehicleData.bodyStyle || 'N/A' }}</span>
+          <span class="font-medium text-gray-900">{{ vehicleData.bodyStyle }}</span>
         </div>
         <div class="flex justify-between py-3 border-b border-gray-200">
           <span class="text-gray-700">Engine size</span>
