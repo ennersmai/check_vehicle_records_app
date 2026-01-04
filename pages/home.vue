@@ -138,16 +138,32 @@ const handleSearch = async () => {
       
       router.push(`/confirm-vehicle/${vrm.value.toUpperCase().replace(/\s/g, '')}`);
     } else {
-      // Handle specific error types
-      if (result.error?.includes('not found')) {
-        errorTitle.value = 'Vehicle Not Found';
-        error.value = 'No vehicle found with this registration number. Please check and try again.';
-      } else if (result.error?.includes('rate') || result.error?.includes('throttle')) {
-        errorTitle.value = 'Service Busy';
-        error.value = 'The service is temporarily busy. Please try again in a moment.';
-      } else {
-        errorTitle.value = 'Lookup Failed';
-        error.value = result.error || 'Unable to retrieve vehicle information. Please try again.';
+      // Handle specific error types using errorCode
+      switch (result.errorCode) {
+        case 'NOT_FOUND':
+          errorTitle.value = 'Vehicle Not Found';
+          error.value = 'No vehicle found with this registration number. Please check and try again.';
+          break;
+        case 'INVALID_VRM':
+          errorTitle.value = 'Invalid Registration';
+          error.value = 'The registration number format is invalid. Please enter a valid UK registration.';
+          break;
+        case 'API_ERROR':
+          errorTitle.value = 'Service Unavailable';
+          error.value = 'The vehicle lookup service is temporarily unavailable. Please try again later.';
+          break;
+        default:
+          // Fallback to message-based detection
+          if (result.error?.includes('not found')) {
+            errorTitle.value = 'Vehicle Not Found';
+            error.value = 'No vehicle found with this registration number. Please check and try again.';
+          } else if (result.error?.includes('rate') || result.error?.includes('throttle')) {
+            errorTitle.value = 'Service Busy';
+            error.value = 'The service is temporarily busy. Please try again in a moment.';
+          } else {
+            errorTitle.value = 'Lookup Failed';
+            error.value = result.error || 'Unable to retrieve vehicle information. Please try again.';
+          }
       }
     }
   } catch (err: any) {

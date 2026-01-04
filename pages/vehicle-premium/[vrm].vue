@@ -39,8 +39,9 @@
         <h1 class="text-3xl font-bold text-primary mb-1">Vehicle details</h1>
         <p class="text-gray-900 text-lg font-medium mb-6">Premium check</p>
 
-        <div class="bg-gray-200 rounded-lg aspect-video flex items-center justify-center mb-6">
-          <CarSilhouette v-if="vehicleData" :bodyStyle="vehicleData.bodyStyle" class="w-32 h-32 text-gray-400" />
+        <div class="bg-gray-200 rounded-lg aspect-video flex items-center justify-center mb-6 overflow-hidden">
+          <img v-if="vehicleData?.imageUrl || vehicleData?.photoUrl" :src="vehicleData.imageUrl || vehicleData.photoUrl" alt="Vehicle" class="w-full h-full object-cover" />
+          <CarSilhouette v-else-if="vehicleData" :bodyStyle="vehicleData.bodyStyle" class="w-32 h-32 text-gray-400" />
           <svg v-else class="w-20 h-20 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
           </svg>
@@ -55,39 +56,39 @@
           <div class="space-y-0">
             <div class="flex justify-between py-2 border-b border-gray-200">
               <span class="text-gray-700 text-sm">VIN number</span>
-              <span class="font-medium text-gray-900 text-sm">{{ vehicleData.vinNumber || 'XX XXXX' }}</span>
+              <span class="font-medium text-gray-900 text-sm">{{ vehicleData.vinNumber || 'N/A' }}</span>
             </div>
             <div class="flex justify-between py-2 border-b border-gray-200">
               <span class="text-gray-700 text-sm">Outstanding finance</span>
-              <span class="font-medium text-gray-900 text-sm">{{ vehicleData.outstandingFinance || 'XX XXXX' }}</span>
+              <span class="font-medium text-gray-900 text-sm">{{ vehicleData.outstandingFinance || 'N/A' }}</span>
             </div>
             <div class="flex justify-between py-2 border-b border-gray-200">
               <span class="text-gray-700 text-sm">Stole vehicle record</span>
-              <span class="font-medium text-gray-900 text-sm">{{ vehicleData.stolenRecord || 'XX XXXX' }}</span>
+              <span class="font-medium text-gray-900 text-sm">{{ vehicleData.stolenRecord || 'N/A' }}</span>
             </div>
             <div class="flex justify-between py-2 border-b border-gray-200">
               <span class="text-gray-700 text-sm">Written off record</span>
-              <span class="font-medium text-gray-900 text-sm">{{ vehicleData.writtenOffRecord || 'XX XXXX' }}</span>
+              <span class="font-medium text-gray-900 text-sm">{{ vehicleData.writtenOffRecord || 'N/A' }}</span>
             </div>
             <div class="flex justify-between py-2 border-b border-gray-200">
               <span class="text-gray-700 text-sm">Previous owners</span>
-              <span class="font-medium text-gray-900 text-sm">{{ vehicleData.previousOwners || 'XX XXXX' }}</span>
+              <span class="font-medium text-gray-900 text-sm">{{ vehicleData.previousOwners || 'N/A' }}</span>
             </div>
             <div class="flex justify-between py-2 border-b border-gray-200">
               <span class="text-gray-700 text-sm">Imported/ Exported</span>
-              <span class="font-medium text-gray-900 text-sm">{{ vehicleData.importedExported || 'XX XXXX' }}</span>
+              <span class="font-medium text-gray-900 text-sm">{{ vehicleData.importedExported || 'N/A' }}</span>
             </div>
             <div class="flex justify-between py-2 border-b border-gray-200">
               <span class="text-gray-700 text-sm">Last owner since</span>
-              <span class="font-medium text-gray-900 text-sm">{{ vehicleData.lastOwnerSince || 'XX XXXX' }}</span>
+              <span class="font-medium text-gray-900 text-sm">{{ vehicleData.lastOwnerSince || 'N/A' }}</span>
             </div>
             <div class="flex justify-between py-2 border-b border-gray-200">
-              <span class="text-gray-700 text-sm">Build sheet</span>
-              <span class="font-medium text-gray-900 text-sm">{{ vehicleData.buildSheet || 'XX XXXX' }}</span>
+              <span class="text-gray-700 text-sm">V5C Certificates</span>
+              <span class="font-medium text-gray-900 text-sm">{{ vehicleData.v5cCount || 'N/A' }}</span>
             </div>
             <div class="flex justify-between py-2">
-              <span class="text-gray-700 text-sm"></span>
-              <span class="font-medium text-gray-900 text-sm">{{ vehicleData.buildSheetExtra || 'XX XXXX' }}</span>
+              <span class="text-gray-700 text-sm">Scrapped</span>
+              <span class="font-medium text-gray-900 text-sm">{{ vehicleData.scrapped || 'N/A' }}</span>
             </div>
           </div>
         </div>
@@ -98,74 +99,82 @@
           <div class="space-y-0">
             <div class="flex justify-between py-2 border-b border-gray-200">
               <span class="text-gray-700 text-sm">Colour</span>
-              <span class="font-medium text-gray-900 text-sm">{{ vehicleData.colour || 'XX XXXX' }}</span>
-            </div>
-            <div class="flex justify-between py-2 border-b border-gray-200">
-              <span class="text-gray-700 text-sm"></span>
-              <span class="font-medium text-gray-900 text-sm">{{ vehicleData.colourExtra || 'XX XXXX' }}</span>
+              <span class="font-medium text-gray-900 text-sm">{{ vehicleData.colour || 'N/A' }}</span>
             </div>
             <div class="flex justify-between py-2 border-b border-gray-200">
               <span class="text-gray-700 text-sm">Fuel type</span>
-              <span class="font-medium text-gray-900 text-sm">{{ vehicleData.fuelType || 'XX XXXX' }}</span>
+              <span class="font-medium text-gray-900 text-sm">{{ vehicleData.fuelType || 'N/A' }}</span>
             </div>
             <div class="flex justify-between py-2 border-b border-gray-200">
               <span class="text-gray-700 text-sm">Body style</span>
-              <span class="font-medium text-gray-900 text-sm">{{ vehicleData.bodyStyle || 'XX XXXX' }}</span>
+              <span class="font-medium text-gray-900 text-sm">{{ vehicleData.bodyStyle || 'N/A' }}</span>
+            </div>
+            <div class="flex justify-between py-2 border-b border-gray-200">
+              <span class="text-gray-700 text-sm">Engine size</span>
+              <span class="font-medium text-gray-900 text-sm">{{ vehicleData.engineCapacity || 'N/A' }}</span>
+            </div>
+            <div class="flex justify-between py-2 border-b border-gray-200">
+              <span class="text-gray-700 text-sm">Kerb Weight</span>
+              <span class="font-medium text-gray-900 text-sm">{{ vehicleData.kerbWeight || 'N/A' }}</span>
+            </div>
+            <div class="flex justify-between py-2 border-b border-gray-200">
+              <span class="text-gray-700 text-sm">BHP</span>
+              <span class="font-medium text-gray-900 text-sm">{{ vehicleData.bhp || 'N/A' }}</span>
+            </div>
+            <div class="flex justify-between py-2 border-b border-gray-200">
+              <span class="text-gray-700 text-sm">Torque</span>
+              <span class="font-medium text-gray-900 text-sm">{{ vehicleData.torque || 'N/A' }}</span>
+            </div>
+            <div class="flex justify-between py-2 border-b border-gray-200">
+              <span class="text-gray-700 text-sm">Top Speed</span>
+              <span class="font-medium text-gray-900 text-sm">{{ vehicleData.topSpeed || 'N/A' }}</span>
             </div>
             <div class="flex justify-between py-2">
-              <span class="text-gray-700 text-sm">Engine size</span>
-              <span class="font-medium text-gray-900 text-sm">{{ vehicleData.engineCapacity || 'XX XXXX' }}</span>
+              <span class="text-gray-700 text-sm">0-60 mph</span>
+              <span class="font-medium text-gray-900 text-sm">{{ vehicleData.acceleration || 'N/A' }}</span>
             </div>
           </div>
         </div>
 
-        <!-- OWNERSHIP & INSURANCE Section -->
+        <!-- OWNERSHIP & REGISTRATION Section -->
         <div class="bg-gray-50 rounded-lg p-4">
-          <h3 class="font-bold text-gray-900 text-sm mb-4 uppercase">Ownership & Insurance</h3>
+          <h3 class="font-bold text-gray-900 text-sm mb-4 uppercase">Ownership & Registration</h3>
           <div class="space-y-0">
             <div class="flex justify-between py-2 border-b border-gray-200">
               <span class="text-gray-700 text-sm">Registration date</span>
-              <span class="font-medium text-gray-900 text-sm">{{ vehicleData.registrationDate || 'XX XXXX' }}</span>
+              <span class="font-medium text-gray-900 text-sm">{{ vehicleData.registrationDate || 'N/A' }}</span>
             </div>
             <div class="flex justify-between py-2 border-b border-gray-200">
-              <span class="text-gray-700 text-sm">Place of first registration</span>
-              <span class="font-medium text-gray-900 text-sm">{{ vehicleData.placeOfFirstRegistration || 'XX XXXX' }}</span>
+              <span class="text-gray-700 text-sm">Country of Origin</span>
+              <span class="font-medium text-gray-900 text-sm">{{ vehicleData.countryOfOrigin || 'N/A' }}</span>
             </div>
             <div class="flex justify-between py-2 border-b border-gray-200">
               <span class="text-gray-700 text-sm">Vehicle Age</span>
-              <span class="font-medium text-gray-900 text-sm">{{ vehicleData.vehicleAge || 'XX XXXX' }}</span>
+              <span class="font-medium text-gray-900 text-sm">{{ vehicleData.vehicleAge || 'N/A' }}</span>
             </div>
             <div class="flex justify-between py-2 border-b border-gray-200">
               <span class="text-gray-700 text-sm">Last MOT Mileage</span>
-              <span class="font-medium text-gray-900 text-sm">{{ vehicleData.lastMotMileage || 'XX XXXX' }}</span>
+              <span class="font-medium text-gray-900 text-sm">{{ vehicleData.lastMotMileage || 'N/A' }}</span>
             </div>
             <div class="flex justify-between py-2 border-b border-gray-200">
               <span class="text-gray-700 text-sm">Last MOT information</span>
-              <span class="font-medium text-gray-900 text-sm">{{ vehicleData.lastMotInformation || 'XX XXXX' }}</span>
+              <span class="font-medium text-gray-900 text-sm">{{ vehicleData.lastMotInformation || 'N/A' }}</span>
             </div>
             <div class="flex justify-between py-2 border-b border-gray-200">
               <span class="text-gray-700 text-sm">Imported/ Exported</span>
-              <span class="font-medium text-gray-900 text-sm">{{ vehicleData.importedExported || 'XX XXXX' }}</span>
+              <span class="font-medium text-gray-900 text-sm">{{ vehicleData.importedExported || 'N/A' }}</span>
             </div>
             <div class="flex justify-between py-2 border-b border-gray-200">
-              <span class="text-gray-700 text-sm">Road Tax</span>
-              <span class="font-medium text-gray-900 text-sm">{{ vehicleData.taxStatus || 'XX XXXX' }}</span>
+              <span class="text-gray-700 text-sm">Road Tax Status</span>
+              <span class="font-medium text-gray-900 text-sm">{{ vehicleData.taxStatus || 'N/A' }}</span>
             </div>
             <div class="flex justify-between py-2 border-b border-gray-200">
-              <span class="text-gray-700 text-sm">6 Month</span>
-              <span class="font-medium text-gray-900 text-sm">{{ vehicleData.taxSixMonths || 'XX XXXX' }}</span>
-            </div>
-            <div class="flex justify-between py-2 border-b border-gray-200">
-              <span class="text-gray-700 text-sm"></span>
-              <span class="font-medium text-gray-900 text-sm">{{ vehicleData.taxSixMonthsExtra || 'XX XXXX' }}</span>
-            </div>
-            <div class="flex justify-between py-2 border-b border-gray-200">
-              <span class="text-gray-700 text-sm">Insurance</span>
-              <span class="font-medium text-gray-900 text-sm">{{ vehicleData.insurance || 'XX XXXX' }}</span>
+              <span class="text-gray-700 text-sm">Tax (6 Months)</span>
+              <span class="font-medium text-gray-900 text-sm">{{ vehicleData.taxSixMonths || 'N/A' }}</span>
             </div>
             <div class="flex justify-between py-2">
-              <span class="text-gray-700 text-sm">Insurance Group</span>
-              <span class="font-medium text-gray-900 text-sm">{{ vehicleData.insuranceGroup || 'XX XXXX' }}</span>
+              <span class="text-gray-700 text-sm">Tax (12 Months)</span>
+              <span class="font-medium text-gray-900 text-sm">{{ vehicleData.taxTwelveMonths || 'N/A' }}</span>
             </div>
           </div>
         </div>

@@ -39,21 +39,25 @@
         <h1 class="text-3xl font-bold text-primary text-center mb-1">Vehicle</h1>
         <p class="text-gray-900 text-xl text-center mb-6">Premium Details</p>
 
-        <!-- Tabs -->
-        <div class="flex gap-2 mb-6 overflow-x-auto scrollbar-hide">
-          <button
-            v-for="tab in tabs"
-            :key="tab.id"
-            @click="activeTab = tab.id"
-            :class="[
-              'px-4 py-2 rounded-lg font-medium text-sm whitespace-nowrap transition-colors',
-              activeTab === tab.id
-                ? 'bg-gray-900 text-white'
-                : 'bg-gray-200 text-gray-700'
-            ]"
-          >
-            {{ tab.label }}
-          </button>
+        <!-- Tabs - Mobile friendly horizontal scroll -->
+        <div class="relative -mx-10 px-10">
+          <div class="flex gap-2 mb-6 overflow-x-auto pb-2 scrollbar-hide snap-x snap-mandatory">
+            <button
+              v-for="tab in tabs"
+              :key="tab.id"
+              @click="activeTab = tab.id"
+              :class="[
+                'px-4 py-2.5 rounded-full font-medium text-sm whitespace-nowrap transition-all snap-start flex-shrink-0',
+                activeTab === tab.id
+                  ? 'bg-primary text-white shadow-md'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              ]"
+            >
+              {{ tab.label }}
+            </button>
+          </div>
+          <!-- Fade indicators for scroll -->
+          <div class="absolute right-10 top-0 bottom-2 w-8 bg-gradient-to-l from-white to-transparent pointer-events-none"></div>
         </div>
       </div>
 
@@ -70,18 +74,28 @@
             </svg>
           </div>
 
-          <!-- Traffic Light Status Indicators -->
-          <div class="grid grid-cols-3 gap-4">
+          <!-- Traffic Light Status Indicators - Improved -->
+          <div class="grid grid-cols-3 gap-3">
             <div v-for="indicator in statusIndicators" :key="indicator.id" class="flex flex-col items-center">
               <div 
                 :class="[
-                  'w-16 h-16 rounded-full mb-2 flex items-center justify-center',
-                  indicator.status === 'green' ? 'bg-green-500' : '',
-                  indicator.status === 'yellow' ? 'bg-yellow-300' : '',
-                  indicator.status === 'red' ? 'bg-red-500' : ''
+                  'w-14 h-14 rounded-full mb-2 flex items-center justify-center shadow-lg transition-transform hover:scale-105',
+                  indicator.status === 'green' ? 'bg-gradient-to-br from-green-400 to-green-600' : '',
+                  indicator.status === 'yellow' ? 'bg-gradient-to-br from-yellow-300 to-amber-500' : '',
+                  indicator.status === 'red' ? 'bg-gradient-to-br from-red-400 to-red-600' : ''
                 ]"
-              ></div>
-              <p class="text-xs text-center text-gray-900 leading-tight">{{ indicator.label }}</p>
+              >
+                <svg v-if="indicator.status === 'green'" class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+                </svg>
+                <svg v-else-if="indicator.status === 'yellow'" class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                <svg v-else class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </div>
+              <p class="text-xs text-center text-gray-700 leading-tight font-medium">{{ indicator.label }}</p>
             </div>
           </div>
         </div>
@@ -93,51 +107,71 @@
           <div class="space-y-0">
             <div class="flex justify-between py-3 border-b border-gray-200">
               <span class="text-gray-700 text-sm">Registration</span>
-              <span class="font-medium text-gray-900 text-sm">{{ vehicleData?.registration || 'XX XXXX' }}</span>
+              <span class="font-medium text-gray-900 text-sm">{{ vehicleData?.registration || 'N/A' }}</span>
             </div>
             <div class="flex justify-between py-3 border-b border-gray-200">
               <span class="text-gray-700 text-sm">Vin Number</span>
-              <span class="font-medium text-gray-900 text-sm">{{ vehicleData?.vinNumber || 'XX XXXX' }}</span>
+              <span class="font-medium text-gray-900 text-sm">{{ vehicleData?.vinNumber || 'N/A' }}</span>
             </div>
             <div class="flex justify-between py-3 border-b border-gray-200">
               <span class="text-gray-700 text-sm">Make</span>
-              <span class="font-medium text-gray-900 text-sm">{{ vehicleData?.make || 'XX XXXX' }}</span>
+              <span class="font-medium text-gray-900 text-sm">{{ vehicleData?.make || 'N/A' }}</span>
             </div>
             <div class="flex justify-between py-3 border-b border-gray-200">
               <span class="text-gray-700 text-sm">Model</span>
-              <span class="font-medium text-gray-900 text-sm">{{ vehicleData?.model || 'XX XXXX' }}</span>
+              <span class="font-medium text-gray-900 text-sm">{{ vehicleData?.model || 'N/A' }}</span>
             </div>
             <div class="flex justify-between py-3 border-b border-gray-200">
               <span class="text-gray-700 text-sm">Colour</span>
-              <span class="font-medium text-gray-900 text-sm">{{ vehicleData?.colour || 'XX XXXX' }}</span>
+              <span class="font-medium text-gray-900 text-sm">{{ vehicleData?.colour || 'N/A' }}</span>
             </div>
             <div class="flex justify-between py-3 border-b border-gray-200">
               <span class="text-gray-700 text-sm">Year of Registration</span>
-              <span class="font-medium text-gray-900 text-sm">{{ vehicleData?.yearOfManufacture || 'XX XXXX' }}</span>
+              <span class="font-medium text-gray-900 text-sm">{{ vehicleData?.yearOfManufacture || 'N/A' }}</span>
             </div>
             <div class="flex justify-between py-3 border-b border-gray-200">
               <span class="text-gray-700 text-sm">Import/ Export</span>
-              <span class="font-medium text-gray-900 text-sm">{{ vehicleData?.importedExported || 'XX XXXX' }}</span>
+              <span class="font-medium text-gray-900 text-sm">{{ vehicleData?.importedExported || 'N/A' }}</span>
             </div>
             <div class="flex justify-between py-3 border-b border-gray-200">
               <span class="text-gray-700 text-sm">Number of owners</span>
-              <span class="font-medium text-gray-900 text-sm">{{ vehicleData?.previousOwners || 'XX XXXX' }}</span>
+              <span class="font-medium text-gray-900 text-sm">{{ vehicleData?.previousOwners || 'N/A' }}</span>
             </div>
             <div class="flex justify-between py-3 border-b border-gray-200">
               <span class="text-gray-700 text-sm">Last owner since</span>
-              <span class="font-medium text-gray-900 text-sm">{{ vehicleData?.lastOwnerSince || 'XX XXXX' }}</span>
+              <span class="font-medium text-gray-900 text-sm">{{ vehicleData?.lastOwnerSince || 'N/A' }}</span>
+            </div>
+            <div class="flex justify-between py-3 border-b border-gray-200">
+              <span class="text-gray-700 text-sm">V5C Certificates</span>
+              <span class="font-medium text-gray-900 text-sm">{{ vehicleData?.v5cCount || 'N/A' }}</span>
+            </div>
+            <div class="flex justify-between py-3 border-b border-gray-200">
+              <span class="text-gray-700 text-sm">Country of Origin</span>
+              <span class="font-medium text-gray-900 text-sm">{{ vehicleData?.countryOfOrigin || 'N/A' }}</span>
             </div>
             <div class="flex justify-between py-3 border-b border-gray-200">
               <span class="text-gray-700 text-sm">Fuel type</span>
-              <span class="font-medium text-gray-900 text-sm">{{ vehicleData?.fuelType || 'XX XXXX' }}</span>
+              <span class="font-medium text-gray-900 text-sm">{{ vehicleData?.fuelType || 'N/A' }}</span>
             </div>
             <div class="flex justify-between py-3 border-b border-gray-200">
               <span class="text-gray-700 text-sm">Body style</span>
-              <span class="font-medium text-gray-900 text-sm">{{ vehicleData?.bodyStyle || 'XX XXXX' }}</span>
+              <span class="font-medium text-gray-900 text-sm">{{ vehicleData?.bodyStyle || 'N/A' }}</span>
+            </div>
+            <div class="flex justify-between py-3 border-b border-gray-200">
+              <span class="text-gray-700 text-sm">Engine size</span>
+              <span class="font-medium text-gray-900 text-sm">{{ vehicleData?.engineCapacity || 'N/A' }}</span>
+            </div>
+            <div class="flex justify-between py-3 border-b border-gray-200">
+              <span class="text-gray-700 text-sm">Engine Number</span>
+              <span class="font-medium text-gray-900 text-sm">{{ vehicleData?.engineNumber || 'N/A' }}</span>
+            </div>
+            <div class="flex justify-between py-3 border-b border-gray-200">
+              <span class="text-gray-700 text-sm">Kerb Weight</span>
+              <span class="font-medium text-gray-900 text-sm">{{ vehicleData?.kerbWeight || 'N/A' }}</span>
             </div>
             <div class="flex justify-between py-3">
-              <span class="text-gray-700 text-sm">Engine size</span>
-              <span class="font-medium text-gray-900 text-sm">{{ vehicleData?.engineCapacity || 'XX XXXX' }}</span>
+              <span class="text-gray-700 text-sm">Scrapped</span>
+              <span class="font-medium text-gray-900 text-sm">{{ vehicleData?.scrapped || 'N/A' }}</span>
             </div>
           </div>
         </div>
@@ -242,6 +276,46 @@
               <span class="text-gray-700 text-sm">0-60 mph</span>
               <span class="font-medium text-gray-900 text-sm">{{ premiumData?.performance?.acceleration || 'N/A' }}</span>
             </div>
+            <div class="flex justify-between py-3">
+              <span class="text-gray-700 text-sm">Power (kW)</span>
+              <span class="font-medium text-gray-900 text-sm">{{ premiumData?.performance?.powerKw || 'N/A' }}</span>
+            </div>
+          </div>
+
+          <h3 class="font-bold text-gray-900 text-sm mb-4 uppercase border-b border-gray-900 pb-2 mt-6">Engine</h3>
+          <div class="space-y-0">
+            <div class="flex justify-between py-3 border-b border-gray-200">
+              <span class="text-gray-700 text-sm">Cylinders</span>
+              <span class="font-medium text-gray-900 text-sm">{{ premiumData?.engine?.cylinders || 'N/A' }}</span>
+            </div>
+            <div class="flex justify-between py-3 border-b border-gray-200">
+              <span class="text-gray-700 text-sm">Arrangement</span>
+              <span class="font-medium text-gray-900 text-sm">{{ premiumData?.engine?.arrangement || 'N/A' }}</span>
+            </div>
+            <div class="flex justify-between py-3 border-b border-gray-200">
+              <span class="text-gray-700 text-sm">Valve Gear</span>
+              <span class="font-medium text-gray-900 text-sm">{{ premiumData?.engine?.valveGear || 'N/A' }}</span>
+            </div>
+            <div class="flex justify-between py-3">
+              <span class="text-gray-700 text-sm">Aspiration</span>
+              <span class="font-medium text-gray-900 text-sm">{{ premiumData?.engine?.aspiration || 'N/A' }}</span>
+            </div>
+          </div>
+
+          <h3 class="font-bold text-gray-900 text-sm mb-4 uppercase border-b border-gray-900 pb-2 mt-6">Transmission</h3>
+          <div class="space-y-0">
+            <div class="flex justify-between py-3 border-b border-gray-200">
+              <span class="text-gray-700 text-sm">Type</span>
+              <span class="font-medium text-gray-900 text-sm">{{ premiumData?.transmission?.type || 'N/A' }}</span>
+            </div>
+            <div class="flex justify-between py-3 border-b border-gray-200">
+              <span class="text-gray-700 text-sm">Gears</span>
+              <span class="font-medium text-gray-900 text-sm">{{ premiumData?.transmission?.gears || 'N/A' }}</span>
+            </div>
+            <div class="flex justify-between py-3">
+              <span class="text-gray-700 text-sm">Drive Type</span>
+              <span class="font-medium text-gray-900 text-sm">{{ premiumData?.transmission?.driveType || 'N/A' }}</span>
+            </div>
           </div>
 
           <h3 class="font-bold text-gray-900 text-sm mb-4 uppercase border-b border-gray-900 pb-2 mt-6">Dimensions</h3>
@@ -266,6 +340,18 @@
               <span class="text-gray-700 text-sm">Kerb Weight</span>
               <span class="font-medium text-gray-900 text-sm">{{ premiumData?.dimensions?.kerbWeight || 'N/A' }}</span>
             </div>
+            <div class="flex justify-between py-3 border-b border-gray-200" v-if="premiumData?.dimensions?.grossWeight">
+              <span class="text-gray-700 text-sm">Gross Weight</span>
+              <span class="font-medium text-gray-900 text-sm">{{ premiumData?.dimensions?.grossWeight }}</span>
+            </div>
+            <div class="flex justify-between py-3 border-b border-gray-200">
+              <span class="text-gray-700 text-sm">Doors</span>
+              <span class="font-medium text-gray-900 text-sm">{{ premiumData?.dimensions?.numberOfDoors || 'N/A' }}</span>
+            </div>
+            <div class="flex justify-between py-3">
+              <span class="text-gray-700 text-sm">Seats</span>
+              <span class="font-medium text-gray-900 text-sm">{{ premiumData?.dimensions?.numberOfSeats || 'N/A' }}</span>
+            </div>
           </div>
 
           <h3 class="font-bold text-gray-900 text-sm mb-4 uppercase border-b border-gray-900 pb-2 mt-6">Fuel Consumption</h3>
@@ -278,9 +364,13 @@
               <span class="text-gray-700 text-sm">Extra Urban</span>
               <span class="font-medium text-gray-900 text-sm">{{ premiumData?.consumption?.extraUrban || 'N/A' }}</span>
             </div>
-            <div class="flex justify-between py-3">
+            <div class="flex justify-between py-3 border-b border-gray-200">
               <span class="text-gray-700 text-sm">Combined</span>
               <span class="font-medium text-gray-900 text-sm">{{ premiumData?.consumption?.combined || 'N/A' }}</span>
+            </div>
+            <div class="flex justify-between py-3">
+              <span class="text-gray-700 text-sm">CO2</span>
+              <span class="font-medium text-gray-900 text-sm">{{ premiumData?.consumption?.co2 || vehicleData?.co2Emissions || 'N/A' }}</span>
             </div>
           </div>
         </div>
@@ -332,8 +422,16 @@
               <span class="font-medium text-gray-900 text-sm">{{ premiumData?.taxTwelveMonths || 'N/A' }}</span>
             </div>
             <div class="flex justify-between py-3 border-b border-gray-200">
+              <span class="text-gray-700 text-sm">Tax Band</span>
+              <span class="font-medium text-gray-900 text-sm">{{ premiumData?.taxBand || 'N/A' }}</span>
+            </div>
+            <div class="flex justify-between py-3 border-b border-gray-200">
               <span class="text-gray-700 text-sm">V5C Issued</span>
               <span class="font-medium text-gray-900 text-sm">{{ vehicleData?.dateOfLastV5CIssued || 'N/A' }}</span>
+            </div>
+            <div class="flex justify-between py-3">
+              <span class="text-gray-700 text-sm">Date of Manufacture</span>
+              <span class="font-medium text-gray-900 text-sm">{{ premiumData?.dateOfManufacture || 'N/A' }}</span>
             </div>
           </div>
 

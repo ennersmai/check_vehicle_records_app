@@ -1,6 +1,6 @@
 <template>
-  <div class="bg-white border border-gray-200 rounded-lg p-4">
-    <canvas ref="chartCanvas" class="w-full h-40"></canvas>
+  <div class="bg-gradient-to-br from-emerald-50 to-white border border-emerald-100 rounded-xl p-4 shadow-sm">
+    <canvas ref="chartCanvas" class="w-full h-48"></canvas>
   </div>
 </template>
 
@@ -32,8 +32,16 @@ const createChart = () => {
   const ctx = chartCanvas.value.getContext('2d');
   if (!ctx) return;
 
-  // Sort data by date
-  const sortedData = [...props.data].sort((a, b) => 
+  // Filter out entries with invalid dates or null mileage, then sort by date
+  const validData = props.data.filter(d => {
+    if (!d.date || d.mileage === null || d.mileage === undefined) return false;
+    const date = new Date(d.date);
+    return !isNaN(date.getTime());
+  });
+
+  if (!validData.length) return;
+
+  const sortedData = [...validData].sort((a, b) => 
     new Date(a.date).getTime() - new Date(b.date).getTime()
   );
 
@@ -44,6 +52,11 @@ const createChart = () => {
 
   const values = sortedData.map(d => d.mileage);
 
+  // Create gradient
+  const gradient = ctx.createLinearGradient(0, 0, 0, 200);
+  gradient.addColorStop(0, 'rgba(16, 185, 129, 0.4)');
+  gradient.addColorStop(1, 'rgba(16, 185, 129, 0.02)');
+
   chartInstance = new Chart(ctx, {
     type: 'line',
     data: {
@@ -52,23 +65,41 @@ const createChart = () => {
         label: 'Mileage',
         data: values,
         borderColor: '#10b981',
-        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+        backgroundColor: gradient,
         fill: true,
-        tension: 0.3,
-        pointRadius: 4,
-        pointBackgroundColor: '#10b981'
+        tension: 0.4,
+        pointRadius: 5,
+        pointBackgroundColor: '#fff',
+        pointBorderColor: '#10b981',
+        pointBorderWidth: 2,
+        pointHoverRadius: 7,
+        pointHoverBackgroundColor: '#10b981',
+        pointHoverBorderColor: '#fff',
+        pointHoverBorderWidth: 2,
+        borderWidth: 3
       }]
     },
     options: {
       responsive: true,
       maintainAspectRatio: false,
+      interaction: {
+        intersect: false,
+        mode: 'index'
+      },
       plugins: {
         legend: {
           display: false
         },
         tooltip: {
+          backgroundColor: 'rgba(17, 24, 39, 0.9)',
+          titleFont: { size: 12, weight: 'bold' },
+          bodyFont: { size: 12 },
+          padding: 12,
+          cornerRadius: 8,
+          displayColors: false,
           callbacks: {
-            label: (context) => `${context.parsed.y.toLocaleString()} miles`
+            title: (items) => items[0]?.label || '',
+            label: (context) => `📍 ${context.parsed.y.toLocaleString()} miles`
           }
         }
       },
@@ -78,13 +109,19 @@ const createChart = () => {
             display: false
           },
           ticks: {
-            font: { size: 10 }
+            font: { size: 11 },
+            color: '#6b7280'
           }
         },
         y: {
           beginAtZero: false,
+          grid: {
+            color: 'rgba(0, 0, 0, 0.05)',
+            drawBorder: false
+          },
           ticks: {
-            font: { size: 10 },
+            font: { size: 11 },
+            color: '#6b7280',
             callback: (value) => `${(Number(value) / 1000).toFixed(0)}k`
           }
         }

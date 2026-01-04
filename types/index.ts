@@ -33,6 +33,8 @@ export interface UserActivity {
 export interface VehicleLookupResponse {
   success: boolean;
   data?: Vehicle;
+  imageUrl?: string;
   error?: string;
-  source: 'cache' | 'dvla' | 'paid' | 'error';
+  source: 'cache' | 'dvla' | 'paid' | 'checkcardetails' | 'error';
+  errorCode?: 'NOT_FOUND' | 'API_ERROR' | 'INVALID_VRM' | 'UNKNOWN';
 }

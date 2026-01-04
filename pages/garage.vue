@@ -18,24 +18,34 @@
     <div class="px-10 mt-8">
       <h1 class="text-3xl font-bold text-primary mb-8">My Garage</h1>
 
-      <div class="space-y-4">
+      <!-- Loading State -->
+      <div v-if="loading" class="flex flex-col items-center justify-center py-12">
+        <svg class="animate-spin h-8 w-8 text-primary mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        <p class="text-gray-500 text-sm">Loading your garage...</p>
+      </div>
+
+      <div v-else class="space-y-4">
         <div 
           v-for="vehicle in garageVehicles" 
           :key="vehicle.id"
           class="border border-gray-200 rounded-lg p-4"
         >
           <div class="flex items-start gap-4 mb-4">
-            <div class="w-20 h-20 bg-gray-800 rounded flex items-center justify-center flex-shrink-0">
-              <CarSilhouette :bodyStyle="vehicle.bodyStyle" class="w-12 h-12 text-white" />
+            <div class="w-20 h-20 bg-gray-800 rounded flex items-center justify-center flex-shrink-0 overflow-hidden">
+              <img v-if="vehicle.imageUrl" :src="vehicle.imageUrl" alt="Vehicle" class="w-full h-full object-cover" />
+              <CarSilhouette v-else :bodyStyle="vehicle.bodyStyle" class="w-12 h-12 text-white" />
             </div>
             
             <div class="flex-1">
               <div class="bg-yellow-300 px-3 py-1 rounded font-bold text-sm inline-block mb-2">
                 {{ vehicle.vrm }}
               </div>
+              <p class="text-xs text-gray-600 mb-1">{{ vehicle.make }} {{ vehicle.model }}</p>
               <div class="space-y-1">
                 <p class="text-sm text-gray-600">MOT expires <span class="font-medium text-gray-900">{{ vehicle.motExpiry }}</span></p>
-                <p class="text-sm text-gray-600">Service due <span class="font-medium text-gray-900">{{ vehicle.serviceDue }}</span></p>
               </div>
             </div>
           </div>
@@ -48,26 +58,27 @@
               View Report
             </button>
             <button 
-              @click="editVehicle(vehicle.id)"
+              @click="editVehicle(vehicle.vrm)"
               class="flex-1 bg-gray-800 text-white px-4 py-2 rounded-lg font-medium text-sm active:opacity-90"
             >
-              Edit
+              Details
             </button>
           </div>
         </div>
-      </div>
 
-      <div v-if="garageVehicles.length === 0" class="text-center py-12">
-        <svg class="w-16 h-16 mx-auto text-gray-300 mb-4" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M22 9V20H20V11H4V20H2V9L12 5L22 9M19 12H5V14H19V12M19 18H5V20H19V18M19 15H5V17H19V15Z" />
-        </svg>
-        <p class="text-gray-500 mb-4">No vehicles in your garage</p>
-        <button 
-          @click="addVehicle"
-          class="text-primary-link font-medium"
-        >
-          Add your first vehicle
-        </button>
+        <div v-if="garageVehicles.length === 0" class="text-center py-12">
+          <svg class="w-16 h-16 mx-auto text-gray-300 mb-4" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M22 9V20H20V11H4V20H2V9L12 5L22 9M19 12H5V14H19V12M19 18H5V20H19V18M19 15H5V17H19V15Z" />
+          </svg>
+          <p class="text-gray-500 mb-4">No vehicles in your garage</p>
+          <p class="text-gray-400 text-sm mb-4">Premium vehicle lookups will appear here</p>
+          <button 
+            @click="addVehicle"
+            class="text-primary font-medium"
+          >
+            Search for a vehicle
+          </button>
+        </div>
       </div>
     </div>
 
@@ -77,42 +88,70 @@
 
 <script setup lang="ts">
 const router = useRouter();
+const supabase = useSupabaseClient();
+const { user } = useAuth();
 
-// Placeholder data - will be fetched from Supabase later
-const garageVehicles = ref([
-  {
-    id: 1,
-    vrm: 'AB13 XYZ',
-    bodyStyle: 'saloon',
-    motExpiry: 'XX/XX/XXXX',
-    serviceDue: 'XX/XX/XXXX'
-  },
-  {
-    id: 2,
-    vrm: 'AB13 XYZ',
-    bodyStyle: 'hatchback',
-    motExpiry: 'XX/XX/XXXX',
-    serviceDue: 'XX/XX/XXXX'
-  },
-  {
-    id: 3,
-    vrm: 'AB13 XYZ',
-    bodyStyle: 'suv',
-    motExpiry: 'XX/XX/XXXX',
-    serviceDue: 'XX/XX/XXXX'
+const garageVehicles = ref<any[]>([]);
+const loading = ref(true);
+
+// Fetch user's premium lookups as their "garage" vehicles
+const fetchGarageVehicles = async () => {
+  if (!user.value) return;
+  
+  loading.value = true;
+  try {
+    // Get premium lookups for the current user (these are their saved vehicles)
+    const { data: premiumLookups, error } = await supabase
+      .from('premium_lookups')
+      .select('*, vehicle_lookups!inner(*)')
+      .eq('user_id', user.value.id)
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+
+    // Map to display format
+    garageVehicles.value = (premiumLookups || []).map((lookup: any) => {
+      const vehicleData = lookup.vehicle_lookups?.dvla_data || lookup.vehicle_lookups?.checkcardetails_data || {};
+      const motData = lookup.mot_data;
+      const imageUrl = lookup.image_data?.VehicleImages?.ImageDetailsList?.[0]?.ImageUrl || 
+                       lookup.vehicle_lookups?.image_data?.VehicleImages?.ImageDetailsList?.[0]?.ImageUrl || null;
+      
+      // Get MOT expiry from various sources
+      let motExpiry = 'N/A';
+      if (motData?.mot?.motDueDate) {
+        motExpiry = new Date(motData.mot.motDueDate).toLocaleDateString('en-GB');
+      } else if (vehicleData.motExpiryDate) {
+        motExpiry = new Date(vehicleData.motExpiryDate).toLocaleDateString('en-GB');
+      }
+      
+      return {
+        id: lookup.id,
+        vrm: lookup.vrm,
+        make: vehicleData.make || 'Unknown',
+        model: vehicleData.model || '',
+        bodyStyle: vehicleData.bodyStyle || 'saloon',
+        motExpiry,
+        imageUrl,
+        serviceDue: 'N/A' // Service tracking not implemented yet
+      };
+    });
+  } catch (error) {
+    console.error('Error fetching garage vehicles:', error);
+  } finally {
+    loading.value = false;
   }
-]);
-
-const viewReport = (vrm: string) => {
-  router.push(`/vehicle/${vrm.replace(/\s/g, '')}`);
 };
 
-const editVehicle = (id: number) => {
-  // Navigate to vehicle details for editing
-  const vehicle = savedVehicles.value.find(v => v.id === id);
-  if (vehicle) {
-    router.push(`/vehicle/${vehicle.vrm}`);
-  }
+onMounted(() => {
+  fetchGarageVehicles();
+});
+
+const viewReport = (vrm: string) => {
+  router.push(`/vehicle-premium/${vrm.replace(/\s/g, '')}`);
+};
+
+const editVehicle = (vrm: string) => {
+  router.push(`/vehicle-full-report/${vrm.replace(/\s/g, '')}`);
 };
 
 const addVehicle = () => {

@@ -39,8 +39,9 @@
         <h1 class="text-3xl font-bold text-primary mb-1">Vehicle details</h1>
         <p class="text-gray-900 text-lg font-medium mb-6">Basic check</p>
 
-        <div class="bg-gray-200 rounded-lg aspect-video flex items-center justify-center mb-6">
-          <CarSilhouette v-if="vehicleData" :bodyStyle="vehicleData.bodyStyle" class="w-32 h-32 text-gray-400" />
+        <div class="bg-gray-200 rounded-lg aspect-video flex items-center justify-center mb-6 overflow-hidden">
+          <img v-if="vehicleData?.imageUrl" :src="vehicleData.imageUrl" alt="Vehicle" class="w-full h-full object-cover" />
+          <CarSilhouette v-else-if="vehicleData" :bodyStyle="vehicleData.bodyStyle" class="w-32 h-32 text-gray-400" />
           <svg v-else class="w-20 h-20 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
           </svg>
@@ -51,99 +52,78 @@
       <div v-if="vehicleData" class="space-y-0 mb-6">
         <div class="flex justify-between py-3 border-b border-gray-200">
           <span class="text-gray-700">Make</span>
-          <span class="font-medium text-gray-900">{{ vehicleData.make || 'XX XXXX' }}</span>
+          <span class="font-medium text-gray-900">{{ vehicleData.make || 'N/A' }}</span>
         </div>
         <div class="flex justify-between py-3 border-b border-gray-200">
           <span class="text-gray-700">Model</span>
-          <span class="font-medium text-gray-900">{{ vehicleData.model || 'XX XXXX' }}</span>
+          <span class="font-medium text-gray-900">{{ vehicleData.model || 'N/A' }}</span>
         </div>
         <div class="flex justify-between py-3 border-b border-gray-200">
           <span class="text-gray-700">Colour</span>
-          <span class="font-medium text-gray-900">{{ vehicleData.colour || 'XX XXXX' }}</span>
+          <span class="font-medium text-gray-900">{{ vehicleData.colour || 'N/A' }}</span>
         </div>
         <div class="flex justify-between py-3 border-b border-gray-200">
           <span class="text-gray-700">Year</span>
-          <span class="font-medium text-gray-900">{{ vehicleData.yearOfManufacture || 'XX XXXX' }}</span>
+          <span class="font-medium text-gray-900">{{ vehicleData.yearOfManufacture || 'N/A' }}</span>
         </div>
         <div class="flex justify-between py-3 border-b border-gray-200">
           <span class="text-gray-700">Fuel type</span>
-          <span class="font-medium text-gray-900">{{ vehicleData.fuelType || 'XX XXXX' }}</span>
+          <span class="font-medium text-gray-900">{{ vehicleData.fuelType || 'N/A' }}</span>
         </div>
         <div class="flex justify-between py-3 border-b border-gray-200">
           <span class="text-gray-700">Body style</span>
-          <span class="font-medium text-gray-900">{{ vehicleData.bodyStyle || 'XX XXXX' }}</span>
+          <span class="font-medium text-gray-900">{{ vehicleData.bodyStyle || 'N/A' }}</span>
         </div>
         <div class="flex justify-between py-3 border-b border-gray-200">
           <span class="text-gray-700">Engine size</span>
-          <span class="font-medium text-gray-900">{{ vehicleData.engineCapacity || 'XX XXXX' }}</span>
+          <span class="font-medium text-gray-900">{{ vehicleData.engineCapacity || 'N/A' }}</span>
         </div>
-        <div class="flex justify-between py-3 border-b border-gray-200">
-          <span class="text-gray-700">BHP</span>
-          <span class="font-medium text-gray-900">{{ vehicleData.bhp || 'XX XXXX' }}</span>
-        </div>
-
         <div class="h-4"></div>
 
         <div class="flex justify-between py-3 border-b border-gray-200">
           <span class="text-gray-700">Registration date</span>
-          <span class="font-medium text-gray-900">{{ vehicleData.registrationDate || 'XX XXXX' }}</span>
+          <span class="font-medium text-gray-900">{{ vehicleData.registrationDate || 'N/A' }}</span>
         </div>
         <div class="flex justify-between py-3 border-b border-gray-200">
-          <span class="text-gray-700">Place of first registration</span>
-          <span class="font-medium text-gray-900">{{ vehicleData.placeOfFirstRegistration || 'XX XXXX' }}</span>
+          <span class="text-gray-700">CO2 Emissions</span>
+          <span class="font-medium text-gray-900">{{ vehicleData.co2Emissions || 'N/A' }}</span>
+        </div>
+        <div class="flex justify-between py-3 border-b border-gray-200">
+          <span class="text-gray-700">Wheelplan</span>
+          <span class="font-medium text-gray-900">{{ vehicleData.wheelplan || 'N/A' }}</span>
         </div>
 
         <div class="h-4"></div>
 
         <div class="flex justify-between py-3 border-b border-gray-200">
           <span class="text-gray-700">Vehicle Age</span>
-          <span class="font-medium text-gray-900">{{ vehicleData.vehicleAge || 'XX XXXX' }}</span>
+          <span class="font-medium text-gray-900">{{ vehicleData.vehicleAge || 'N/A' }}</span>
         </div>
 
         <div class="h-4"></div>
 
         <div class="flex justify-between py-3 border-b border-gray-200">
           <span class="text-gray-700">MOT</span>
-          <span class="font-medium text-gray-900">{{ vehicleData.motStatus || 'XX XXXX' }}</span>
+          <span class="font-medium text-gray-900">{{ vehicleData.motStatus || 'N/A' }}</span>
         </div>
         <div class="flex justify-between py-3 border-b border-gray-200">
-          <span class="text-gray-700">MOT Mileage information</span>
-          <span class="font-medium text-gray-900">{{ vehicleData.motMileage || 'XX XXXX' }}</span>
-        </div>
-        <div class="flex justify-between py-3 border-b border-gray-200">
-          <span class="text-gray-700">MOT information</span>
-          <span class="font-medium text-gray-900">{{ vehicleData.motInformation || 'XX XXXX' }}</span>
+          <span class="text-gray-700">MOT Expiry</span>
+          <span class="font-medium text-gray-900">{{ vehicleData.motExpiryDate || 'N/A' }}</span>
         </div>
 
         <div class="h-4"></div>
 
         <div class="flex justify-between py-3 border-b border-gray-200">
           <span class="text-gray-700">Road Tax</span>
-          <span class="font-medium text-gray-900">{{ vehicleData.taxStatus || 'XX XXXX' }}</span>
+          <span class="font-medium text-gray-900">{{ vehicleData.taxStatus || 'N/A' }}</span>
         </div>
         <div class="flex justify-between py-3 border-b border-gray-200">
-          <span class="text-gray-700">6 Months</span>
-          <span class="font-medium text-gray-900">{{ vehicleData.taxSixMonths || 'XX XXXX' }}</span>
+          <span class="text-gray-700">Tax Due Date</span>
+          <span class="font-medium text-gray-900">{{ vehicleData.taxDueDate || 'N/A' }}</span>
         </div>
         <div class="flex justify-between py-3 border-b border-gray-200">
-          <span class="text-gray-700 flex items-center">
-            1 Year
-            <svg class="w-4 h-4 ml-2" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5H6.5C5.84 5 5.28 5.42 5.08 6.01L3 12V20C3 20.55 3.45 21 4 21H5C5.55 21 6 20.55 6 20V19H18V20C18 20.55 18.45 21 19 21H20C20.55 21 21 20.55 21 20V12L18.92 6.01M6.5 16C5.67 16 5 15.33 5 14.5S5.67 13 6.5 13 8 13.67 8 14.5 7.33 16 6.5 16M17.5 16C16.67 16 16 15.33 16 14.5S16.67 13 17.5 13 19 13.67 19 14.5 18.33 16 17.5 16M5 11L6.5 6.5H17.5L19 11H5Z" />
-            </svg>
-          </span>
-          <span class="font-medium text-gray-900">{{ vehicleData.taxTwelveMonths || 'XX XXXX' }}</span>
-        </div>
-
-        <div class="h-4"></div>
-
-        <div class="flex justify-between py-3 border-b border-gray-200">
-          <span class="text-gray-700">Insurance</span>
-          <span class="font-medium text-gray-900">{{ vehicleData.insurance || 'XX XXXX' }}</span>
-        </div>
-        <div class="flex justify-between py-3 border-b border-gray-200">
-          <span class="text-gray-700">Insurance Group</span>
-          <span class="font-medium text-gray-900">{{ vehicleData.insuranceGroup || 'XX XXXX' }}</span>
+          <span class="text-gray-700">V5C Issued</span>
+          <span class="font-medium text-gray-900">{{ vehicleData.dateOfLastV5CIssued || 'N/A' }}</span>
         </div>
       </div>
 
@@ -275,8 +255,8 @@ onMounted(async () => {
         mappedData = mapDvlaData(cachedData);
       }
       
-      // Merge mapped and raw data
-      vehicleData.value = { ...mappedData, ...cachedData };
+      // Merge: raw data first, then mapped data takes precedence for formatted fields
+      vehicleData.value = { ...cachedData, ...mappedData };
     } else {
       error.value = 'Vehicle data not found. Please try searching again.';
     }

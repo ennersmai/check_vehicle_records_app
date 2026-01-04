@@ -59,6 +59,7 @@ export const useVehicle = () => {
 
   /**
    * Get cached vehicle lookup from database
+   * Returns vehicle data with image URL if available
    */
   const getCachedVehicle = async (vrm: string) => {
     try {
@@ -68,10 +69,13 @@ export const useVehicle = () => {
         .eq('vrm', vrm.toUpperCase().replace(/\s/g, ''))
         .single();
 
-      if (error) throw error;
+      if (error || !data) throw error;
       
-      // Return the actual vehicle data (prefer DVLA)
-      return data.dvla_data || data.checkcardetails_data;
+      // Return the actual vehicle data (prefer DVLA) with image URL
+      const vehicleData = data.dvla_data || data.checkcardetails_data || {};
+      const imageUrl = data.image_data?.VehicleImages?.ImageDetailsList?.[0]?.ImageUrl || null;
+      
+      return { ...vehicleData, imageUrl };
     } catch (error) {
       return null;
     }
