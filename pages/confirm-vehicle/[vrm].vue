@@ -140,8 +140,8 @@ onMounted(async () => {
         // CheckCarDetails format
         console.log('[CONFIRM PAGE] Mapping as CheckCarDetails data');
         mappedData = mapCheckCarDetailsBasic(cachedData);
-      } else if (cachedData.registrationNumber || cachedData.make) {
-        // DVLA format
+      } else {
+        // DVLA format (default)
         console.log('[CONFIRM PAGE] Mapping as DVLA data');
         mappedData = mapDvlaData(cachedData);
       }
