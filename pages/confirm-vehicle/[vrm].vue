@@ -119,14 +119,17 @@ onMounted(async () => {
   try {
     loadingMessage.value = 'Retrieving vehicle information...';
     
+    console.log('[CONFIRM PAGE] Starting data retrieval for VRM:', vrm.value);
+    
     // Get cached vehicle data (should already be cached from home page lookup)
     const cachedData = await getCachedVehicle(vrm.value);
     
+    console.log('[CONFIRM PAGE] Raw cached data:', JSON.stringify(cachedData, null, 2));
+    
     if (cachedData) {
-      console.log('Cached data:', cachedData);
-      
       // Extract imageUrl before mapping
       const imageUrl = cachedData.imageUrl;
+      console.log('[CONFIRM PAGE] Extracted imageUrl:', imageUrl);
       
       // Map the data to our normalized format
       // DVLA data will have fields like registrationNumber, make, colour, etc.
@@ -135,26 +138,32 @@ onMounted(async () => {
       
       if (cachedData.tax || cachedData.motTests) {
         // CheckCarDetails format
+        console.log('[CONFIRM PAGE] Mapping as CheckCarDetails data');
         mappedData = mapCheckCarDetailsBasic(cachedData);
       } else if (cachedData.registrationNumber || cachedData.make) {
         // DVLA format
+        console.log('[CONFIRM PAGE] Mapping as DVLA data');
         mappedData = mapDvlaData(cachedData);
       }
       
-      console.log('Mapped data:', mappedData);
+      console.log('[CONFIRM PAGE] Mapped data:', JSON.stringify(mappedData, null, 2));
       
       // Use only mapped data and add imageUrl back
       vehicleData.value = { ...mappedData, imageUrl };
+      
+      console.log('[CONFIRM PAGE] Final vehicleData with imageUrl:', JSON.stringify(vehicleData.value, null, 2));
     } else {
+      console.error('[CONFIRM PAGE] No cached data found');
       errorTitle.value = 'Data Not Found';
       error.value = 'Vehicle data could not be retrieved. Please try searching again.';
     }
   } catch (err: any) {
-    console.error('Confirm vehicle error:', err);
+    console.error('[CONFIRM PAGE] Error:', err);
     errorTitle.value = 'Error Loading Data';
     error.value = err.message || 'An unexpected error occurred.';
   } finally {
     loading.value = false;
+    console.log('[CONFIRM PAGE] Loading complete');
   }
 });
 
