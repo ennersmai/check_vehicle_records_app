@@ -13,14 +13,16 @@
 const { checkAuth, user } = useAuth();
 
 onMounted(async () => {
+  // Wait for auth check to complete
   await checkAuth();
   
-  setTimeout(() => {
-    if (user.value) {
-      navigateTo('/home');
-    } else {
-      navigateTo('/login');
-    }
-  }, 2000);
+  // Small delay for UI smoothness, then redirect based on auth state
+  await new Promise(resolve => setTimeout(resolve, 500));
+  
+  if (user.value) {
+    navigateTo('/home');
+  } else {
+    navigateTo('/login');
+  }
 });
 </script>
