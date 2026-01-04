@@ -195,7 +195,10 @@
           <!-- Charts -->
           <div class="grid grid-cols-1 gap-4">
             <div>
-              <p class="text-sm font-medium text-gray-700 mb-2">Mileage Over Time</p>
+              <p class="text-sm font-medium text-gray-700 mb-1">Mileage Over Time</p>
+              <p v-if="mileageChartData.length" class="text-xs text-gray-500 mb-2">
+                {{ mileageChartData[0]?.mileage?.toLocaleString() }} to {{ mileageChartData[mileageChartData.length - 1]?.mileage?.toLocaleString() }} miles ({{ formatDate(mileageChartData[0]?.date) }} to {{ formatDate(mileageChartData[mileageChartData.length - 1]?.date) }})
+              </p>
               <MileageChart v-if="mileageChartData.length" :data="mileageChartData" />
               <div v-else class="bg-gray-100 rounded-lg h-40 flex items-center justify-center">
                 <p class="text-gray-500 text-sm">No mileage data available</p>
