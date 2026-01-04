@@ -123,6 +123,11 @@ onMounted(async () => {
     const cachedData = await getCachedVehicle(vrm.value);
     
     if (cachedData) {
+      console.log('Cached data:', cachedData);
+      
+      // Extract imageUrl before mapping
+      const imageUrl = cachedData.imageUrl;
+      
       // Map the data to our normalized format
       // DVLA data will have fields like registrationNumber, make, colour, etc.
       // CheckCarDetails will have tax, motTests, etc.
@@ -136,13 +141,16 @@ onMounted(async () => {
         mappedData = mapDvlaData(cachedData);
       }
       
-      // Use only mapped data to avoid showing raw field values
-      vehicleData.value = mappedData;
+      console.log('Mapped data:', mappedData);
+      
+      // Use only mapped data and add imageUrl back
+      vehicleData.value = { ...mappedData, imageUrl };
     } else {
       errorTitle.value = 'Data Not Found';
       error.value = 'Vehicle data could not be retrieved. Please try searching again.';
     }
   } catch (err: any) {
+    console.error('Confirm vehicle error:', err);
     errorTitle.value = 'Error Loading Data';
     error.value = err.message || 'An unexpected error occurred.';
   } finally {
