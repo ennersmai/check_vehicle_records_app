@@ -9,7 +9,15 @@ export const useSupabaseClient = () => {
   
   supabaseInstance = createClient(
     config.public.supabaseUrl as string,
-    config.public.supabaseAnonKey as string
+    config.public.supabaseAnonKey as string,
+    {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true,
+        storage: typeof window !== 'undefined' ? window.localStorage : undefined
+      }
+    }
   );
 
   return supabaseInstance;
