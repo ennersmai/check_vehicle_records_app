@@ -33,7 +33,7 @@
     </div>
 
     <!-- Vehicle Data -->
-    <div v-else class="flex flex-col items-center px-10 mt-8">
+    <div v-else-if="!loading && vehicleData" class="flex flex-col items-center px-10 mt-8">
       <h1 class="text-3xl font-bold text-primary mb-2">Confirm Vehicle</h1>
       <p class="text-center text-gray-600 mb-8">
         Please review the vehicle details<br />before confirmation
@@ -49,7 +49,7 @@
         </div>
       </div>
 
-      <div v-if="vehicleData" class="w-full max-w-sm bg-white border border-gray-200 rounded-lg p-6 mb-6">
+      <div class="w-full max-w-sm bg-white border border-gray-200 rounded-lg p-6 mb-6">
         <div class="space-y-3">
           <div class="flex justify-between py-2 border-b border-gray-100">
             <span class="text-gray-600">Make</span>

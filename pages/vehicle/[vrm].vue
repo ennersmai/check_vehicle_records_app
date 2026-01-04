@@ -136,42 +136,56 @@
           <h2 class="text-xl font-bold text-primary">Upgrade to Premium</h2>
         </div>
 
-        <div class="grid grid-cols-2 gap-3 mb-6">
+        <p class="text-gray-600 text-sm mb-4">Get comprehensive vehicle history including:</p>
+        
+        <div class="space-y-2 mb-6">
           <div class="flex items-start">
             <svg class="w-5 h-5 text-green-600 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
             </svg>
-            <span class="text-sm text-gray-700">Outstanding finance</span>
+            <span class="text-sm text-gray-700">Outstanding finance check</span>
           </div>
           <div class="flex items-start">
             <svg class="w-5 h-5 text-green-600 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
             </svg>
-            <span class="text-sm text-gray-700">Previous owners</span>
+            <span class="text-sm text-gray-700">Full ownership history & previous keepers</span>
           </div>
           <div class="flex items-start">
             <svg class="w-5 h-5 text-green-600 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
             </svg>
-            <span class="text-sm text-gray-700">Written off record</span>
+            <span class="text-sm text-gray-700">Written-off & accident damage records</span>
           </div>
           <div class="flex items-start">
             <svg class="w-5 h-5 text-green-600 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
             </svg>
-            <span class="text-sm text-gray-700">Imported / Exported</span>
+            <span class="text-sm text-gray-700">Stolen vehicle database check</span>
           </div>
           <div class="flex items-start">
             <svg class="w-5 h-5 text-green-600 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
             </svg>
-            <span class="text-sm text-gray-700">Stolen vehicle record</span>
+            <span class="text-sm text-gray-700">Complete MOT history with mileage analysis</span>
           </div>
           <div class="flex items-start">
             <svg class="w-5 h-5 text-green-600 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
             </svg>
-            <span class="text-sm text-gray-700">Build sheet</span>
+            <span class="text-sm text-gray-700">Import/Export status & plate changes</span>
+          </div>
+          <div class="flex items-start">
+            <svg class="w-5 h-5 text-green-600 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+            <span class="text-sm text-gray-700">Full technical specifications & performance data</span>
+          </div>
+          <div class="flex items-start">
+            <svg class="w-5 h-5 text-green-600 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+            <span class="text-sm text-gray-700">Vehicle images & detailed build sheet</span>
           </div>
         </div>
 
