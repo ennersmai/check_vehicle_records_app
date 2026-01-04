@@ -490,13 +490,13 @@ const statusIndicators = ref([
   { id: 6, label: 'Import/Export', status: 'green' }
 ]);
 
-// MOT History computed - sorted newest first
+// MOT History computed - sorted oldest first
 const motHistory = computed(() => {
   const history = premiumData.value?.motHistory || [];
   return [...history].sort((a, b) => {
     const dateA = new Date(a.date).getTime();
     const dateB = new Date(b.date).getTime();
-    return dateB - dateA; // Descending order (newest first)
+    return dateA - dateB; // Ascending order (oldest first)
   });
 });
 const motSummary = computed(() => premiumData.value?.motSummary || { totalTests: 0, passedTests: 0, failedTests: 0 });
@@ -527,6 +527,7 @@ const motChartData = computed(() => {
   const chartData = history.map((m: any) => ({
     date: m.date,
     result: m.result,
+    passed: m.result === 'PASS' ? 1 : 0,
     advisoryCount: m.advisories?.length || 0,
     failureCount: m.failures?.length || 0
   }));

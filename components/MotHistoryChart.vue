@@ -12,6 +12,7 @@ Chart.register(...registerables);
 interface MotRecord {
   date: string;
   result: 'PASS' | 'FAIL';
+  passed?: number;
   advisoryCount?: number;
   failureCount?: number;
 }
@@ -51,24 +52,24 @@ const createChart = () => {
     return date.toLocaleDateString('en-GB', { month: 'short', year: '2-digit' });
   });
 
+  const passed = sortedData.map(d => d.passed || 0);
   const advisories = sortedData.map(d => d.advisoryCount || 0);
   const failures = sortedData.map(d => d.failureCount || 0);
-
-  // Color bars based on pass/fail
-  const backgroundColors = sortedData.map(d => 
-    d.result === 'PASS' ? '#22c55e' : '#ef4444'
-  );
-
-  // Create pass/fail indicator bars at bottom
-  const passFailColors = sortedData.map(d => 
-    d.result === 'PASS' ? 'rgba(34, 197, 94, 0.9)' : 'rgba(239, 68, 68, 0.9)'
-  );
 
   chartInstance = new Chart(ctx, {
     type: 'bar',
     data: {
       labels,
       datasets: [
+        {
+          label: 'Passed',
+          data: passed,
+          backgroundColor: 'rgba(34, 197, 94, 0.85)',
+          borderColor: 'rgba(34, 197, 94, 1)',
+          borderWidth: 1,
+          borderRadius: 6,
+          borderSkipped: false
+        },
         {
           label: 'Advisories',
           data: advisories,
