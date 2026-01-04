@@ -10,15 +10,13 @@
 </template>
 
 <script setup lang="ts">
-const { checkAuth, user } = useAuth();
+const { user } = useAuth();
 
 onMounted(async () => {
-  // Wait for auth check to complete
-  await checkAuth();
+  // Small delay for UI smoothness
+  await new Promise(resolve => setTimeout(resolve, 300));
   
-  // Small delay for UI smoothness, then redirect based on auth state
-  await new Promise(resolve => setTimeout(resolve, 500));
-  
+  // Auth is already initialized by plugin, just check user state
   if (user.value) {
     navigateTo('/home');
   } else {
