@@ -39,16 +39,51 @@
         <h1 class="text-3xl font-bold text-primary text-center mb-1">Vehicle</h1>
         <p class="text-gray-900 text-xl text-center mb-6">Premium Details</p>
 
-        <!-- Category Dropdown -->
-        <div class="mb-6">
-          <select
-            v-model="activeTab"
-            class="w-full px-4 py-3 bg-white border-2 border-primary rounded-lg font-medium text-gray-900 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+        <!-- Horizontal Scrollable Tabs with Indicators -->
+        <div class="mb-6 relative">
+          <!-- Left Scroll Indicator -->
+          <button
+            v-if="showLeftIndicator"
+            @click="scrollTabs('left')"
+            class="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-primary text-white w-8 h-8 rounded-full flex items-center justify-center shadow-lg"
           >
-            <option v-for="tab in tabs" :key="tab.id" :value="tab.id">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+
+          <!-- Tabs Container -->
+          <div
+            ref="tabsContainer"
+            @scroll="checkScroll"
+            class="flex gap-2 overflow-x-auto scrollbar-hide scroll-smooth px-10"
+            style="scrollbar-width: none; -ms-overflow-style: none;"
+          >
+            <button
+              v-for="tab in tabs"
+              :key="tab.id"
+              @click="activeTab = tab.id"
+              :class="[
+                'px-4 py-2 rounded-lg font-medium text-sm whitespace-nowrap transition-all flex-shrink-0',
+                activeTab === tab.id
+                  ? 'bg-primary text-white shadow-md'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              ]"
+            >
               {{ tab.label }}
-            </option>
-          </select>
+            </button>
+          </div>
+
+          <!-- Right Scroll Indicator -->
+          <button
+            v-if="showRightIndicator"
+            @click="scrollTabs('right')"
+            class="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-primary text-white w-8 h-8 rounded-full flex items-center justify-center shadow-lg"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
         </div>
       </div>
 
@@ -415,8 +450,8 @@
           </div>
         </div>
 
-        <!-- BUILD SHEET Tab -->
-        <div v-if="activeTab === 'build-sheet'" class="space-y-6">
+        <!-- REGISTRATION & TAX Tab -->
+        <div v-if="activeTab === 'registration-tax'" class="space-y-6">
           <!-- Vehicle Images -->
           <div>
             <h3 class="font-semibold text-gray-900 mb-3">Vehicle Images</h3>
@@ -430,8 +465,8 @@
             </div>
           </div>
 
-          <!-- Build Sheet Data -->
-          <h3 class="font-bold text-gray-900 text-sm uppercase border-b border-gray-900 pb-2">Build Sheet</h3>
+          <!-- Registration & Tax Data -->
+          <h3 class="font-bold text-gray-900 text-sm uppercase border-b border-gray-900 pb-2">Registration & Tax</h3>
           <div class="space-y-0">
             <div class="flex justify-between py-3 border-b border-gray-200">
               <span class="text-gray-700 text-sm">VIN</span>
@@ -626,8 +661,44 @@ const tabs = [
   { id: 'vehicle-info', label: 'VEHICLE INFO' },
   { id: 'mot', label: 'MOT' },
   { id: 'technical', label: 'TECHNICAL' },
-  { id: 'build-sheet', label: 'BUILD SHEET' }
+  { id: 'registration-tax', label: 'REGISTRATION & TAX' }
 ];
+
+// Horizontal scroll state
+const tabsContainer = ref<HTMLElement | null>(null);
+const showLeftIndicator = ref(false);
+const showRightIndicator = ref(false);
+
+const checkScroll = () => {
+  if (!tabsContainer.value) return;
+  const { scrollLeft, scrollWidth, clientWidth } = tabsContainer.value;
+  showLeftIndicator.value = scrollLeft > 10;
+  showRightIndicator.value = scrollLeft < scrollWidth - clientWidth - 10;
+};
+
+const scrollTabs = (direction: 'left' | 'right') => {
+  if (!tabsContainer.value) return;
+  const scrollAmount = 200;
+  tabsContainer.value.scrollBy({
+    left: direction === 'left' ? -scrollAmount : scrollAmount,
+    behavior: 'smooth'
+  });
+};
+
+onMounted(() => {
+  nextTick(() => {
+    checkScroll();
+    if (tabsContainer.value) {
+      tabsContainer.value.addEventListener('scroll', checkScroll);
+    }
+  });
+});
+
+onUnmounted(() => {
+  if (tabsContainer.value) {
+    tabsContainer.value.removeEventListener('scroll', checkScroll);
+  }
+});
 
 // Traffic light status indicators - will be updated from real data
 const statusIndicators = computed(() => {
@@ -776,3 +847,16 @@ onMounted(async () => {
   }
 });
 </script>
+
+<style scoped>
+/* Hide scrollbar for Chrome, Safari and Opera */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+</style>
