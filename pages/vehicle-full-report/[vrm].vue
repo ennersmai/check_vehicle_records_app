@@ -40,12 +40,12 @@
         <p class="text-gray-900 text-xl text-center mb-6">Premium Details</p>
 
         <!-- Horizontal Scrollable Tabs with Indicators -->
-        <div class="mb-6 relative">
+        <div class="mb-6 flex items-center gap-2">
           <!-- Left Scroll Indicator -->
           <button
             v-if="showLeftIndicator"
             @click="scrollTabs('left')"
-            class="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-primary text-white w-8 h-8 rounded-full flex items-center justify-center shadow-lg"
+            class="flex-shrink-0 bg-primary text-white w-8 h-8 rounded-full flex items-center justify-center shadow-lg"
           >
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7" />
@@ -56,7 +56,7 @@
           <div
             ref="tabsContainer"
             @scroll="checkScroll"
-            class="flex gap-2 overflow-x-auto scrollbar-hide scroll-smooth px-10"
+            class="flex gap-2 overflow-x-auto scrollbar-hide scroll-smooth flex-1"
             style="scrollbar-width: none; -ms-overflow-style: none;"
           >
             <button
@@ -78,7 +78,7 @@
           <button
             v-if="showRightIndicator"
             @click="scrollTabs('right')"
-            class="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-primary text-white w-8 h-8 rounded-full flex items-center justify-center shadow-lg"
+            class="flex-shrink-0 bg-primary text-white w-8 h-8 rounded-full flex items-center justify-center shadow-lg"
           >
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7" />
