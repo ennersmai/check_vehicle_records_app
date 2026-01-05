@@ -40,23 +40,18 @@
         <p class="text-gray-900 text-xl text-center mb-6">Premium Details</p>
 
         <!-- Horizontal Scrollable Tabs with Indicators -->
-        <div class="mb-6 flex items-center gap-2">
-          <!-- Left Scroll Indicator -->
-          <button
+        <div class="mb-6 relative">
+          <!-- Left Scroll Indicator (Blue Line) -->
+          <div
             v-if="showLeftIndicator"
-            @click="scrollTabs('left')"
-            class="flex-shrink-0 bg-primary text-white w-8 h-8 rounded-full flex items-center justify-center shadow-lg"
-          >
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7" />
-            </svg>
-          </button>
+            class="absolute left-0 top-0 bottom-0 w-1 bg-primary z-10 rounded-full"
+          ></div>
 
           <!-- Tabs Container -->
           <div
             ref="tabsContainer"
             @scroll="checkScroll"
-            class="flex gap-2 overflow-x-auto scrollbar-hide scroll-smooth flex-1"
+            class="flex gap-2 overflow-x-auto scrollbar-hide scroll-smooth"
             style="scrollbar-width: none; -ms-overflow-style: none;"
           >
             <button
@@ -74,16 +69,11 @@
             </button>
           </div>
 
-          <!-- Right Scroll Indicator -->
-          <button
+          <!-- Right Scroll Indicator (Blue Line) -->
+          <div
             v-if="showRightIndicator"
-            @click="scrollTabs('right')"
-            class="flex-shrink-0 bg-primary text-white w-8 h-8 rounded-full flex items-center justify-center shadow-lg"
-          >
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
+            class="absolute right-0 top-0 bottom-0 w-1 bg-primary z-10 rounded-full"
+          ></div>
         </div>
       </div>
 
@@ -674,15 +664,6 @@ const checkScroll = () => {
   const { scrollLeft, scrollWidth, clientWidth } = tabsContainer.value;
   showLeftIndicator.value = scrollLeft > 10;
   showRightIndicator.value = scrollLeft < scrollWidth - clientWidth - 10;
-};
-
-const scrollTabs = (direction: 'left' | 'right') => {
-  if (!tabsContainer.value) return;
-  const scrollAmount = 200;
-  tabsContainer.value.scrollBy({
-    left: direction === 'left' ? -scrollAmount : scrollAmount,
-    behavior: 'smooth'
-  });
 };
 
 onMounted(() => {
