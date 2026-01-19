@@ -69,6 +69,9 @@ export default defineNuxtConfig({
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' },
         { name: 'description', content: 'Check Vehicle Records - UK Vehicle History Checks' }
+      ],
+      link: [
+        { rel: 'icon', type: 'image/x-icon', href: '/cvr_dash.ico' }
       ]
     }
   },
