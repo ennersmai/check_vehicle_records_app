@@ -117,7 +117,7 @@
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid md:grid-cols-3 gap-8 mb-8">
           <div>
-            <img src="/cvr_logo.png" alt="Check Vehicle Records" class="h-10 mb-4 brightness-0 invert" />
+            <img src="/cvr_logo.png" alt="Check Vehicle Records" class="h-10 mb-4" />
             <p class="text-sm">Making vehicle history checks simple and accessible for everyone.</p>
           </div>
           <div>
