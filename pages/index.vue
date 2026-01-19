@@ -10,13 +10,21 @@
 </template>
 
 <script setup lang="ts">
-import { Capacitor } from '@capacitor/core';
-
 const { user } = useAuth();
 
 onMounted(async () => {
-  // Check if running in Capacitor (mobile app)
-  const isCapacitor = Capacitor.isNativePlatform();
+  // Check if running in Capacitor (mobile app) - only on client side
+  let isCapacitor = false;
+  
+  if (process.client) {
+    try {
+      const { Capacitor } = await import('@capacitor/core');
+      isCapacitor = Capacitor.isNativePlatform();
+    } catch {
+      // Capacitor not available (web environment)
+      isCapacitor = false;
+    }
+  }
   
   if (isCapacitor) {
     // Mobile app logic - redirect to app screens
