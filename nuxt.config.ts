@@ -71,7 +71,7 @@ export default defineNuxtConfig({
         { name: 'description', content: 'Check Vehicle Records - UK Vehicle History Checks' }
       ],
       link: [
-        { rel: 'icon', type: 'image/x-icon', href: '/cvr_dash.ico' }
+        { rel: 'icon', type: 'image/x-icon', href: '/cvr_dash2.ico' }
       ]
     }
   },
