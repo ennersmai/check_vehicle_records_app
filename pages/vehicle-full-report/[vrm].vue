@@ -804,18 +804,18 @@ onMounted(async () => {
       // Map the premium data
       const mapped = mapPremiumData(
         basicData,
-        premium.history_data,
-        premium.mot_data,
-        premium.mileage_data,
-        premium.image_data,
-        premium.specs_data
+        (premium as any).history_data,
+        (premium as any).mot_data,
+        (premium as any).mileage_data,
+        (premium as any).image_data,
+        (premium as any).specs_data
       );
       
       premiumData.value = mapped;
       vehicleData.value = { ...vehicleData.value, ...mapped };
       
       // Update traffic light indicators from real data
-      statusIndicators.value = calculateTrafficLightStatus(mapped);
+      // Note: statusIndicators is computed, so it will update automatically when premiumData changes
     } else {
       errorTitle.value = 'Premium Data Not Found';
       error.value = 'No premium report found for this vehicle. Please purchase a premium check first.';

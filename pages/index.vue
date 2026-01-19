@@ -10,17 +10,26 @@
 </template>
 
 <script setup lang="ts">
+import { Capacitor } from '@capacitor/core';
+
 const { user } = useAuth();
 
 onMounted(async () => {
-  // Small delay for UI smoothness
-  await new Promise(resolve => setTimeout(resolve, 300));
+  // Check if running in Capacitor (mobile app)
+  const isCapacitor = Capacitor.isNativePlatform();
   
-  // Auth is already initialized by plugin, just check user state
-  if (user.value) {
-    navigateTo('/home');
+  if (isCapacitor) {
+    // Mobile app logic - redirect to app screens
+    await new Promise(resolve => setTimeout(resolve, 300));
+    
+    if (user.value) {
+      navigateTo('/home');
+    } else {
+      navigateTo('/login');
+    }
   } else {
-    navigateTo('/login');
+    // Web users - redirect to landing page
+    navigateTo('/landing');
   }
 });
 </script>
