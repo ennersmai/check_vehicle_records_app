@@ -106,7 +106,7 @@
             <li><strong>Objection:</strong> Object to processing of your personal information</li>
             <li><strong>Withdrawal of Consent:</strong> Withdraw consent where processing is based on consent</li>
           </ul>
-          <p class="mt-4">To exercise these rights, please contact us at <a href="mailto:privacy@checkvehiclerecords.com" class="text-blue-600 hover:underline">privacy@checkvehiclerecords.com</a></p>
+          <p class="mt-4">To exercise these rights, please contact us at <a href="mailto:privacy@checkvehiclerecords.co.uk" class="text-blue-600 hover:underline">privacy@checkvehiclerecords.co.uk</a></p>
         </section>
 
         <section>
@@ -157,8 +157,8 @@
           <h2 class="text-2xl font-semibold text-gray-900 mb-4">13. Contact Us</h2>
           <p class="mb-4">If you have any questions about this Privacy Policy, please contact us:</p>
           <ul class="space-y-2">
-            <li><strong>Email:</strong> <a href="mailto:privacy@checkvehiclerecords.com" class="text-blue-600 hover:underline">privacy@checkvehiclerecords.com</a></li>
-            <li><strong>Support:</strong> <a href="mailto:support@checkvehiclerecords.com" class="text-blue-600 hover:underline">support@checkvehiclerecords.com</a></li>
+            <li><strong>Email:</strong> <a href="mailto:privacy@checkvehiclerecords.co.uk" class="text-blue-600 hover:underline">privacy@checkvehiclerecords.co.uk</a></li>
+            <li><strong>Support:</strong> <a href="mailto:support@checkvehiclerecords.co.uk" class="text-blue-600 hover:underline">support@checkvehiclerecords.co.uk</a></li>
           </ul>
         </section>
 

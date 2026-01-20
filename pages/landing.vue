@@ -131,7 +131,7 @@
             <h4 class="text-white font-semibold mb-4">Support</h4>
             <ul class="space-y-2">
               <li><NuxtLink to="/support" class="hover:text-white transition">Contact Us</NuxtLink></li>
-              <li><a href="mailto:support@checkvehiclerecords.com" class="hover:text-white transition">support@checkvehiclerecords.com</a></li>
+              <li><a href="mailto:info@checkvehiclerecords.co.uk" class="hover:text-white transition">info@checkvehiclerecords.co.uk</a></li>
             </ul>
           </div>
         </div>

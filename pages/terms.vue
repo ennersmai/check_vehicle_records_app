@@ -240,8 +240,8 @@
           <h2 class="text-2xl font-semibold text-gray-900 mb-4">16. Contact Information</h2>
           <p class="mb-4">If you have questions about these Terms, please contact us:</p>
           <ul class="space-y-2">
-            <li><strong>Email:</strong> <a href="mailto:legal@checkvehiclerecords.com" class="text-blue-600 hover:underline">legal@checkvehiclerecords.com</a></li>
-            <li><strong>Support:</strong> <a href="mailto:support@checkvehiclerecords.com" class="text-blue-600 hover:underline">support@checkvehiclerecords.com</a></li>
+            <li><strong>Email:</strong> <a href="mailto:legal@checkvehiclerecords.co.uk" class="text-blue-600 hover:underline">legal@checkvehiclerecords.co.uk</a></li>
+            <li><strong>Support:</strong> <a href="mailto:support@checkvehiclerecords.co.uk" class="text-blue-600 hover:underline">support@checkvehiclerecords.co.uk</a></li>
           </ul>
         </section>
 

@@ -34,8 +34,8 @@
             </div>
             <h3 class="text-xl font-semibold text-gray-900 mb-2">General Support</h3>
             <p class="text-gray-600 mb-4">For general inquiries and support</p>
-            <a href="mailto:support@checkvehiclerecords.com" class="text-blue-600 hover:underline font-medium">
-              support@checkvehiclerecords.com
+            <a href="mailto:support@checkvehiclerecords.co.uk" class="text-blue-600 hover:underline font-medium">
+              support@checkvehiclerecords.co.uk
             </a>
           </div>
 
@@ -47,8 +47,8 @@
             </div>
             <h3 class="text-xl font-semibold text-gray-900 mb-2">Billing & Subscriptions</h3>
             <p class="text-gray-600 mb-4">Questions about payments or subscriptions</p>
-            <a href="mailto:billing@checkvehiclerecords.com" class="text-blue-600 hover:underline font-medium">
-              billing@checkvehiclerecords.com
+            <a href="mailto:billing@checkvehiclerecords.co.uk" class="text-blue-600 hover:underline font-medium">
+              billing@checkvehiclerecords.co.uk
             </a>
           </div>
 
@@ -60,8 +60,8 @@
             </div>
             <h3 class="text-xl font-semibold text-gray-900 mb-2">Privacy & Data</h3>
             <p class="text-gray-600 mb-4">Privacy concerns and data requests</p>
-            <a href="mailto:privacy@checkvehiclerecords.com" class="text-blue-600 hover:underline font-medium">
-              privacy@checkvehiclerecords.com
+            <a href="mailto:privacy@checkvehiclerecords.co.uk" class="text-blue-600 hover:underline font-medium">
+              privacy@checkvehiclerecords.co.uk
             </a>
           </div>
 
@@ -73,8 +73,8 @@
             </div>
             <h3 class="text-xl font-semibold text-gray-900 mb-2">Legal & Terms</h3>
             <p class="text-gray-600 mb-4">Legal inquiries and terms questions</p>
-            <a href="mailto:legal@checkvehiclerecords.com" class="text-blue-600 hover:underline font-medium">
-              legal@checkvehiclerecords.com
+            <a href="mailto:legal@checkvehiclerecords.co.uk" class="text-blue-600 hover:underline font-medium">
+              legal@checkvehiclerecords.co.uk
             </a>
           </div>
         </div>
@@ -108,7 +108,7 @@
             <h3 class="text-lg font-semibold text-gray-900 mb-2">Can I get a refund?</h3>
             <p class="text-gray-700">
               Refund requests are handled according to Apple App Store and Google Play Store policies. Please contact 
-              the respective store's support for refund requests, or email us at billing@checkvehiclerecords.com for assistance.
+              the respective store's support for refund requests, or email us at billing@checkvehiclerecords.co.uk for assistance.
             </p>
           </div>
 
