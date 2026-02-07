@@ -59,6 +59,7 @@ export default defineNuxtConfig({
     public: {
       supabaseUrl: process.env.SUPABASE_URL,
       supabaseAnonKey: process.env.SUPABASE_ANON_KEY,
+      revenueCatApiKey: process.env.NUXT_PUBLIC_REVENUECAT_API_KEY || '',
     }
   },
 
