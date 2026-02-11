@@ -15,6 +15,7 @@ interface PremiumLookupResponse {
     mileage: any
     images: any
     specs: any
+    valuation: any
   }
   error?: string
 }
@@ -72,7 +73,8 @@ serve(async (req) => {
             mot: cachedPremium.mot_data,
             mileage: cachedPremium.mileage_data,
             images: cachedPremium.image_data,
-            specs: cachedPremium.specs_data
+            specs: cachedPremium.specs_data,
+            valuation: cachedPremium.valuation_data
           }
         } as PremiumLookupResponse),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -112,12 +114,16 @@ serve(async (req) => {
     const apiKey = Deno.env.get('CHECKCAR_API_KEY') ?? ''
     const baseUrl = 'https://api.checkcardetails.co.uk/vehicledata'
 
-    const [historyRes, motRes, mileageRes, imageRes, specsRes] = await Promise.allSettled([
+    // Get last recorded mileage for valuation (from basic lookup or we'll get it from mileage endpoint)
+    const lastMileage = basicLookup?.dvla_data?.mileage || '10000'
+
+    const [historyRes, motRes, mileageRes, imageRes, specsRes, valuationRes] = await Promise.allSettled([
       fetch(`${baseUrl}/carhistorycheck?apikey=${apiKey}&vrm=${normalizedVrm}`),
       fetch(`${baseUrl}/mot?apikey=${apiKey}&vrm=${normalizedVrm}`),
       fetch(`${baseUrl}/mileage?apikey=${apiKey}&vrm=${normalizedVrm}`),
       fetch(`${baseUrl}/vehicleimage?apikey=${apiKey}&vrm=${normalizedVrm}`),
-      fetch(`${baseUrl}/vehiclespecs?apikey=${apiKey}&vrm=${normalizedVrm}`)
+      fetch(`${baseUrl}/vehiclespecs?apikey=${apiKey}&vrm=${normalizedVrm}`),
+      fetch(`${baseUrl}/vehiclevaluation?apikey=${apiKey}&vrm=${normalizedVrm}&mileage=${lastMileage}`)
     ])
 
     // Parse responses
@@ -140,6 +146,10 @@ serve(async (req) => {
     const specsData = specsRes.status === 'fulfilled' && specsRes.value.ok 
       ? await specsRes.value.json() 
       : null
+    
+    const valuationData = valuationRes.status === 'fulfilled' && valuationRes.value.ok 
+      ? await valuationRes.value.json() 
+      : null
 
     console.log('Premium data fetched successfully')
 
@@ -155,6 +165,7 @@ serve(async (req) => {
         mileage_data: mileageData,
         image_data: imageData,
         specs_data: specsData,
+        valuation_data: valuationData,
         voucher_id: voucherId
       })
       .select()
@@ -187,7 +198,8 @@ serve(async (req) => {
           mot: motData,
           mileage: mileageData,
           images: imageData,
-          specs: specsData
+          specs: specsData,
+          valuation: valuationData
         }
       } as PremiumLookupResponse),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }

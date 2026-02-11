@@ -3,9 +3,21 @@
 @tailwind utilities;
 
 @layer base {
+  html {
+    overflow-x: hidden;
+  }
   body {
     @apply bg-white text-gray-900 scrollbar-hide;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding-top: env(safe-area-inset-top);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
   }
+}
+
+.bottom-nav {
+  padding-bottom: max(env(safe-area-inset-bottom, 0px), 20px);
 }
 
 @layer utilities {

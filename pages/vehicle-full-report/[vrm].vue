@@ -1,6 +1,6 @@
 <template>
   <div class="min-h-screen bg-white pb-20">
-    <div class="px-10 py-4">
+    <div class="px-6 pt-8 py-4">
       <button @click="$router.back()" class="flex items-center text-gray-900 hover:text-gray-700">
         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
@@ -78,12 +78,12 @@
       </div>
 
       <!-- Tab Content -->
-      <div class="pb-6">
+      <div class="pb-24">
         <!-- OVERVIEW Tab -->
         <div v-if="activeTab === 'overview'" class="space-y-6">
           <!-- Vehicle Photo -->
           <div class="bg-gray-200 rounded-lg aspect-video flex items-center justify-center" @click="vehicleData?.photoUrl && openFullscreen(vehicleData.photoUrl)">
-            <img v-if="vehicleData?.photoUrl" :src="vehicleData.photoUrl" alt="Vehicle" class="w-full h-full object-cover rounded-lg cursor-pointer" />
+            <img v-if="vehicleData?.photoUrl && !imageError" :src="vehicleData.photoUrl" @error="imageError = true" alt="Vehicle" class="w-full h-full object-contain rounded-lg cursor-pointer" />
             <CarSilhouette v-else-if="vehicleData" :bodyStyle="vehicleData.bodyStyle" class="w-32 h-32 text-gray-400" />
             <svg v-else class="w-20 h-20 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -189,6 +189,75 @@
               <span class="text-gray-700 text-sm">Scrapped</span>
               <span class="font-medium text-gray-900 text-sm">{{ vehicleData?.scrapped || 'N/A' }}</span>
             </div>
+          </div>
+        </div>
+
+        <!-- VALUATION Tab -->
+        <div v-if="activeTab === 'valuation'" class="space-y-6">
+          <div v-if="premiumData?.valuation">
+            <p class="text-sm text-gray-500 mb-4">
+              {{ premiumData.valuation.vehicleDescription }}<br />
+              <span v-if="premiumData.valuation.mileage">Mileage: {{ premiumData.valuation.mileage }} miles</span>
+              <span v-if="premiumData.valuation.valuationTime"> &bull; {{ premiumData.valuation.valuationTime }}</span>
+            </p>
+
+            <!-- Private Valuations -->
+            <h3 class="font-bold text-gray-900 text-sm uppercase border-b border-gray-900 pb-2 mb-0">Private Valuations</h3>
+            <div class="space-y-0">
+              <div class="flex justify-between py-3 border-b border-gray-200">
+                <span class="text-gray-700 text-sm">Private Clean</span>
+                <span class="font-medium text-gray-900 text-sm">{{ premiumData.valuation.privateClean || 'N/A' }}</span>
+              </div>
+              <div class="flex justify-between py-3 border-b border-gray-200">
+                <span class="text-gray-700 text-sm">Private Average</span>
+                <span class="font-medium text-gray-900 text-sm">{{ premiumData.valuation.privateAverage || 'N/A' }}</span>
+              </div>
+              <div class="flex justify-between py-3 border-b border-gray-200">
+                <span class="text-gray-700 text-sm">Part Exchange</span>
+                <span class="font-medium text-gray-900 text-sm">{{ premiumData.valuation.partExchange || 'N/A' }}</span>
+              </div>
+            </div>
+
+            <!-- Dealer Valuations -->
+            <h3 class="font-bold text-gray-900 text-sm uppercase border-b border-gray-900 pb-2 mb-0 mt-6">Dealer Valuations</h3>
+            <div class="space-y-0">
+              <div class="flex justify-between py-3 border-b border-gray-200">
+                <span class="text-gray-700 text-sm">OTR (On The Road)</span>
+                <span class="font-medium text-gray-900 text-sm">{{ premiumData.valuation.otr || 'N/A' }}</span>
+              </div>
+              <div class="flex justify-between py-3 border-b border-gray-200">
+                <span class="text-gray-700 text-sm">Dealer Forecourt</span>
+                <span class="font-medium text-gray-900 text-sm">{{ premiumData.valuation.dealerForecourt || 'N/A' }}</span>
+              </div>
+            </div>
+
+            <!-- Trade Valuations -->
+            <h3 class="font-bold text-gray-900 text-sm uppercase border-b border-gray-900 pb-2 mb-0 mt-6">Trade Valuations</h3>
+            <div class="space-y-0">
+              <div class="flex justify-between py-3 border-b border-gray-200">
+                <span class="text-gray-700 text-sm">Trade Retail</span>
+                <span class="font-medium text-gray-900 text-sm">{{ premiumData.valuation.tradeRetail || 'N/A' }}</span>
+              </div>
+              <div class="flex justify-between py-3 border-b border-gray-200">
+                <span class="text-gray-700 text-sm">Trade Average</span>
+                <span class="font-medium text-gray-900 text-sm">{{ premiumData.valuation.tradeAverage || 'N/A' }}</span>
+              </div>
+              <div class="flex justify-between py-3 border-b border-gray-200">
+                <span class="text-gray-700 text-sm">Trade Poor</span>
+                <span class="font-medium text-gray-900 text-sm">{{ premiumData.valuation.tradePoor || 'N/A' }}</span>
+              </div>
+              <div class="flex justify-between py-3 border-b border-gray-200">
+                <span class="text-gray-700 text-sm">Auction</span>
+                <span class="font-medium text-gray-900 text-sm">{{ premiumData.valuation.auction || 'N/A' }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div v-else class="text-center py-12">
+            <svg class="w-16 h-16 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <p class="text-gray-500 text-sm">Valuation data not available for this vehicle</p>
           </div>
         </div>
 
@@ -446,8 +515,9 @@
           <div>
             <h3 class="font-semibold text-gray-900 mb-3">Vehicle Images</h3>
             <div v-if="premiumData?.vehicleImages?.length" class="grid grid-cols-2 gap-2">
-              <div v-for="(img, idx) in premiumData.vehicleImages" :key="idx" class="bg-gray-200 rounded-lg aspect-video cursor-pointer" @click="openFullscreen(img)">
-                <img :src="img" alt="Vehicle" class="w-full h-full object-cover rounded-lg" />
+              <div v-for="(img, idx) in premiumData.vehicleImages" :key="idx" class="bg-gray-200 rounded-lg aspect-video cursor-pointer flex items-center justify-center overflow-hidden" @click="!brokenImages[idx] && openFullscreen(img)">
+                <img v-if="!brokenImages[idx]" :src="img" @error="brokenImages[idx] = true" alt="Vehicle" class="w-full h-full object-contain rounded-lg" />
+                <CarSilhouette v-else-if="vehicleData" :bodyStyle="vehicleData.bodyStyle" class="w-16 h-16 text-gray-400" />
               </div>
             </div>
             <div v-else class="bg-gray-200 rounded-lg aspect-video flex items-center justify-center">
@@ -527,128 +597,54 @@
 
     <BottomNav />
 
-    <!-- Fullscreen Image Modal with Pinch-to-Zoom (Landscape) -->
-    <div v-if="fullscreenImage" @click="closeFullscreen" class="fixed inset-0 bg-black z-50 overflow-hidden">
-      <div 
-        ref="imageContainer"
-        class="w-full h-full flex items-center justify-center touch-none"
-        @touchstart="handleTouchStart"
-        @touchmove="handleTouchMove"
-        @touchend="handleTouchEnd"
-      >
-        <img 
-          :src="fullscreenImage" 
-          alt="Vehicle" 
-          class="h-screen object-contain transition-transform duration-200"
-          :style="{ transform: `rotate(90deg) scale(${imageScale}) translate(${imageTranslateX}px, ${imageTranslateY}px)` }"
-        />
-      </div>
-    </div>
+    <!-- Fullscreen Image Modal -->
+    <FullscreenImageModal 
+      :imageUrl="fullscreenImage" 
+      :scale="imageScale" 
+      :translateX="imageTranslateX" 
+      :translateY="imageTranslateY"
+      @close="closeFullscreen"
+      @touchstart="handleTouchStart"
+      @touchmove="handleTouchMove"
+      @touchend="handleTouchEnd"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { mapPremiumData, calculateTrafficLightStatus } from '~/utils/vehicleDataMapper';
+import { useFullscreenImage } from '~/composables/useFullscreenImage';
 
 const route = useRoute();
 const router = useRouter();
 const { getCachedPremiumLookup, getCachedVehicle } = useVehicle();
+const { 
+  fullscreenImage, 
+  imageScale, 
+  imageTranslateX, 
+  imageTranslateY, 
+  openFullscreen, 
+  closeFullscreen, 
+  handleTouchStart, 
+  handleTouchMove, 
+  handleTouchEnd 
+} = useFullscreenImage();
 
 const vrm = computed(() => route.params.vrm as string);
 const vehicleData = ref<any>(null);
 const premiumData = ref<any>(null);
+const imageError = ref(false);
+const brokenImages = reactive<Record<number, boolean>>({});
 const activeTab = ref('overview');
 const loading = ref(true);
 const loadingMessage = ref('Loading premium report...');
 const error = ref('');
 const errorTitle = ref('');
-const fullscreenImage = ref<string | null>(null);
-const imageContainer = ref<HTMLElement | null>(null);
-const imageScale = ref(1);
-const imageTranslateX = ref(0);
-const imageTranslateY = ref(0);
-
-// Touch gesture state
-let initialDistance = 0;
-let initialScale = 1;
-let lastTouchX = 0;
-let lastTouchY = 0;
-let isDragging = false;
-
-// Fullscreen image functions
-const openFullscreen = (imageUrl: string) => {
-  fullscreenImage.value = imageUrl;
-  imageScale.value = 1;
-  imageTranslateX.value = 0;
-  imageTranslateY.value = 0;
-};
-
-const closeFullscreen = () => {
-  fullscreenImage.value = null;
-  imageScale.value = 1;
-  imageTranslateX.value = 0;
-  imageTranslateY.value = 0;
-};
-
-// Calculate distance between two touch points
-const getDistance = (touch1: Touch, touch2: Touch) => {
-  const dx = touch1.clientX - touch2.clientX;
-  const dy = touch1.clientY - touch2.clientY;
-  return Math.sqrt(dx * dx + dy * dy);
-};
-
-// Touch gesture handlers
-const handleTouchStart = (e: TouchEvent) => {
-  if (e.touches.length === 2) {
-    // Pinch zoom start
-    e.preventDefault();
-    initialDistance = getDistance(e.touches[0], e.touches[1]);
-    initialScale = imageScale.value;
-  } else if (e.touches.length === 1 && imageScale.value > 1) {
-    // Pan start (only when zoomed in)
-    isDragging = true;
-    lastTouchX = e.touches[0].clientX;
-    lastTouchY = e.touches[0].clientY;
-  }
-};
-
-const handleTouchMove = (e: TouchEvent) => {
-  if (e.touches.length === 2) {
-    // Pinch zoom
-    e.preventDefault();
-    const currentDistance = getDistance(e.touches[0], e.touches[1]);
-    const scale = (currentDistance / initialDistance) * initialScale;
-    imageScale.value = Math.max(1, Math.min(scale, 4)); // Limit between 1x and 4x
-  } else if (e.touches.length === 1 && isDragging && imageScale.value > 1) {
-    // Pan (only when zoomed in) - swap X and Y because image is rotated 90 degrees
-    e.preventDefault();
-    const deltaX = e.touches[0].clientX - lastTouchX;
-    const deltaY = e.touches[0].clientY - lastTouchY;
-    // Swap and invert coordinates for 90-degree rotation
-    imageTranslateX.value += deltaY / imageScale.value;
-    imageTranslateY.value -= deltaX / imageScale.value;
-    lastTouchX = e.touches[0].clientX;
-    lastTouchY = e.touches[0].clientY;
-  }
-};
-
-const handleTouchEnd = (e: TouchEvent) => {
-  if (e.touches.length < 2) {
-    initialDistance = 0;
-  }
-  if (e.touches.length === 0) {
-    isDragging = false;
-    // Reset position if zoomed out to 1x
-    if (imageScale.value === 1) {
-      imageTranslateX.value = 0;
-      imageTranslateY.value = 0;
-    }
-  }
-};
 
 const tabs = [
   { id: 'overview', label: 'OVERVIEW' },
   { id: 'vehicle-info', label: 'VEHICLE INFO' },
+  { id: 'valuation', label: 'VALUATION' },
   { id: 'mot', label: 'MOT' },
   { id: 'technical', label: 'TECHNICAL' },
   { id: 'registration-tax', label: 'REGISTRATION & TAX' }
@@ -808,7 +804,8 @@ onMounted(async () => {
         (premium as any).mot_data,
         (premium as any).mileage_data,
         (premium as any).image_data,
-        (premium as any).specs_data
+        (premium as any).specs_data,
+        (premium as any).valuation_data
       );
       
       premiumData.value = mapped;

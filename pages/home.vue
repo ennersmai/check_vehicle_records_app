@@ -1,15 +1,6 @@
 <template>
   <div class="min-h-screen bg-white pb-20">
-    <div class="px-10 py-4">
-      <button @click="handleBack" class="flex items-center text-gray-900 hover:text-gray-700">
-        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-        </svg>
-        Back
-      </button>
-    </div>
-
-    <div class="flex flex-col items-center justify-center px-10 mt-12">
+    <div class="flex flex-col items-center justify-center px-10 mt-24">
       <img src="/cvr_logo.png" alt="Check Vehicle Records" class="w-64 mb-8" />
       
       <p class="text-gray-600 text-center mb-6 text-sm">
@@ -55,6 +46,39 @@
           Tap <span class="inline-flex items-center"><svg class="w-3 h-3 mx-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" /></svg></span> to scan number plate
         </p>
 
+        <!-- Scan Instructions Modal -->
+        <div v-if="showScanModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-6" @click.self="showScanModal = false">
+          <div class="bg-white rounded-2xl p-6 max-w-sm w-full shadow-xl">
+            <div class="text-center mb-4">
+              <div class="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3">
+                <svg class="w-7 h-7 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+              </div>
+              <h3 class="text-lg font-semibold text-gray-900">Scan Tips</h3>
+            </div>
+            <ul class="text-sm text-gray-600 space-y-2 mb-5">
+              <li class="flex items-start gap-2">
+                <span class="text-primary font-bold mt-0.5">1.</span>
+                <span>Hold your phone <strong>straight</strong> and level, facing the plate directly</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-primary font-bold mt-0.5">2.</span>
+                <span>Ensure the plate is <strong>clearly visible</strong> and well-lit</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-primary font-bold mt-0.5">3.</span>
+                <span>Get close enough so the plate fills most of the frame</span>
+              </li>
+            </ul>
+            <div class="flex gap-3">
+              <button @click="showScanModal = false" class="flex-1 py-2.5 border border-gray-200 rounded-lg text-sm text-gray-600 font-medium">Cancel</button>
+              <button @click="confirmScan" class="flex-1 py-2.5 bg-primary text-white rounded-lg text-sm font-medium">Open Camera</button>
+            </div>
+          </div>
+        </div>
+
         <PrimaryButton type="submit" :loading="loading" class="w-full">
           {{ loadingMessage || 'CHECK VEHICLE' }}
         </PrimaryButton>
@@ -92,7 +116,7 @@
 <script setup lang="ts">
 import { formatVrm } from '~/utils/vrmFormatter';
 
-const { user, signOut } = useAuth();
+const { user } = useAuth();
 const { lookupVehicle } = useVehicle();
 const { scanVrm: performScan, isScanning } = useVrmScanner();
 const router = useRouter();
@@ -102,11 +126,7 @@ const loading = ref(false);
 const error = ref('');
 const errorTitle = ref('');
 const loadingMessage = ref('');
-
-const handleBack = async () => {
-  await signOut();
-  router.push('/login');
-};
+const showScanModal = ref(false);
 
 const handleSearch = async () => {
   if (!vrm.value || vrm.value.length < 2) {
@@ -175,20 +195,22 @@ const handleSearch = async () => {
   }
 };
 
-// Handle OCR scan
-const handleScanVrm = async () => {
+// Handle OCR scan - show instruction modal first
+const handleScanVrm = () => {
   error.value = '';
   errorTitle.value = '';
+  showScanModal.value = true;
+};
+
+// User confirmed scan from modal - open camera
+const confirmScan = async () => {
+  showScanModal.value = false;
   
   const result = await performScan();
   
   if (result.success && result.vrm) {
-    // Auto-fill the scanned VRM (formatted)
-    vrm.value = formatVrm(result.vrm);
-    
-    // Optional: Auto-submit after successful scan
-    // Uncomment the next line to auto-search after scan:
-    // await handleSearch();
+    // Auto-fill the scanned VRM (no spaces for clean input)
+    vrm.value = result.vrm.toUpperCase().replace(/\s/g, '');
   } else if (result.error && result.error !== 'Scan cancelled') {
     errorTitle.value = 'Scan Failed';
     error.value = result.error;

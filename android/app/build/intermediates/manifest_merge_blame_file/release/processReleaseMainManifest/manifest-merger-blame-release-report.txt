@@ -1,0 +1,341 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.cvr.app"
+4    android:versionCode="11"
+5    android:versionName="1.0.8" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="24"
+9        android:targetSdkVersion="36" />
+10
+11    <uses-permission android:name="android.permission.INTERNET" />
+11-->C:\Users\Mai\Desktop\cvr\android\app\src\main\AndroidManifest.xml:6:5-67
+11-->C:\Users\Mai\Desktop\cvr\android\app\src\main\AndroidManifest.xml:6:22-64
+12    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+12-->C:\Users\Mai\Desktop\cvr\android\app\src\main\AndroidManifest.xml:7:5-79
+12-->C:\Users\Mai\Desktop\cvr\android\app\src\main\AndroidManifest.xml:7:22-76
+13    <uses-permission android:name="android.permission.CAMERA" />
+13-->C:\Users\Mai\Desktop\cvr\android\app\src\main\AndroidManifest.xml:8:5-65
+13-->C:\Users\Mai\Desktop\cvr\android\app\src\main\AndroidManifest.xml:8:22-62
+14    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+14-->C:\Users\Mai\Desktop\cvr\android\app\src\main\AndroidManifest.xml:9:5-76
+14-->C:\Users\Mai\Desktop\cvr\android\app\src\main\AndroidManifest.xml:9:22-73
+15    <uses-permission
+15-->C:\Users\Mai\Desktop\cvr\android\app\src\main\AndroidManifest.xml:10:5-108
+16        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+16-->C:\Users\Mai\Desktop\cvr\android\app\src\main\AndroidManifest.xml:10:22-78
+17        android:maxSdkVersion="29" />
+17-->C:\Users\Mai\Desktop\cvr\android\app\src\main\AndroidManifest.xml:10:79-105
+18
+19    <queries>
+19-->[:capacitor-camera] C:\Users\Mai\Desktop\cvr\node_modules\@capacitor\camera\android\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:7:5-11:15
+20        <intent>
+20-->[:capacitor-camera] C:\Users\Mai\Desktop\cvr\node_modules\@capacitor\camera\android\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:8:9-10:18
+21            <action android:name="android.media.action.IMAGE_CAPTURE" />
+21-->[:capacitor-camera] C:\Users\Mai\Desktop\cvr\node_modules\@capacitor\camera\android\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:9:13-73
+21-->[:capacitor-camera] C:\Users\Mai\Desktop\cvr\node_modules\@capacitor\camera\android\build\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:9:21-70
+22        </intent>
+23        <intent>
+23-->[com.android.billingclient:billing:8.0.0] C:\Users\Mai\.gradle\caches\8.13\transforms\b08e528f60a968b7542cff4f2a07b9bf\transformed\jetified-billing-8.0.0\AndroidManifest.xml:13:9-15:18
+24            <action android:name="com.android.vending.billing.InAppBillingService.BIND" />
+24-->[com.android.billingclient:billing:8.0.0] C:\Users\Mai\.gradle\caches\8.13\transforms\b08e528f60a968b7542cff4f2a07b9bf\transformed\jetified-billing-8.0.0\AndroidManifest.xml:14:13-91
+24-->[com.android.billingclient:billing:8.0.0] C:\Users\Mai\.gradle\caches\8.13\transforms\b08e528f60a968b7542cff4f2a07b9bf\transformed\jetified-billing-8.0.0\AndroidManifest.xml:14:21-88
+25        </intent>
+26        <intent>
+26-->[com.android.billingclient:billing:8.0.0] C:\Users\Mai\.gradle\caches\8.13\transforms\b08e528f60a968b7542cff4f2a07b9bf\transformed\jetified-billing-8.0.0\AndroidManifest.xml:16:9-18:18
+27            <action android:name="com.google.android.apps.play.billingtestcompanion.BillingOverrideService.BIND" />
+27-->[com.android.billingclient:billing:8.0.0] C:\Users\Mai\.gradle\caches\8.13\transforms\b08e528f60a968b7542cff4f2a07b9bf\transformed\jetified-billing-8.0.0\AndroidManifest.xml:17:13-116
+27-->[com.android.billingclient:billing:8.0.0] C:\Users\Mai\.gradle\caches\8.13\transforms\b08e528f60a968b7542cff4f2a07b9bf\transformed\jetified-billing-8.0.0\AndroidManifest.xml:17:21-113
+28        </intent>
+29    </queries>
+30
+31    <uses-permission android:name="com.android.vending.BILLING" />
+31-->[com.android.billingclient:billing:8.0.0] C:\Users\Mai\.gradle\caches\8.13\transforms\b08e528f60a968b7542cff4f2a07b9bf\transformed\jetified-billing-8.0.0\AndroidManifest.xml:10:5-67
+31-->[com.android.billingclient:billing:8.0.0] C:\Users\Mai\.gradle\caches\8.13\transforms\b08e528f60a968b7542cff4f2a07b9bf\transformed\jetified-billing-8.0.0\AndroidManifest.xml:10:22-64
+32
+33    <permission
+33-->[androidx.core:core:1.17.0] C:\Users\Mai\.gradle\caches\8.13\transforms\82e869eb293a216a93834e77c5cd9e1f\transformed\core-1.17.0\AndroidManifest.xml:22:5-24:47
+34        android:name="com.cvr.app.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+34-->[androidx.core:core:1.17.0] C:\Users\Mai\.gradle\caches\8.13\transforms\82e869eb293a216a93834e77c5cd9e1f\transformed\core-1.17.0\AndroidManifest.xml:23:9-81
+35        android:protectionLevel="signature" />
+35-->[androidx.core:core:1.17.0] C:\Users\Mai\.gradle\caches\8.13\transforms\82e869eb293a216a93834e77c5cd9e1f\transformed\core-1.17.0\AndroidManifest.xml:24:9-44
+36
+37    <uses-permission android:name="com.cvr.app.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+37-->[androidx.core:core:1.17.0] C:\Users\Mai\.gradle\caches\8.13\transforms\82e869eb293a216a93834e77c5cd9e1f\transformed\core-1.17.0\AndroidManifest.xml:26:5-97
+37-->[androidx.core:core:1.17.0] C:\Users\Mai\.gradle\caches\8.13\transforms\82e869eb293a216a93834e77c5cd9e1f\transformed\core-1.17.0\AndroidManifest.xml:26:22-94
+38
+39    <application
+39-->C:\Users\Mai\Desktop\cvr\android\app\src\main\AndroidManifest.xml:12:5-46:19
+40        android:allowBackup="true"
+40-->C:\Users\Mai\Desktop\cvr\android\app\src\main\AndroidManifest.xml:13:9-35
+41        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+41-->[androidx.core:core:1.17.0] C:\Users\Mai\.gradle\caches\8.13\transforms\82e869eb293a216a93834e77c5cd9e1f\transformed\core-1.17.0\AndroidManifest.xml:28:18-86
+42        android:extractNativeLibs="false"
+43        android:icon="@mipmap/ic_launcher"
+43-->C:\Users\Mai\Desktop\cvr\android\app\src\main\AndroidManifest.xml:14:9-43
+44        android:label="@string/app_name"
+44-->C:\Users\Mai\Desktop\cvr\android\app\src\main\AndroidManifest.xml:15:9-41
+45        android:roundIcon="@mipmap/ic_launcher_round"
+45-->C:\Users\Mai\Desktop\cvr\android\app\src\main\AndroidManifest.xml:16:9-54
+46        android:supportsRtl="true"
+46-->C:\Users\Mai\Desktop\cvr\android\app\src\main\AndroidManifest.xml:17:9-35
+47        android:theme="@style/AppTheme" >
+47-->C:\Users\Mai\Desktop\cvr\android\app\src\main\AndroidManifest.xml:18:9-40
+48        <activity
+48-->C:\Users\Mai\Desktop\cvr\android\app\src\main\AndroidManifest.xml:21:9-34:20
+49            android:name="com.cvr.app.MainActivity"
+49-->C:\Users\Mai\Desktop\cvr\android\app\src\main\AndroidManifest.xml:23:13-52
+50            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|smallestScreenSize|screenLayout|uiMode"
+50-->C:\Users\Mai\Desktop\cvr\android\app\src\main\AndroidManifest.xml:22:13-129
+51            android:exported="true"
+51-->C:\Users\Mai\Desktop\cvr\android\app\src\main\AndroidManifest.xml:27:13-36
+52            android:label="@string/title_activity_main"
+52-->C:\Users\Mai\Desktop\cvr\android\app\src\main\AndroidManifest.xml:24:13-56
+53            android:launchMode="singleTask"
+53-->C:\Users\Mai\Desktop\cvr\android\app\src\main\AndroidManifest.xml:26:13-44
+54            android:theme="@style/AppTheme.NoActionBarLaunch" >
+54-->C:\Users\Mai\Desktop\cvr\android\app\src\main\AndroidManifest.xml:25:13-62
+55            <intent-filter>
+55-->C:\Users\Mai\Desktop\cvr\android\app\src\main\AndroidManifest.xml:29:13-32:29
+56                <action android:name="android.intent.action.MAIN" />
+56-->C:\Users\Mai\Desktop\cvr\android\app\src\main\AndroidManifest.xml:30:17-69
+56-->C:\Users\Mai\Desktop\cvr\android\app\src\main\AndroidManifest.xml:30:25-66
+57
+58                <category android:name="android.intent.category.LAUNCHER" />
+58-->C:\Users\Mai\Desktop\cvr\android\app\src\main\AndroidManifest.xml:31:17-77
+58-->C:\Users\Mai\Desktop\cvr\android\app\src\main\AndroidManifest.xml:31:27-74
+59            </intent-filter>
+60        </activity>
+61
+62        <provider
+63            android:name="androidx.core.content.FileProvider"
+63-->C:\Users\Mai\Desktop\cvr\android\app\src\main\AndroidManifest.xml:37:13-62
+64            android:authorities="com.cvr.app.fileprovider"
+64-->C:\Users\Mai\Desktop\cvr\android\app\src\main\AndroidManifest.xml:38:13-64
+65            android:exported="false"
+65-->C:\Users\Mai\Desktop\cvr\android\app\src\main\AndroidManifest.xml:39:13-37
+66            android:grantUriPermissions="true" >
+66-->C:\Users\Mai\Desktop\cvr\android\app\src\main\AndroidManifest.xml:40:13-47
+67            <meta-data
+67-->C:\Users\Mai\Desktop\cvr\android\app\src\main\AndroidManifest.xml:41:13-43:54
+68                android:name="android.support.FILE_PROVIDER_PATHS"
+68-->C:\Users\Mai\Desktop\cvr\android\app\src\main\AndroidManifest.xml:42:17-67
+69                android:resource="@xml/file_paths" />
+69-->C:\Users\Mai\Desktop\cvr\android\app\src\main\AndroidManifest.xml:43:17-51
+70        </provider>
+71
+72        <service
+72-->[com.google.android.gms:play-services-mlkit-text-recognition-common:19.1.0] C:\Users\Mai\.gradle\caches\8.13\transforms\887c8184c42707227a66fe2c821a4951\transformed\jetified-play-services-mlkit-text-recognition-common-19.1.0\AndroidManifest.xml:9:9-15:19
+73            android:name="com.google.mlkit.common.internal.MlKitComponentDiscoveryService"
+73-->[com.google.android.gms:play-services-mlkit-text-recognition-common:19.1.0] C:\Users\Mai\.gradle\caches\8.13\transforms\887c8184c42707227a66fe2c821a4951\transformed\jetified-play-services-mlkit-text-recognition-common-19.1.0\AndroidManifest.xml:10:13-91
+74            android:directBootAware="true"
+74-->[com.google.mlkit:common:18.11.0] C:\Users\Mai\.gradle\caches\8.13\transforms\5628ed625c22fe67f25b4c3925fbdf87\transformed\jetified-common-18.11.0\AndroidManifest.xml:17:13-43
+75            android:exported="false" >
+75-->[com.google.android.gms:play-services-mlkit-text-recognition-common:19.1.0] C:\Users\Mai\.gradle\caches\8.13\transforms\887c8184c42707227a66fe2c821a4951\transformed\jetified-play-services-mlkit-text-recognition-common-19.1.0\AndroidManifest.xml:11:13-37
+76            <meta-data
+76-->[com.google.android.gms:play-services-mlkit-text-recognition-common:19.1.0] C:\Users\Mai\.gradle\caches\8.13\transforms\887c8184c42707227a66fe2c821a4951\transformed\jetified-play-services-mlkit-text-recognition-common-19.1.0\AndroidManifest.xml:12:13-14:85
+77                android:name="com.google.firebase.components:com.google.mlkit.vision.text.internal.TextRegistrar"
+77-->[com.google.android.gms:play-services-mlkit-text-recognition-common:19.1.0] C:\Users\Mai\.gradle\caches\8.13\transforms\887c8184c42707227a66fe2c821a4951\transformed\jetified-play-services-mlkit-text-recognition-common-19.1.0\AndroidManifest.xml:13:17-114
+78                android:value="com.google.firebase.components.ComponentRegistrar" />
+78-->[com.google.android.gms:play-services-mlkit-text-recognition-common:19.1.0] C:\Users\Mai\.gradle\caches\8.13\transforms\887c8184c42707227a66fe2c821a4951\transformed\jetified-play-services-mlkit-text-recognition-common-19.1.0\AndroidManifest.xml:14:17-82
+79            <meta-data
+79-->[com.google.mlkit:vision-common:17.3.0] C:\Users\Mai\.gradle\caches\8.13\transforms\253ad1be293b29b4512637474065822f\transformed\jetified-vision-common-17.3.0\AndroidManifest.xml:12:13-14:85
+80                android:name="com.google.firebase.components:com.google.mlkit.vision.common.internal.VisionCommonRegistrar"
+80-->[com.google.mlkit:vision-common:17.3.0] C:\Users\Mai\.gradle\caches\8.13\transforms\253ad1be293b29b4512637474065822f\transformed\jetified-vision-common-17.3.0\AndroidManifest.xml:13:17-124
+81                android:value="com.google.firebase.components.ComponentRegistrar" />
+81-->[com.google.mlkit:vision-common:17.3.0] C:\Users\Mai\.gradle\caches\8.13\transforms\253ad1be293b29b4512637474065822f\transformed\jetified-vision-common-17.3.0\AndroidManifest.xml:14:17-82
+82            <meta-data
+82-->[com.google.mlkit:common:18.11.0] C:\Users\Mai\.gradle\caches\8.13\transforms\5628ed625c22fe67f25b4c3925fbdf87\transformed\jetified-common-18.11.0\AndroidManifest.xml:20:13-22:85
+83                android:name="com.google.firebase.components:com.google.mlkit.common.internal.CommonComponentRegistrar"
+83-->[com.google.mlkit:common:18.11.0] C:\Users\Mai\.gradle\caches\8.13\transforms\5628ed625c22fe67f25b4c3925fbdf87\transformed\jetified-common-18.11.0\AndroidManifest.xml:21:17-120
+84                android:value="com.google.firebase.components.ComponentRegistrar" />
+84-->[com.google.mlkit:common:18.11.0] C:\Users\Mai\.gradle\caches\8.13\transforms\5628ed625c22fe67f25b4c3925fbdf87\transformed\jetified-common-18.11.0\AndroidManifest.xml:22:17-82
+85        </service>
+86
+87        <provider
+87-->[com.google.mlkit:common:18.11.0] C:\Users\Mai\.gradle\caches\8.13\transforms\5628ed625c22fe67f25b4c3925fbdf87\transformed\jetified-common-18.11.0\AndroidManifest.xml:9:9-13:38
+88            android:name="com.google.mlkit.common.internal.MlKitInitProvider"
+88-->[com.google.mlkit:common:18.11.0] C:\Users\Mai\.gradle\caches\8.13\transforms\5628ed625c22fe67f25b4c3925fbdf87\transformed\jetified-common-18.11.0\AndroidManifest.xml:10:13-78
+89            android:authorities="com.cvr.app.mlkitinitprovider"
+89-->[com.google.mlkit:common:18.11.0] C:\Users\Mai\.gradle\caches\8.13\transforms\5628ed625c22fe67f25b4c3925fbdf87\transformed\jetified-common-18.11.0\AndroidManifest.xml:11:13-69
+90            android:exported="false"
+90-->[com.google.mlkit:common:18.11.0] C:\Users\Mai\.gradle\caches\8.13\transforms\5628ed625c22fe67f25b4c3925fbdf87\transformed\jetified-common-18.11.0\AndroidManifest.xml:12:13-37
+91            android:initOrder="99" />
+91-->[com.google.mlkit:common:18.11.0] C:\Users\Mai\.gradle\caches\8.13\transforms\5628ed625c22fe67f25b4c3925fbdf87\transformed\jetified-common-18.11.0\AndroidManifest.xml:13:13-35
+92
+93        <receiver
+93-->[com.revenuecat.purchases:purchases-store-amazon:9.20.0] C:\Users\Mai\.gradle\caches\8.13\transforms\ac838e89f974d7015e0eb1c9cedc9f4c\transformed\jetified-purchases-store-amazon-9.20.0\AndroidManifest.xml:8:9-15:20
+94            android:name="com.amazon.device.iap.ResponseReceiver"
+94-->[com.revenuecat.purchases:purchases-store-amazon:9.20.0] C:\Users\Mai\.gradle\caches\8.13\transforms\ac838e89f974d7015e0eb1c9cedc9f4c\transformed\jetified-purchases-store-amazon-9.20.0\AndroidManifest.xml:9:13-66
+95            android:exported="true"
+95-->[com.revenuecat.purchases:purchases-store-amazon:9.20.0] C:\Users\Mai\.gradle\caches\8.13\transforms\ac838e89f974d7015e0eb1c9cedc9f4c\transformed\jetified-purchases-store-amazon-9.20.0\AndroidManifest.xml:10:13-36
+96            android:permission="com.amazon.inapp.purchasing.Permission.NOTIFY" >
+96-->[com.revenuecat.purchases:purchases-store-amazon:9.20.0] C:\Users\Mai\.gradle\caches\8.13\transforms\ac838e89f974d7015e0eb1c9cedc9f4c\transformed\jetified-purchases-store-amazon-9.20.0\AndroidManifest.xml:11:13-79
+97            <intent-filter>
+97-->[com.revenuecat.purchases:purchases-store-amazon:9.20.0] C:\Users\Mai\.gradle\caches\8.13\transforms\ac838e89f974d7015e0eb1c9cedc9f4c\transformed\jetified-purchases-store-amazon-9.20.0\AndroidManifest.xml:12:13-14:29
+98                <action android:name="com.amazon.inapp.purchasing.NOTIFY" />
+98-->[com.revenuecat.purchases:purchases-store-amazon:9.20.0] C:\Users\Mai\.gradle\caches\8.13\transforms\ac838e89f974d7015e0eb1c9cedc9f4c\transformed\jetified-purchases-store-amazon-9.20.0\AndroidManifest.xml:13:17-77
+98-->[com.revenuecat.purchases:purchases-store-amazon:9.20.0] C:\Users\Mai\.gradle\caches\8.13\transforms\ac838e89f974d7015e0eb1c9cedc9f4c\transformed\jetified-purchases-store-amazon-9.20.0\AndroidManifest.xml:13:25-74
+99            </intent-filter>
+100        </receiver>
+101
+102        <activity
+102-->[com.revenuecat.purchases:purchases:9.20.0] C:\Users\Mai\.gradle\caches\8.13\transforms\14737ddc2352d24ca9dfcff2e7f761b5\transformed\jetified-purchases-9.20.0\AndroidManifest.xml:10:9-13:75
+103            android:name="com.revenuecat.purchases.amazon.purchasing.ProxyAmazonBillingActivity"
+103-->[com.revenuecat.purchases:purchases:9.20.0] C:\Users\Mai\.gradle\caches\8.13\transforms\14737ddc2352d24ca9dfcff2e7f761b5\transformed\jetified-purchases-9.20.0\AndroidManifest.xml:11:13-97
+104            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+104-->[com.revenuecat.purchases:purchases:9.20.0] C:\Users\Mai\.gradle\caches\8.13\transforms\14737ddc2352d24ca9dfcff2e7f761b5\transformed\jetified-purchases-9.20.0\AndroidManifest.xml:12:13-96
+105            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+105-->[com.revenuecat.purchases:purchases:9.20.0] C:\Users\Mai\.gradle\caches\8.13\transforms\14737ddc2352d24ca9dfcff2e7f761b5\transformed\jetified-purchases-9.20.0\AndroidManifest.xml:13:13-72
+106        <activity
+106-->[com.revenuecat.purchases:purchases:9.20.0] C:\Users\Mai\.gradle\caches\8.13\transforms\14737ddc2352d24ca9dfcff2e7f761b5\transformed\jetified-purchases-9.20.0\AndroidManifest.xml:14:9-18:74
+107            android:name="com.revenuecat.purchases.SimulatedStoreErrorDialogActivity"
+107-->[com.revenuecat.purchases:purchases:9.20.0] C:\Users\Mai\.gradle\caches\8.13\transforms\14737ddc2352d24ca9dfcff2e7f761b5\transformed\jetified-purchases-9.20.0\AndroidManifest.xml:15:13-86
+108            android:configChanges="orientation|screenSize"
+108-->[com.revenuecat.purchases:purchases:9.20.0] C:\Users\Mai\.gradle\caches\8.13\transforms\14737ddc2352d24ca9dfcff2e7f761b5\transformed\jetified-purchases-9.20.0\AndroidManifest.xml:16:13-59
+109            android:excludeFromRecents="true"
+109-->[com.revenuecat.purchases:purchases:9.20.0] C:\Users\Mai\.gradle\caches\8.13\transforms\14737ddc2352d24ca9dfcff2e7f761b5\transformed\jetified-purchases-9.20.0\AndroidManifest.xml:17:13-46
+110            android:theme="@android:style/Theme.Material.Dialog.Alert" />
+110-->[com.revenuecat.purchases:purchases:9.20.0] C:\Users\Mai\.gradle\caches\8.13\transforms\14737ddc2352d24ca9dfcff2e7f761b5\transformed\jetified-purchases-9.20.0\AndroidManifest.xml:18:13-71
+111
+112        <meta-data
+112-->[com.android.billingclient:billing:8.0.0] C:\Users\Mai\.gradle\caches\8.13\transforms\b08e528f60a968b7542cff4f2a07b9bf\transformed\jetified-billing-8.0.0\AndroidManifest.xml:22:9-24:37
+113            android:name="com.google.android.play.billingclient.version"
+113-->[com.android.billingclient:billing:8.0.0] C:\Users\Mai\.gradle\caches\8.13\transforms\b08e528f60a968b7542cff4f2a07b9bf\transformed\jetified-billing-8.0.0\AndroidManifest.xml:23:13-73
+114            android:value="8.0.0" />
+114-->[com.android.billingclient:billing:8.0.0] C:\Users\Mai\.gradle\caches\8.13\transforms\b08e528f60a968b7542cff4f2a07b9bf\transformed\jetified-billing-8.0.0\AndroidManifest.xml:24:13-34
+115
+116        <activity
+116-->[com.android.billingclient:billing:8.0.0] C:\Users\Mai\.gradle\caches\8.13\transforms\b08e528f60a968b7542cff4f2a07b9bf\transformed\jetified-billing-8.0.0\AndroidManifest.xml:26:9-30:75
+117            android:name="com.android.billingclient.api.ProxyBillingActivity"
+117-->[com.android.billingclient:billing:8.0.0] C:\Users\Mai\.gradle\caches\8.13\transforms\b08e528f60a968b7542cff4f2a07b9bf\transformed\jetified-billing-8.0.0\AndroidManifest.xml:27:13-78
+118            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+118-->[com.android.billingclient:billing:8.0.0] C:\Users\Mai\.gradle\caches\8.13\transforms\b08e528f60a968b7542cff4f2a07b9bf\transformed\jetified-billing-8.0.0\AndroidManifest.xml:28:13-96
+119            android:exported="false"
+119-->[com.android.billingclient:billing:8.0.0] C:\Users\Mai\.gradle\caches\8.13\transforms\b08e528f60a968b7542cff4f2a07b9bf\transformed\jetified-billing-8.0.0\AndroidManifest.xml:29:13-37
+120            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+120-->[com.android.billingclient:billing:8.0.0] C:\Users\Mai\.gradle\caches\8.13\transforms\b08e528f60a968b7542cff4f2a07b9bf\transformed\jetified-billing-8.0.0\AndroidManifest.xml:30:13-72
+121        <activity
+121-->[com.android.billingclient:billing:8.0.0] C:\Users\Mai\.gradle\caches\8.13\transforms\b08e528f60a968b7542cff4f2a07b9bf\transformed\jetified-billing-8.0.0\AndroidManifest.xml:31:9-35:75
+122            android:name="com.android.billingclient.api.ProxyBillingActivityV2"
+122-->[com.android.billingclient:billing:8.0.0] C:\Users\Mai\.gradle\caches\8.13\transforms\b08e528f60a968b7542cff4f2a07b9bf\transformed\jetified-billing-8.0.0\AndroidManifest.xml:32:13-80
+123            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+123-->[com.android.billingclient:billing:8.0.0] C:\Users\Mai\.gradle\caches\8.13\transforms\b08e528f60a968b7542cff4f2a07b9bf\transformed\jetified-billing-8.0.0\AndroidManifest.xml:33:13-96
+124            android:exported="false"
+124-->[com.android.billingclient:billing:8.0.0] C:\Users\Mai\.gradle\caches\8.13\transforms\b08e528f60a968b7542cff4f2a07b9bf\transformed\jetified-billing-8.0.0\AndroidManifest.xml:34:13-37
+125            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+125-->[com.android.billingclient:billing:8.0.0] C:\Users\Mai\.gradle\caches\8.13\transforms\b08e528f60a968b7542cff4f2a07b9bf\transformed\jetified-billing-8.0.0\AndroidManifest.xml:35:13-72
+126        <activity
+126-->[com.google.android.gms:play-services-base:18.5.0] C:\Users\Mai\.gradle\caches\8.13\transforms\09184d8ce54bc29d06ccfc4608f2ee0e\transformed\jetified-play-services-base-18.5.0\AndroidManifest.xml:5:9-173
+127            android:name="com.google.android.gms.common.api.GoogleApiActivity"
+127-->[com.google.android.gms:play-services-base:18.5.0] C:\Users\Mai\.gradle\caches\8.13\transforms\09184d8ce54bc29d06ccfc4608f2ee0e\transformed\jetified-play-services-base-18.5.0\AndroidManifest.xml:5:19-85
+128            android:exported="false"
+128-->[com.google.android.gms:play-services-base:18.5.0] C:\Users\Mai\.gradle\caches\8.13\transforms\09184d8ce54bc29d06ccfc4608f2ee0e\transformed\jetified-play-services-base-18.5.0\AndroidManifest.xml:5:146-170
+129            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+129-->[com.google.android.gms:play-services-base:18.5.0] C:\Users\Mai\.gradle\caches\8.13\transforms\09184d8ce54bc29d06ccfc4608f2ee0e\transformed\jetified-play-services-base-18.5.0\AndroidManifest.xml:5:86-145
+130
+131        <meta-data
+131-->[com.google.android.gms:play-services-basement:18.4.0] C:\Users\Mai\.gradle\caches\8.13\transforms\0759f701d5f0895c9d8d1d530c37ed3c\transformed\jetified-play-services-basement-18.4.0\AndroidManifest.xml:6:9-122
+132            android:name="com.google.android.gms.version"
+132-->[com.google.android.gms:play-services-basement:18.4.0] C:\Users\Mai\.gradle\caches\8.13\transforms\0759f701d5f0895c9d8d1d530c37ed3c\transformed\jetified-play-services-basement-18.4.0\AndroidManifest.xml:6:20-65
+133            android:value="@integer/google_play_services_version" />
+133-->[com.google.android.gms:play-services-basement:18.4.0] C:\Users\Mai\.gradle\caches\8.13\transforms\0759f701d5f0895c9d8d1d530c37ed3c\transformed\jetified-play-services-basement-18.4.0\AndroidManifest.xml:6:66-119
+134
+135        <provider
+135-->[androidx.emoji2:emoji2:1.3.0] C:\Users\Mai\.gradle\caches\8.13\transforms\b81d08eecb7a9154649919023ce363cc\transformed\jetified-emoji2-1.3.0\AndroidManifest.xml:24:9-32:20
+136            android:name="androidx.startup.InitializationProvider"
+136-->[androidx.emoji2:emoji2:1.3.0] C:\Users\Mai\.gradle\caches\8.13\transforms\b81d08eecb7a9154649919023ce363cc\transformed\jetified-emoji2-1.3.0\AndroidManifest.xml:25:13-67
+137            android:authorities="com.cvr.app.androidx-startup"
+137-->[androidx.emoji2:emoji2:1.3.0] C:\Users\Mai\.gradle\caches\8.13\transforms\b81d08eecb7a9154649919023ce363cc\transformed\jetified-emoji2-1.3.0\AndroidManifest.xml:26:13-68
+138            android:exported="false" >
+138-->[androidx.emoji2:emoji2:1.3.0] C:\Users\Mai\.gradle\caches\8.13\transforms\b81d08eecb7a9154649919023ce363cc\transformed\jetified-emoji2-1.3.0\AndroidManifest.xml:27:13-37
+139            <meta-data
+139-->[androidx.emoji2:emoji2:1.3.0] C:\Users\Mai\.gradle\caches\8.13\transforms\b81d08eecb7a9154649919023ce363cc\transformed\jetified-emoji2-1.3.0\AndroidManifest.xml:29:13-31:52
+140                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+140-->[androidx.emoji2:emoji2:1.3.0] C:\Users\Mai\.gradle\caches\8.13\transforms\b81d08eecb7a9154649919023ce363cc\transformed\jetified-emoji2-1.3.0\AndroidManifest.xml:30:17-75
+141                android:value="androidx.startup" />
+141-->[androidx.emoji2:emoji2:1.3.0] C:\Users\Mai\.gradle\caches\8.13\transforms\b81d08eecb7a9154649919023ce363cc\transformed\jetified-emoji2-1.3.0\AndroidManifest.xml:31:17-49
+142            <meta-data
+142-->[androidx.lifecycle:lifecycle-process:2.6.2] C:\Users\Mai\.gradle\caches\8.13\transforms\29dc75295bf73eb66473bf75b424894b\transformed\jetified-lifecycle-process-2.6.2\AndroidManifest.xml:29:13-31:52
+143                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+143-->[androidx.lifecycle:lifecycle-process:2.6.2] C:\Users\Mai\.gradle\caches\8.13\transforms\29dc75295bf73eb66473bf75b424894b\transformed\jetified-lifecycle-process-2.6.2\AndroidManifest.xml:30:17-78
+144                android:value="androidx.startup" />
+144-->[androidx.lifecycle:lifecycle-process:2.6.2] C:\Users\Mai\.gradle\caches\8.13\transforms\29dc75295bf73eb66473bf75b424894b\transformed\jetified-lifecycle-process-2.6.2\AndroidManifest.xml:31:17-49
+145            <meta-data
+145-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Mai\.gradle\caches\8.13\transforms\e97a02eac34da2fedde3ef3e5dc6f822\transformed\jetified-profileinstaller-1.4.0\AndroidManifest.xml:29:13-31:52
+146                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
+146-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Mai\.gradle\caches\8.13\transforms\e97a02eac34da2fedde3ef3e5dc6f822\transformed\jetified-profileinstaller-1.4.0\AndroidManifest.xml:30:17-85
+147                android:value="androidx.startup" />
+147-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Mai\.gradle\caches\8.13\transforms\e97a02eac34da2fedde3ef3e5dc6f822\transformed\jetified-profileinstaller-1.4.0\AndroidManifest.xml:31:17-49
+148        </provider>
+149
+150        <receiver
+150-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Mai\.gradle\caches\8.13\transforms\e97a02eac34da2fedde3ef3e5dc6f822\transformed\jetified-profileinstaller-1.4.0\AndroidManifest.xml:34:9-52:20
+151            android:name="androidx.profileinstaller.ProfileInstallReceiver"
+151-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Mai\.gradle\caches\8.13\transforms\e97a02eac34da2fedde3ef3e5dc6f822\transformed\jetified-profileinstaller-1.4.0\AndroidManifest.xml:35:13-76
+152            android:directBootAware="false"
+152-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Mai\.gradle\caches\8.13\transforms\e97a02eac34da2fedde3ef3e5dc6f822\transformed\jetified-profileinstaller-1.4.0\AndroidManifest.xml:36:13-44
+153            android:enabled="true"
+153-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Mai\.gradle\caches\8.13\transforms\e97a02eac34da2fedde3ef3e5dc6f822\transformed\jetified-profileinstaller-1.4.0\AndroidManifest.xml:37:13-35
+154            android:exported="true"
+154-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Mai\.gradle\caches\8.13\transforms\e97a02eac34da2fedde3ef3e5dc6f822\transformed\jetified-profileinstaller-1.4.0\AndroidManifest.xml:38:13-36
+155            android:permission="android.permission.DUMP" >
+155-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Mai\.gradle\caches\8.13\transforms\e97a02eac34da2fedde3ef3e5dc6f822\transformed\jetified-profileinstaller-1.4.0\AndroidManifest.xml:39:13-57
+156            <intent-filter>
+156-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Mai\.gradle\caches\8.13\transforms\e97a02eac34da2fedde3ef3e5dc6f822\transformed\jetified-profileinstaller-1.4.0\AndroidManifest.xml:40:13-42:29
+157                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
+157-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Mai\.gradle\caches\8.13\transforms\e97a02eac34da2fedde3ef3e5dc6f822\transformed\jetified-profileinstaller-1.4.0\AndroidManifest.xml:41:17-91
+157-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Mai\.gradle\caches\8.13\transforms\e97a02eac34da2fedde3ef3e5dc6f822\transformed\jetified-profileinstaller-1.4.0\AndroidManifest.xml:41:25-88
+158            </intent-filter>
+159            <intent-filter>
+159-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Mai\.gradle\caches\8.13\transforms\e97a02eac34da2fedde3ef3e5dc6f822\transformed\jetified-profileinstaller-1.4.0\AndroidManifest.xml:43:13-45:29
+160                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
+160-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Mai\.gradle\caches\8.13\transforms\e97a02eac34da2fedde3ef3e5dc6f822\transformed\jetified-profileinstaller-1.4.0\AndroidManifest.xml:44:17-85
+160-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Mai\.gradle\caches\8.13\transforms\e97a02eac34da2fedde3ef3e5dc6f822\transformed\jetified-profileinstaller-1.4.0\AndroidManifest.xml:44:25-82
+161            </intent-filter>
+162            <intent-filter>
+162-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Mai\.gradle\caches\8.13\transforms\e97a02eac34da2fedde3ef3e5dc6f822\transformed\jetified-profileinstaller-1.4.0\AndroidManifest.xml:46:13-48:29
+163                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
+163-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Mai\.gradle\caches\8.13\transforms\e97a02eac34da2fedde3ef3e5dc6f822\transformed\jetified-profileinstaller-1.4.0\AndroidManifest.xml:47:17-88
+163-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Mai\.gradle\caches\8.13\transforms\e97a02eac34da2fedde3ef3e5dc6f822\transformed\jetified-profileinstaller-1.4.0\AndroidManifest.xml:47:25-85
+164            </intent-filter>
+165            <intent-filter>
+165-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Mai\.gradle\caches\8.13\transforms\e97a02eac34da2fedde3ef3e5dc6f822\transformed\jetified-profileinstaller-1.4.0\AndroidManifest.xml:49:13-51:29
+166                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
+166-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Mai\.gradle\caches\8.13\transforms\e97a02eac34da2fedde3ef3e5dc6f822\transformed\jetified-profileinstaller-1.4.0\AndroidManifest.xml:50:17-95
+166-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Mai\.gradle\caches\8.13\transforms\e97a02eac34da2fedde3ef3e5dc6f822\transformed\jetified-profileinstaller-1.4.0\AndroidManifest.xml:50:25-92
+167            </intent-filter>
+168        </receiver>
+169
+170        <service
+170-->[com.google.android.datatransport:transport-backend-cct:3.1.8] C:\Users\Mai\.gradle\caches\8.13\transforms\0916291cb08319f6fefc206349c0498b\transformed\jetified-transport-backend-cct-3.1.8\AndroidManifest.xml:28:9-34:19
+171            android:name="com.google.android.datatransport.runtime.backends.TransportBackendDiscovery"
+171-->[com.google.android.datatransport:transport-backend-cct:3.1.8] C:\Users\Mai\.gradle\caches\8.13\transforms\0916291cb08319f6fefc206349c0498b\transformed\jetified-transport-backend-cct-3.1.8\AndroidManifest.xml:29:13-103
+172            android:exported="false" >
+172-->[com.google.android.datatransport:transport-backend-cct:3.1.8] C:\Users\Mai\.gradle\caches\8.13\transforms\0916291cb08319f6fefc206349c0498b\transformed\jetified-transport-backend-cct-3.1.8\AndroidManifest.xml:30:13-37
+173            <meta-data
+173-->[com.google.android.datatransport:transport-backend-cct:3.1.8] C:\Users\Mai\.gradle\caches\8.13\transforms\0916291cb08319f6fefc206349c0498b\transformed\jetified-transport-backend-cct-3.1.8\AndroidManifest.xml:31:13-33:39
+174                android:name="backend:com.google.android.datatransport.cct.CctBackendFactory"
+174-->[com.google.android.datatransport:transport-backend-cct:3.1.8] C:\Users\Mai\.gradle\caches\8.13\transforms\0916291cb08319f6fefc206349c0498b\transformed\jetified-transport-backend-cct-3.1.8\AndroidManifest.xml:32:17-94
+175                android:value="cct" />
+175-->[com.google.android.datatransport:transport-backend-cct:3.1.8] C:\Users\Mai\.gradle\caches\8.13\transforms\0916291cb08319f6fefc206349c0498b\transformed\jetified-transport-backend-cct-3.1.8\AndroidManifest.xml:33:17-36
+176        </service>
+177        <service
+177-->[com.google.android.datatransport:transport-runtime:3.1.8] C:\Users\Mai\.gradle\caches\8.13\transforms\8dccdceffe7a9f12b22a31cabde31350\transformed\jetified-transport-runtime-3.1.8\AndroidManifest.xml:26:9-30:19
+178            android:name="com.google.android.datatransport.runtime.scheduling.jobscheduling.JobInfoSchedulerService"
+178-->[com.google.android.datatransport:transport-runtime:3.1.8] C:\Users\Mai\.gradle\caches\8.13\transforms\8dccdceffe7a9f12b22a31cabde31350\transformed\jetified-transport-runtime-3.1.8\AndroidManifest.xml:27:13-117
+179            android:exported="false"
+179-->[com.google.android.datatransport:transport-runtime:3.1.8] C:\Users\Mai\.gradle\caches\8.13\transforms\8dccdceffe7a9f12b22a31cabde31350\transformed\jetified-transport-runtime-3.1.8\AndroidManifest.xml:28:13-37
+180            android:permission="android.permission.BIND_JOB_SERVICE" >
+180-->[com.google.android.datatransport:transport-runtime:3.1.8] C:\Users\Mai\.gradle\caches\8.13\transforms\8dccdceffe7a9f12b22a31cabde31350\transformed\jetified-transport-runtime-3.1.8\AndroidManifest.xml:29:13-69
+181        </service>
+182
+183        <receiver
+183-->[com.google.android.datatransport:transport-runtime:3.1.8] C:\Users\Mai\.gradle\caches\8.13\transforms\8dccdceffe7a9f12b22a31cabde31350\transformed\jetified-transport-runtime-3.1.8\AndroidManifest.xml:32:9-34:40
+184            android:name="com.google.android.datatransport.runtime.scheduling.jobscheduling.AlarmManagerSchedulerBroadcastReceiver"
+184-->[com.google.android.datatransport:transport-runtime:3.1.8] C:\Users\Mai\.gradle\caches\8.13\transforms\8dccdceffe7a9f12b22a31cabde31350\transformed\jetified-transport-runtime-3.1.8\AndroidManifest.xml:33:13-132
+185            android:exported="false" />
+185-->[com.google.android.datatransport:transport-runtime:3.1.8] C:\Users\Mai\.gradle\caches\8.13\transforms\8dccdceffe7a9f12b22a31cabde31350\transformed\jetified-transport-runtime-3.1.8\AndroidManifest.xml:34:13-37
+186    </application>
+187
+188</manifest>

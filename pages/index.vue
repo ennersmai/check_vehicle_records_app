@@ -13,22 +13,13 @@
 const { user } = useAuth();
 
 onMounted(async () => {
-  // Check if running in Capacitor (mobile app) - only on client side
-  let isCapacitor = false;
-  
-  if (process.client) {
-    try {
-      const { Capacitor } = await import('@capacitor/core');
-      isCapacitor = Capacitor.isNativePlatform();
-    } catch {
-      // Capacitor not available (web environment)
-      isCapacitor = false;
-    }
-  }
+  // Check if running in Capacitor (mobile app) via global window object
+  // Don't use import('@capacitor/core') as it's excluded from the bundle
+  const isCapacitor = !!(window as any).Capacitor?.isNativePlatform?.();
   
   if (isCapacitor) {
-    // Mobile app logic - redirect to app screens
-    await new Promise(resolve => setTimeout(resolve, 300));
+    // Mobile app - show spinner briefly then redirect
+    await new Promise(resolve => setTimeout(resolve, 500));
     
     if (user.value) {
       navigateTo('/home');

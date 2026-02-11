@@ -1,6 +1,6 @@
 <template>
   <div class="min-h-screen bg-white pb-20">
-    <div class="px-10 py-4">
+    <div class="px-6 pt-8 py-4">
       <button @click="$router.back()" class="flex items-center text-gray-900 hover:text-gray-700">
         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
@@ -40,7 +40,7 @@
         <p class="text-gray-900 text-lg font-medium mb-6">Basic check</p>
 
         <div class="bg-gray-200 rounded-lg aspect-video flex items-center justify-center mb-6 overflow-hidden" @click="vehicleData?.imageUrl && openFullscreen(vehicleData.imageUrl)">
-          <img v-if="vehicleData?.imageUrl" :src="vehicleData.imageUrl" alt="Vehicle" class="w-full h-full object-cover cursor-pointer" />
+          <img v-if="vehicleData?.imageUrl && !imageError" :src="vehicleData.imageUrl" @error="imageError = true" alt="Vehicle" class="w-full h-full object-contain cursor-pointer" />
           <CarSilhouette v-else-if="vehicleData" :bodyStyle="vehicleData.bodyStyle" class="w-32 h-32 text-gray-400" />
           <svg v-else class="w-20 h-20 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -128,7 +128,7 @@
       </div>
 
       <!-- Premium Upgrade Section -->
-      <div class="mt-8 mb-6">
+      <div class="mt-8 mb-24">
         <div class="flex items-center mb-4">
           <svg class="w-6 h-6 text-primary mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
@@ -245,6 +245,7 @@ const {
 
 const vrm = computed(() => route.params.vrm as string);
 const vehicleData = ref<any>(null);
+const imageError = ref(false);
 const loading = ref(true);
 const error = ref('');
 

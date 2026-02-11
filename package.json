@@ -11,19 +11,25 @@
     "cap:init": "npx cap init",
     "cap:add:ios": "npx cap add ios",
     "cap:add:android": "npx cap add android",
-    "cap:sync": "npm run build && npx cap sync",
+    "cap:sync": "npx nuxt generate && npx cap sync",
+    "cap:android": "npx nuxt generate && npx cap sync android",
     "cap:open:ios": "npx cap open ios",
     "cap:open:android": "npx cap open android"
   },
   "dependencies": {
+    "@capacitor/android": "^8.0.2",
+    "@capacitor/app": "^8.0.0",
+    "@capacitor/camera": "^8.0.0",
+    "@jcesarmobile/capacitor-ocr": "^0.3.0",
     "@pinia/nuxt": "^0.5.1",
+    "@revenuecat/purchases-capacitor": "^12.1.1",
     "@supabase/supabase-js": "^2.89.0",
     "chart.js": "^4.4.1",
-    "vue-chartjs": "^5.3.0",
     "magic-string": "^0.30.21",
     "nuxt": "3.13.0",
     "pinia": "^3.0.4",
     "vue": "^3.5.26",
+    "vue-chartjs": "^5.3.0",
     "vue-router": "^4.6.4"
   },
   "devDependencies": {
@@ -31,10 +37,7 @@
     "@nuxtjs/tailwindcss": "^6.12.1",
     "autoprefixer": "^10.4.17",
     "postcss": "^8.4.33",
-    "tailwindcss": "^3.4.1"
-  },
-  "optionalDependencies": {
-    "@capacitor-mlkit/text-recognition": "^6.0.0",
-    "@capacitor/camera": "^8.0.0"
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5.9.3"
   }
 }

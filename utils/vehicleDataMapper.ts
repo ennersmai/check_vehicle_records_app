@@ -93,6 +93,22 @@ export interface NormalizedPremiumData extends NormalizedVehicleData {
   // Images
   vehicleImages: string[]
   
+  // Valuation
+  valuation: {
+    otr: string
+    dealerForecourt: string
+    tradeRetail: string
+    privateClean: string
+    privateAverage: string
+    partExchange: string
+    auction: string
+    tradeAverage: string
+    tradePoor: string
+    mileage: string
+    vehicleDescription: string
+    valuationTime: string
+  } | null
+
   // Specs
   performance: {
     bhp: string
@@ -250,7 +266,8 @@ export function mapPremiumData(
   motData: any,
   mileageData: any,
   imageData: any,
-  specsData: any
+  specsData: any,
+  valuationData?: any
 ): NormalizedPremiumData {
   const basic = mapDvlaData(basicData) || mapCheckCarDetailsBasic(basicData)
   
@@ -459,6 +476,22 @@ export function mapPremiumData(
     
     // Photo URL from image data
     photoUrl: imageData?.VehicleImages?.ImageDetailsList?.[0]?.ImageUrl || '',
+
+    // Valuation
+    valuation: valuationData?.ValuationList ? {
+      otr: formatValuation(valuationData.ValuationList.OTR),
+      dealerForecourt: formatValuation(valuationData.ValuationList.DealerForecourt),
+      tradeRetail: formatValuation(valuationData.ValuationList.TradeRetail),
+      privateClean: formatValuation(valuationData.ValuationList.PrivateClean),
+      privateAverage: formatValuation(valuationData.ValuationList.PrivateAverage),
+      partExchange: formatValuation(valuationData.ValuationList.PartExchange),
+      auction: formatValuation(valuationData.ValuationList.Auction),
+      tradeAverage: formatValuation(valuationData.ValuationList.TradeAverage),
+      tradePoor: formatValuation(valuationData.ValuationList.TradePoor),
+      mileage: valuationData.Mileage || '',
+      vehicleDescription: valuationData.VehicleDescription || '',
+      valuationTime: formatDate(valuationData.ValuationTime),
+    } : null,
   } as NormalizedPremiumData
 }
 
@@ -591,6 +624,13 @@ function formatMpg(mpg: number | undefined): string {
 function formatCurrency(amount: number | undefined): string {
   if (!amount) return ''
   return `£${amount.toFixed(2)}`
+}
+
+function formatValuation(value: string | number | undefined): string {
+  if (!value) return ''
+  const num = typeof value === 'string' ? parseInt(value) : value
+  if (isNaN(num)) return ''
+  return `£${num.toLocaleString()}`
 }
 
 function getMileageStatus(summary: any): 'green' | 'yellow' | 'red' {

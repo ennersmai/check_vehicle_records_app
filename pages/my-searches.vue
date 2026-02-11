@@ -1,6 +1,6 @@
 <template>
   <div class="min-h-screen bg-white pb-20">
-    <div class="px-10 py-4">
+    <div class="px-6 pt-8 py-4">
       <button @click="$router.back()" class="flex items-center text-gray-900 hover:text-gray-700">
         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
@@ -40,7 +40,16 @@
             <p class="text-sm text-gray-500">Last checked: {{ search.lastChecked }}</p>
           </div>
 
-          <div class="flex justify-end">
+          <div class="flex justify-end gap-2">
+            <button 
+              @click="confirmDelete(search)"
+              class="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors active:opacity-90"
+              title="Delete search"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              </svg>
+            </button>
             <button 
               @click="viewReport(search.vrm, search.isPremium)"
               class="bg-primary text-white px-6 py-2 rounded-lg font-medium text-sm active:opacity-90"
@@ -56,6 +65,27 @@
           </svg>
           <p class="text-gray-500">No recent searches</p>
           <button @click="$router.push('/home')" class="text-primary font-medium mt-2">Search for a vehicle</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div v-if="showDeleteModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-6" @click.self="showDeleteModal = false">
+      <div class="bg-white rounded-2xl p-6 max-w-sm w-full shadow-xl">
+        <div class="text-center mb-4">
+          <div class="w-14 h-14 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-3">
+            <svg class="w-7 h-7 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            </svg>
+          </div>
+          <h3 class="text-lg font-semibold text-gray-900">Delete Search</h3>
+          <p class="text-sm text-gray-500 mt-2">Are you sure you want to delete the search for <strong>{{ deleteTarget?.vrm }}</strong>? This cannot be undone.</p>
+        </div>
+        <div class="flex gap-3">
+          <button @click="showDeleteModal = false" class="flex-1 py-2.5 border border-gray-200 rounded-lg text-sm text-gray-600 font-medium">Cancel</button>
+          <button @click="deleteSearch" :disabled="deleting" class="flex-1 py-2.5 bg-red-500 text-white rounded-lg text-sm font-medium disabled:opacity-50">
+            {{ deleting ? 'Deleting...' : 'Delete' }}
+          </button>
         </div>
       </div>
     </div>
@@ -133,6 +163,38 @@ const viewReport = (vrm: string, isPremium: boolean) => {
     router.push(`/vehicle-premium/${vrm.replace(/\s/g, '')}`);
   } else {
     router.push(`/vehicle/${vrm.replace(/\s/g, '')}`);
+  }
+};
+
+const showDeleteModal = ref(false);
+const deleteTarget = ref<any>(null);
+const deleting = ref(false);
+
+const confirmDelete = (search: any) => {
+  deleteTarget.value = search;
+  showDeleteModal.value = true;
+};
+
+const deleteSearch = async () => {
+  if (!deleteTarget.value || !user.value) return;
+  
+  deleting.value = true;
+  try {
+    const { error } = await (supabase as any)
+      .from('vehicle_lookups')
+      .delete()
+      .eq('id', deleteTarget.value.id)
+      .eq('user_id', user.value.id);
+
+    if (error) throw error;
+
+    recentSearches.value = recentSearches.value.filter((s: any) => s.id !== deleteTarget.value.id);
+    showDeleteModal.value = false;
+    deleteTarget.value = null;
+  } catch (err) {
+    console.error('Error deleting search:', err);
+  } finally {
+    deleting.value = false;
   }
 };
 </script>

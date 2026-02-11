@@ -1,6 +1,6 @@
 <template>
   <div class="min-h-screen bg-white pb-20 flex flex-col">
-    <div class="px-10 py-4">
+    <div class="px-6 pt-8 py-4">
       <button @click="$router.back()" class="flex items-center text-gray-900 hover:text-gray-700">
         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
@@ -9,7 +9,7 @@
       </button>
     </div>
 
-    <div class="flex-1 flex flex-col items-center justify-center px-10">
+    <div class="flex-1 flex flex-col items-center px-10 pt-12">
       <svg class="w-24 h-24 text-primary mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" />
       </svg>

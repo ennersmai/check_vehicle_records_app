@@ -1,6 +1,6 @@
 <template>
   <div class="min-h-screen bg-white pb-20 flex flex-col">
-    <div class="px-10 py-4">
+    <div class="px-6 pt-8 py-4">
       <button @click="$router.push('/home')" class="flex items-center text-gray-900 hover:text-gray-700">
         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />

@@ -1,5 +1,5 @@
 <template>
-  <nav class="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200">
+  <nav class="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 bottom-nav">
     <div class="flex items-center justify-around h-16 px-2">
       <NuxtLink 
         v-for="item in navItems" 
@@ -19,12 +19,6 @@ const router = useRouter();
 const currentPath = computed(() => router.currentRoute.value.path);
 
 const navItems = [
-  {
-    path: '/home',
-    label: '',
-    icon: 'search',
-    name: 'search'
-  },
   {
     path: '/my-searches',
     label: '',
@@ -96,9 +90,6 @@ const getIconComponent = (iconName: string) => {
 };
 
 const isActive = (itemName: string) => {
-  if (itemName === 'search') {
-    return currentPath.value === '/home';
-  }
   const item = navItems.find(i => i.name === itemName);
   return item ? currentPath.value === item.path || currentPath.value.startsWith(item.path + '/') : false;
 };

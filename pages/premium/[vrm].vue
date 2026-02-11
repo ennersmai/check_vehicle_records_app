@@ -1,6 +1,6 @@
 <template>
   <div class="min-h-screen bg-white pb-20">
-    <div class="px-10 py-4">
+    <div class="px-6 pt-8 py-4">
       <button @click="$router.back()" class="flex items-center text-gray-900 hover:text-gray-700">
         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
@@ -35,9 +35,10 @@
       </div>
 
       <!-- Vehicle Image -->
-      <div v-if="vehicleData?.imageUrl" class="mb-6">
-        <div class="bg-gray-200 rounded-lg aspect-video flex items-center justify-center overflow-hidden" @click="openFullscreen(vehicleData.imageUrl)">
-          <img :src="vehicleData.imageUrl" alt="Vehicle" class="w-full h-full object-cover cursor-pointer" />
+      <div v-if="vehicleData" class="mb-6">
+        <div class="bg-gray-200 rounded-lg aspect-video flex items-center justify-center overflow-hidden" @click="vehicleData?.imageUrl && !imageError && openFullscreen(vehicleData.imageUrl)">
+          <img v-if="vehicleData?.imageUrl && !imageError" :src="vehicleData.imageUrl" @error="imageError = true" alt="Vehicle" class="w-full h-full object-contain cursor-pointer" />
+          <CarSilhouette v-else :bodyStyle="vehicleData.bodyStyle" class="w-32 h-32 text-gray-400" />
         </div>
       </div>
 
@@ -116,6 +117,7 @@ const {
 
 const vrm = computed(() => route.params.vrm as string);
 const vehicleData = ref<any>(null);
+const imageError = ref(false);
 const loading = ref(true);
 
 onMounted(async () => {

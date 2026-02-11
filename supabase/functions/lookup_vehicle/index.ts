@@ -203,7 +203,6 @@ serve(async (req) => {
         errorCode: 'NOT_FOUND'
       } as VehicleLookupResponse),
       { 
-        status: 404,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
       }
     )
@@ -214,17 +213,13 @@ serve(async (req) => {
     // Determine error type
     const errorMessage = error.message || 'An unexpected error occurred'
     let errorCode: 'NOT_FOUND' | 'API_ERROR' | 'INVALID_VRM' | 'UNKNOWN' = 'UNKNOWN'
-    let statusCode = 400
     
     if (errorMessage.includes('VRM is required') || errorMessage.includes('invalid')) {
       errorCode = 'INVALID_VRM'
-      statusCode = 400
     } else if (errorMessage.includes('not found')) {
       errorCode = 'NOT_FOUND'
-      statusCode = 404
     } else {
       errorCode = 'API_ERROR'
-      statusCode = 500
     }
     
     return new Response(
@@ -235,7 +230,6 @@ serve(async (req) => {
         errorCode
       } as VehicleLookupResponse),
       { 
-        status: statusCode,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
       }
     )

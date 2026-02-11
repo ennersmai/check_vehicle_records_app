@@ -3,7 +3,7 @@ import { CapacitorConfig } from '@capacitor/cli';
 const config: CapacitorConfig = {
   appId: 'com.cvr.app',
   appName: 'CVR',
-  webDir: '.output/public',
+  webDir: '.vercel/output/static',
   server: {
     androidScheme: 'https'
   },

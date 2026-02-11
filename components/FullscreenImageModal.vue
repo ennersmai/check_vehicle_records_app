@@ -1,9 +1,21 @@
 <template>
-  <!-- Fullscreen Image Modal with Pinch-to-Zoom (Landscape) -->
-  <div v-if="imageUrl" @click="$emit('close')" class="fixed inset-0 bg-black z-50 overflow-hidden">
+  <!-- Fullscreen Image Modal with Pinch-to-Zoom -->
+  <div v-if="imageUrl" class="fixed inset-0 bg-black z-50 overflow-hidden">
+    <!-- Close button -->
+    <button 
+      @click="$emit('close')" 
+      class="absolute z-[60] w-10 h-10 flex items-center justify-center bg-white/20 rounded-full text-white" 
+      style="top: max(env(safe-area-inset-top, 12px), 12px); right: 16px;"
+    >
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+
     <div 
       ref="imageContainer"
       class="w-full h-full flex items-center justify-center touch-none"
+      @click.self="$emit('close')"
       @touchstart="$emit('touchstart', $event)"
       @touchmove="$emit('touchmove', $event)"
       @touchend="$emit('touchend', $event)"

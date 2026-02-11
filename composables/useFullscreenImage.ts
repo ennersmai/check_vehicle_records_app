@@ -14,19 +14,52 @@ export const useFullscreenImage = () => {
   let lastTouchY = 0
   let isDragging = false
 
+  // Close handler for global back button event
+  let closeHandler: (() => void) | null = null
+
+  const resetState = () => {
+    fullscreenImage.value = null
+    imageScale.value = 1
+    imageTranslateX.value = 0
+    imageTranslateY.value = 0
+    // Tell global back button handler that fullscreen is closed
+    if (typeof document !== 'undefined') {
+      document.body.removeAttribute('data-fullscreen-image')
+    }
+  }
+
   // Fullscreen image functions
   const openFullscreen = (imageUrl: string) => {
     fullscreenImage.value = imageUrl
     imageScale.value = 1
     imageTranslateX.value = 0
     imageTranslateY.value = 0
+
+    if (typeof window !== 'undefined') {
+      // Mark fullscreen as open for the global back button handler
+      document.body.setAttribute('data-fullscreen-image', 'true')
+
+      // Listen for the global back button close event
+      if (closeHandler) {
+        window.removeEventListener('close-fullscreen-image', closeHandler)
+      }
+      closeHandler = () => {
+        resetState()
+        if (closeHandler) {
+          window.removeEventListener('close-fullscreen-image', closeHandler)
+          closeHandler = null
+        }
+      }
+      window.addEventListener('close-fullscreen-image', closeHandler)
+    }
   }
 
   const closeFullscreen = () => {
-    fullscreenImage.value = null
-    imageScale.value = 1
-    imageTranslateX.value = 0
-    imageTranslateY.value = 0
+    if (typeof window !== 'undefined' && closeHandler) {
+      window.removeEventListener('close-fullscreen-image', closeHandler)
+      closeHandler = null
+    }
+    resetState()
   }
 
   // Calculate distance between two touch points
@@ -59,13 +92,15 @@ export const useFullscreenImage = () => {
       const scale = (currentDistance / initialDistance) * initialScale
       imageScale.value = Math.max(1, Math.min(scale, 4)) // Limit between 1x and 4x
     } else if (e.touches.length === 1 && isDragging && imageScale.value > 1) {
-      // Pan (only when zoomed in) - invert coordinates for 90-degree rotation
+      // Pan (only when zoomed in) - remap for 90deg CW rotation
+      // CSS: rotate(90deg) scale(s) translate(tx, ty) applied R-to-L
+      // tx+ → screen DOWN, ty+ → screen LEFT
+      // So: swipe right (deltaX+) → ty-  |  swipe down (deltaY+) → tx+
       e.preventDefault()
       const deltaX = e.touches[0].clientX - lastTouchX
       const deltaY = e.touches[0].clientY - lastTouchY
-      // For 90-degree clockwise rotation: horizontal drag = vertical translate, vertical drag = horizontal translate
-      imageTranslateX.value -= deltaX / imageScale.value
-      imageTranslateY.value -= deltaY / imageScale.value
+      imageTranslateY.value -= deltaX / imageScale.value
+      imageTranslateX.value += deltaY / imageScale.value
       lastTouchX = e.touches[0].clientX
       lastTouchY = e.touches[0].clientY
     }
