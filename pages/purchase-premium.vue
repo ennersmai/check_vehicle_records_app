@@ -65,7 +65,7 @@ const selectedPackage = ref<number | null>(null);
 
 const selectedPackagePrice = computed(() => {
   const pkg = packages.find(p => p.id === selectedPackage.value);
-  return pkg ? pkg.price : '£xx.xx';
+  return pkg ? pkg.price : '£0.00';
 });
 
 const handleConfirm = () => {
