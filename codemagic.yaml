@@ -64,23 +64,28 @@ workflows:
 
       - name: Ensure iOS project exists
         script: |
-          if [ ! -d "ios" ]; then
+          if [ ! -d "ios/App" ]; then
             npx cap add ios
           fi
 
       - name: Sync Capacitor iOS project
-        script: npx cap sync ios
+        script: |
+          npx cap sync ios
+          if [ ! -f "ios/App/Podfile" ]; then
+            rm -rf ios
+            npx cap add ios
+            npx cap sync ios
+          fi
+          if [ ! -f "ios/App/Podfile" ]; then
+            echo "Podfile still missing at ios/App/Podfile"
+            ls -la
+            ls -la ios || true
+            exit 1
+          fi
 
       - name: Install iOS Pods
         script: |
-          if [ -f "ios/App/Podfile" ]; then
-            cd ios/App
-          elif [ -f "ios/Podfile" ]; then
-            cd ios
-          else
-            echo "Podfile not found in ios/App or ios"
-            exit 1
-          fi
+          cd ios/App
           pod install
 
       - name: Fetch App Store signing files
