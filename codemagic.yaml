@@ -76,8 +76,15 @@ workflows:
           cd ios/App
           pod install
 
+      - name: Fetch App Store signing files
+        script: |
+          app-store-connect fetch-signing-files "com.cvr.app" --type IOS_APP_STORE --create
+
       - name: Set up code signing
-        script: xcode-project use-profiles
+        script: |
+          keychain initialize
+          keychain add-certificates
+          xcode-project use-profiles
 
       - name: Build iOS IPA
         script: |
