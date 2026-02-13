@@ -71,22 +71,15 @@ workflows:
       - name: Sync Capacitor iOS project
         script: |
           npx cap sync ios
-          if [ ! -f "ios/App/Podfile" ]; then
-            rm -rf ios
-            npx cap add ios
-            npx cap sync ios
-          fi
-          if [ ! -f "ios/App/Podfile" ]; then
-            echo "Podfile still missing at ios/App/Podfile"
-            ls -la
-            ls -la ios || true
-            exit 1
-          fi
 
       - name: Install iOS Pods
         script: |
-          cd ios/App
-          pod install
+          if [ -f "ios/App/Podfile" ]; then
+            cd ios/App
+            pod install
+          else
+            echo "No Podfile found (likely SPM-only iOS setup). Skipping pod install."
+          fi
 
       - name: Fetch App Store signing files
         script: |
