@@ -18,12 +18,22 @@ workflows:
       - name: Build web app (Nuxt static output)
         script: npm run generate
 
+      - name: Ensure Android project exists
+        script: |
+          if [ ! -d "android" ]; then
+            npx cap add android
+          fi
+
       - name: Sync Capacitor Android project
         script: npx cap sync android
 
       - name: Build Android AAB
         script: |
           cd android
+          if [ ! -f "./gradlew" ]; then
+            gradle wrapper
+          fi
+          chmod +x ./gradlew
           ./gradlew bundleRelease
     artifacts:
       - android/app/build/outputs/bundle/release/*.aab
