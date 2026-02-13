@@ -87,15 +87,15 @@ workflows:
         script: |
           export APP_STORE_CONNECT_ISSUER_ID="${APP_STORE_CONNECT_ISSUER_ID:-5af92c06-676d-4196-b3f8-13148368e52a}"
           export APP_STORE_CONNECT_KEY_IDENTIFIER="${APP_STORE_CONNECT_KEY_IDENTIFIER:-HF597Z99Y2}"
-          export APP_STORE_CONNECT_PRIVATE_KEY="${APP_STORE_CONNECT_PRIVATE_KEY:-$(cat <<'EOF'
------BEGIN PRIVATE KEY-----
-MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgDISJa46W9sB/6yxR
-NJZDvDElRiz2GGEtGuvQLylpq/WgCgYIKoZIzj0DAQehRANCAAT4cMnTui/tqv06
-EONVhGaDRpsLg+i6wSpeibTZanRUwLW6hiVNvf08djLQwUEhaXx1GlB3wKeiNF8Y
-Z0hj9W8m
------END PRIVATE KEY-----
-EOF
-)}"
+          if [ -z "${APP_STORE_CONNECT_PRIVATE_KEY:-}" ]; then
+            APP_STORE_CONNECT_PRIVATE_KEY="$(printf '%s\n' \
+              '-----BEGIN PRIVATE KEY-----' \
+              'MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgDISJa46W9sB/6yxR' \
+              'NJZDvDElRiz2GGEtGuvQLylpq/WgCgYIKoZIzj0DAQehRANCAAT4cMnTui/tqv06' \
+              'EONVhGaDRpsLg+i6wSpeibTZanRUwLW6hiVNvf08djLQwUEhaXx1GlB3wKeiNF8Y' \
+              'Z0hj9W8m' \
+              '-----END PRIVATE KEY-----')"
+          fi
           app-store-connect fetch-signing-files "com.cvr.app" --type IOS_APP_STORE --create --issuer-id "$APP_STORE_CONNECT_ISSUER_ID" --key-id "$APP_STORE_CONNECT_KEY_IDENTIFIER" --private-key "$APP_STORE_CONNECT_PRIVATE_KEY"
 
       - name: Set up code signing
