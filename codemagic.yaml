@@ -50,6 +50,10 @@ workflows:
       ios_signing:
         distribution_type: app_store
         bundle_identifier: com.cvr.app
+        provisioning_profiles:
+          - codemagic
+        certificates:
+          - codemagic
     cache:
       cache_paths:
         - ~/.npm
