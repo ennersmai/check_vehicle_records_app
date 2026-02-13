@@ -83,7 +83,8 @@ workflows:
 
       - name: Fetch App Store signing files
         script: |
-          app-store-connect fetch-signing-files "com.cvr.app" --type IOS_APP_STORE --create
+          export APP_STORE_CONNECT_ISSUER_ID="${APP_STORE_CONNECT_ISSUER_ID:-5af92c06-676d-4196-b3f8-13148368e52a}"
+          app-store-connect fetch-signing-files "com.cvr.app" --type IOS_APP_STORE --create --issuer-id "$APP_STORE_CONNECT_ISSUER_ID"
 
       - name: Set up code signing
         script: |
