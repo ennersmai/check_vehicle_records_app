@@ -109,10 +109,17 @@ workflows:
             exit 1
           fi
 
-          mkdir -p resources
+          mkdir -p assets resources
+          cp public/mobile_logo.png assets/icon.png
           cp public/mobile_logo.png resources/icon.png
 
           npx @capacitor/assets generate --ios
+
+          if [ ! -d "ios/App/App/Assets.xcassets/AppIcon.appiconset" ]; then
+            echo "iOS AppIcon.appiconset was not generated"
+            find ios -name AppIcon.appiconset || true
+            exit 1
+          fi
 
       - name: Sync Capacitor iOS project
         script: |
