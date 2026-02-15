@@ -104,10 +104,14 @@ workflows:
 
       - name: Generate iOS app icons
         script: |
-          if [ ! -f "resources/icon.png" ]; then
-            echo "Missing resources/icon.png for iOS app icon generation"
+          if [ ! -f "public/mobile_logo.png" ]; then
+            echo "Missing public/mobile_logo.png for iOS app icon generation"
             exit 1
           fi
+
+          mkdir -p resources
+          cp public/mobile_logo.png resources/icon.png
+
           npx @capacitor/assets generate --ios
 
       - name: Sync Capacitor iOS project
