@@ -102,6 +102,14 @@ workflows:
             npx cap add ios
           fi
 
+      - name: Generate iOS app icons
+        script: |
+          if [ ! -f "resources/icon.png" ]; then
+            echo "Missing resources/icon.png for iOS app icon generation"
+            exit 1
+          fi
+          npx @capacitor/assets generate --ios
+
       - name: Sync Capacitor iOS project
         script: |
           npx cap sync ios
