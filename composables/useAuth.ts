@@ -89,6 +89,20 @@ export const useAuth = () => {
     user.value = data.session?.user || null;
   };
 
+  const deleteAccount = async () => {
+    loading.value = true;
+    try {
+      const { error } = await supabase.functions.invoke('delete_account');
+      if (error) throw error;
+      user.value = null;
+      return { success: true };
+    } catch (error: any) {
+      return { success: false, error: error.message };
+    } finally {
+      loading.value = false;
+    }
+  };
+
   return {
     user,
     loading,
@@ -97,6 +111,7 @@ export const useAuth = () => {
     signOut,
     resetPassword,
     updatePassword,
-    checkAuth
+    checkAuth,
+    deleteAccount
   };
 };

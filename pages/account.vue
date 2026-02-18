@@ -21,15 +21,6 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
             </svg>
           </div>
-          <button 
-            @click="uploadPhoto"
-            class="absolute bottom-0 right-0 w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white"
-          >
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-            </svg>
-          </button>
         </div>
         
         <div>
@@ -112,10 +103,33 @@
       <!-- Log Out -->
       <button 
         @click="handleLogout"
-        class="w-full text-red-600 font-medium py-4"
+        class="w-full text-red-600 font-medium py-4 border-b border-gray-200"
       >
         Log Out
       </button>
+
+      <!-- Delete Account -->
+      <button 
+        @click="showDeleteModal = true"
+        class="w-full text-gray-400 text-sm font-medium py-4"
+      >
+        Delete Account
+      </button>
+    </div>
+
+    <!-- Delete Account Confirmation Modal -->
+    <div v-if="showDeleteModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-6" @click.self="showDeleteModal = false">
+      <div class="bg-white rounded-2xl p-6 max-w-sm w-full shadow-xl">
+        <h3 class="text-lg font-semibold text-gray-900 mb-2">Delete Account</h3>
+        <p class="text-sm text-gray-600 mb-6">This will permanently delete your account and all associated data. This action cannot be undone.</p>
+        <div v-if="deleteError" class="text-red-600 text-sm mb-4">{{ deleteError }}</div>
+        <div class="flex gap-3">
+          <button @click="showDeleteModal = false" class="flex-1 py-2.5 border border-gray-200 rounded-lg text-sm text-gray-600 font-medium">Cancel</button>
+          <button @click="handleDeleteAccount" :disabled="deletingAccount" class="flex-1 py-2.5 bg-red-600 text-white rounded-lg text-sm font-medium disabled:opacity-50">
+            {{ deletingAccount ? 'Deleting...' : 'Delete' }}
+          </button>
+        </div>
+      </div>
     </div>
 
     <BottomNav />
@@ -124,39 +138,14 @@
 
 <script setup lang="ts">
 const router = useRouter();
-const { user, signOut } = useAuth();
+const { user, signOut, deleteAccount } = useAuth();
 
 const userName = computed(() => user.value?.user_metadata?.name || 'John Smith');
 const userEmail = computed(() => user.value?.email || 'johnsmith@email.com');
 const profilePhoto = ref<string | null>(null);
-
-const uploadPhoto = async () => {
-  // Photo upload using Capacitor Camera API
-  // Note: Requires native app context to function
-  try {
-    const { Camera, CameraResultType, CameraSource } = await import('@capacitor/camera');
-    
-    const photo = await Camera.getPhoto({
-      quality: 80,
-      allowEditing: true,
-      resultType: CameraResultType.DataUrl,
-      source: CameraSource.Prompt
-    });
-    
-    if (photo.dataUrl) {
-      profilePhoto.value = photo.dataUrl;
-      // In production, upload to Supabase Storage
-      console.log('Photo captured successfully');
-    }
-  } catch (err: any) {
-    // Camera not available (web browser) - fallback to file input
-    if (err.message?.includes('not implemented')) {
-      console.log('Camera not available in web browser');
-    } else {
-      console.error('Photo upload error:', err);
-    }
-  }
-};
+const showDeleteModal = ref(false);
+const deletingAccount = ref(false);
+const deleteError = ref('');
 
 const handleSettings = () => {
   router.push('/settings');
@@ -165,5 +154,18 @@ const handleSettings = () => {
 const handleLogout = async () => {
   await signOut();
   router.push('/login');
+};
+
+const handleDeleteAccount = async () => {
+  deletingAccount.value = true;
+  deleteError.value = '';
+  const result = await deleteAccount();
+  deletingAccount.value = false;
+  if (result.success) {
+    showDeleteModal.value = false;
+    router.push('/login');
+  } else {
+    deleteError.value = result.error || 'Failed to delete account. Please contact support.';
+  }
 };
 </script>

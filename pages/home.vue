@@ -217,9 +217,4 @@ const confirmScan = async () => {
   }
 };
 
-onMounted(() => {
-  if (!user.value) {
-    router.push('/login');
-  }
-});
 </script>

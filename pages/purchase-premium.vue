@@ -12,7 +12,12 @@
     <div class="px-10 mt-8">
       <h1 class="text-3xl font-bold text-primary mb-1">Purchase</h1>
       <p class="text-xl text-gray-900 mb-2">Premium Check</p>
-      <p class="text-gray-600 text-sm mb-8">Choose your package and proceed to<br />secure checkout. Instant report delivery,<br />no hidden fees.</p>
+      <p class="text-gray-600 text-sm mb-6">Choose your package and proceed to<br />secure checkout. Instant report delivery,<br />no hidden fees.</p>
+
+      <div class="bg-blue-50 border border-blue-100 rounded-lg p-4 mb-6 text-xs text-blue-800">
+        <p class="font-semibold mb-1">About credits &amp; vouchers</p>
+        <p>All purchases are processed exclusively through Apple In-App Purchase. Credits are issued to your account after a successful payment and are personal to you — they cannot be transferred, shared, or used by another account. Voucher codes are generated automatically upon purchase and are tied to the purchasing account.</p>
+      </div>
 
       <form @submit.prevent="handleConfirm" class="space-y-4">
         <label 
@@ -52,8 +57,15 @@
 <script setup lang="ts">
 const route = useRoute();
 const router = useRouter();
+const { user } = useAuth();
 
 const vrm = computed(() => route.query.vrm as string);
+
+onMounted(() => {
+  if (!user.value) {
+    router.push({ path: '/login', query: { redirect: route.fullPath } });
+  }
+});
 
 const packages = [
   { id: 1, name: 'One time purchase', price: '£9.99', checks: 1, productId: 'com.cvr.app.credits.1' },

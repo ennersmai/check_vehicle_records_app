@@ -72,6 +72,7 @@
 <script setup lang="ts">
 const { signIn } = useAuth();
 const router = useRouter();
+const route = useRoute();
 
 const username = ref('');
 const password = ref('');
@@ -88,7 +89,8 @@ const handleLogin = async () => {
   loading.value = false;
 
   if (result.success) {
-    router.push('/home');
+    const redirect = route.query.redirect as string;
+    router.push(redirect || '/home');
   } else {
     error.value = result.error || 'Login failed';
   }
