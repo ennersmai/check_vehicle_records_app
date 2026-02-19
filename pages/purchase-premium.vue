@@ -12,10 +12,23 @@
     <div class="px-10 mt-8">
       <h1 class="text-3xl font-bold text-primary mb-1">Purchase</h1>
       <p class="text-xl text-gray-900 mb-2">Premium Check</p>
-      <p class="text-gray-600 text-sm mb-6">Choose your package and proceed to<br />secure checkout. Instant report delivery,<br />no hidden fees.</p>
+      <p class="text-gray-600 text-sm mb-4">Choose your package and proceed to<br />secure checkout. Instant report delivery,<br />no hidden fees.</p>
 
-      <div class="bg-blue-50 border border-blue-100 rounded-lg p-4 mb-6 text-xs text-blue-800">
-        <p class="font-semibold mb-1">About credits &amp; vouchers</p>
+      <!-- Collapsible info -->
+      <button 
+        type="button"
+        @click="showInfo = !showInfo" 
+        class="flex items-center gap-2 text-primary text-sm mb-4"
+      >
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+        </svg>
+        <span>About credits & vouchers</span>
+        <svg :class="['w-4 h-4 transition-transform', showInfo ? 'rotate-180' : '']" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+      <div v-if="showInfo" class="bg-blue-50 border border-blue-100 rounded-lg p-4 mb-4 text-xs text-blue-800">
         <p>All purchases are processed exclusively through Apple In-App Purchase. Credits are issued to your account after a successful payment and are personal to you — they cannot be transferred, shared, or used by another account. Voucher codes are generated automatically upon purchase and are tied to the purchasing account.</p>
       </div>
 
@@ -74,6 +87,7 @@ const packages = [
 ];
 
 const selectedPackage = ref<number | null>(null);
+const showInfo = ref(false);
 
 const selectedPackagePrice = computed(() => {
   const pkg = packages.find(p => p.id === selectedPackage.value);
