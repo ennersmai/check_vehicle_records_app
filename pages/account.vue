@@ -9,15 +9,15 @@
       </button>
     </div>
 
-    <div class="px-10 mt-8">
-      <h1 class="text-3xl font-bold text-primary mb-8">My Account</h1>
+    <div class="px-10 mt-4">
+      <h1 class="text-3xl font-bold text-primary mb-4">My Account</h1>
 
       <!-- Profile Section -->
-      <div class="flex items-center gap-4 mb-8">
+      <div class="flex items-center gap-4 mb-6">
         <div class="relative">
-          <div class="w-24 h-24 bg-gray-200 rounded-full flex items-center justify-center overflow-hidden">
+          <div class="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center overflow-hidden">
             <img v-if="profilePhoto" :src="profilePhoto" alt="Profile" class="w-full h-full object-cover" />
-            <svg v-else class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg v-else class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
             </svg>
           </div>
@@ -30,8 +30,8 @@
       </div>
 
       <!-- Activity Section -->
-      <div class="mb-6">
-        <h3 class="text-sm font-semibold text-gray-900 mb-3">Activity</h3>
+      <div class="mb-4">
+        <h3 class="text-sm font-semibold text-gray-900 mb-2">Activity</h3>
         
         <button 
           @click="$router.push('/my-searches')"
@@ -65,8 +65,8 @@
       </div>
 
       <!-- Account Section -->
-      <div class="mb-6">
-        <h3 class="text-sm font-semibold text-gray-900 mb-3">Account</h3>
+      <div class="mb-4">
+        <h3 class="text-sm font-semibold text-gray-900 mb-2">Account</h3>
         
         <button 
           @click="$router.push('/purchases')"
@@ -101,7 +101,7 @@
 
         <button 
           @click="showDeleteModal = true"
-          class="w-full flex items-center justify-between py-4 border-b border-gray-200"
+          class="w-full flex items-center justify-between py-3 border-b border-gray-200"
         >
           <div class="flex items-center gap-3">
             <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -113,15 +113,19 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
           </svg>
         </button>
-      </div>
 
-      <!-- Log Out -->
-      <button 
-        @click="handleLogout"
-        class="w-full text-red-600 font-medium py-4"
-      >
-        Log Out
-      </button>
+        <button 
+          @click="handleLogout"
+          class="w-full flex items-center justify-between py-3"
+        >
+          <div class="flex items-center gap-3">
+            <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            </svg>
+            <span class="text-red-600 font-medium">Log Out</span>
+          </div>
+        </button>
+      </div>
     </div>
 
     <!-- Delete Account Confirmation Modal -->
@@ -145,6 +149,7 @@
 
 <script setup lang="ts">
 const router = useRouter();
+const route = useRoute();
 const { user, signOut, deleteAccount } = useAuth();
 
 const userName = computed(() => user.value?.user_metadata?.name || 'John Smith');
@@ -153,6 +158,12 @@ const profilePhoto = ref<string | null>(null);
 const showDeleteModal = ref(false);
 const deletingAccount = ref(false);
 const deleteError = ref('');
+
+onMounted(() => {
+  if (!user.value) {
+    router.push({ path: '/login', query: { redirect: route.fullPath } });
+  }
+});
 
 const handleSettings = () => {
   router.push('/settings');

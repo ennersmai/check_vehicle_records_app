@@ -1,6 +1,16 @@
 <template>
-  <div class="min-h-screen bg-white flex flex-col items-center justify-center px-10">
-    <img src="/cvr_logo.png" alt="Check Vehicle Records" class="w-64 mb-12" />
+  <div class="min-h-screen bg-white flex flex-col px-10">
+    <div class="pt-8 pb-4">
+      <button @click="handleBack" class="flex items-center text-gray-900 hover:text-gray-700">
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+        Back
+      </button>
+    </div>
+
+    <div class="flex-1 flex flex-col items-center justify-center">
+      <img src="/cvr_logo.png" alt="Check Vehicle Records" class="w-64 mb-12" />
     
     <form @submit.prevent="handleLogin" class="w-full max-w-sm space-y-4">
       <div class="relative">
@@ -63,8 +73,9 @@
       </div>
     </form>
 
-    <div v-if="error" class="mt-4 text-red-600 text-sm">
-      {{ error }}
+      <div v-if="error" class="mt-4 text-red-600 text-sm">
+        {{ error }}
+      </div>
     </div>
   </div>
 </template>
@@ -79,6 +90,14 @@ const password = ref('');
 const showPassword = ref(false);
 const loading = ref(false);
 const error = ref('');
+
+const handleBack = () => {
+  if (window.history.length > 1) {
+    router.back();
+  } else {
+    router.push('/home');
+  }
+};
 
 const handleLogin = async () => {
   error.value = '';
