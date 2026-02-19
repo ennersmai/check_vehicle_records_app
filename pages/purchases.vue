@@ -109,10 +109,12 @@ interface VoucherRecord {
   vehicle_vrm?: string;
 }
 
+const route = useRoute();
+
 // Load vouchers on mount
 onMounted(async () => {
   if (!user.value) {
-    router.push('/login');
+    router.push({ path: '/login', query: { redirect: route.fullPath } });
     return;
   }
 

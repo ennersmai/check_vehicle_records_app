@@ -92,11 +92,7 @@ const loading = ref(false);
 const error = ref('');
 
 const handleBack = () => {
-  if (window.history.length > 1) {
-    router.back();
-  } else {
-    router.push('/home');
-  }
+  router.push('/home');
 };
 
 const handleLogin = async () => {
