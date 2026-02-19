@@ -29,7 +29,7 @@
         </svg>
       </button>
       <div v-if="showInfo" class="bg-blue-50 border border-blue-100 rounded-lg p-4 mb-4 text-xs text-blue-800">
-        <p>All purchases are processed exclusively through Apple In-App Purchase. Credits are issued to your account after a successful payment and are personal to you — they cannot be transferred, shared, or used by another account. Voucher codes are generated automatically upon purchase and are tied to the purchasing account.</p>
+        <p>All purchases are processed exclusively through Apple In-App Purchase. Credits are issued to your account after a successful payment and are personal to you, they cannot be transferred, shared, or used by another account. Voucher codes are generated automatically upon purchase and are tied to the purchasing account.</p>
       </div>
 
       <form @submit.prevent="handleConfirm" class="space-y-4">
