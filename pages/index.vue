@@ -18,14 +18,9 @@ onMounted(async () => {
   const isCapacitor = !!(window as any).Capacitor?.isNativePlatform?.();
   
   if (isCapacitor) {
-    // Mobile app - show spinner briefly then redirect
+    // Mobile app - show spinner briefly then redirect to home (allow guest browsing)
     await new Promise(resolve => setTimeout(resolve, 500));
-    
-    if (user.value) {
-      navigateTo('/home');
-    } else {
-      navigateTo('/login');
-    }
+    navigateTo('/home');
   } else {
     // Web users - redirect to landing page
     navigateTo('/landing');

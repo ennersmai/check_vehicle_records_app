@@ -98,22 +98,29 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
           </svg>
         </button>
+
+        <button 
+          @click="showDeleteModal = true"
+          class="w-full flex items-center justify-between py-4 border-b border-gray-200"
+        >
+          <div class="flex items-center gap-3">
+            <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            </svg>
+            <span class="text-gray-900">Delete Account</span>
+          </div>
+          <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
       </div>
 
       <!-- Log Out -->
       <button 
         @click="handleLogout"
-        class="w-full text-red-600 font-medium py-4 border-b border-gray-200"
+        class="w-full text-red-600 font-medium py-4"
       >
         Log Out
-      </button>
-
-      <!-- Delete Account -->
-      <button 
-        @click="showDeleteModal = true"
-        class="w-full text-gray-400 text-sm font-medium py-4"
-      >
-        Delete Account
       </button>
     </div>
 
