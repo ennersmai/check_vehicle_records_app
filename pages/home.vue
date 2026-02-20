@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-white pb-20">
+  <div class="min-h-screen bg-white pb-36">
     <div class="flex flex-col items-center justify-center px-10 mt-24">
       <img src="/cvr_logo.png" alt="Check Vehicle Records" class="w-64 mb-8" />
       

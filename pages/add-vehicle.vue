@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-white pb-20">
+  <div class="min-h-screen bg-white pb-36">
     <div class="px-6 pt-8 py-4">
       <button @click="$router.back()" class="flex items-center text-gray-900 hover:text-gray-700">
         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -11,22 +11,22 @@
 
     <div class="px-10 mt-8">
       <h1 class="text-3xl font-bold text-primary mb-2">Add Vehicle</h1>
-      <p class="text-gray-600 text-sm mb-8">Enter your vehicle details below<br />to add it to your garage.</p>
+      <p class="text-gray-600 text-sm mb-8">Enter the registration number to look up<br />and add a vehicle to your garage.</p>
 
-      <form @submit.prevent="handleSave" class="space-y-4">
+      <form @submit.prevent="handleLookup" class="space-y-4">
         <div class="relative">
           <input
-            v-model="form.registrationNumber"
+            v-model="vrm"
             type="text"
             placeholder="Registration number"
             class="w-full px-4 pr-12 py-3 border border-gray-200 rounded-lg focus:outline-none focus:border-primary text-sm uppercase"
-            :disabled="isScanning"
+            :disabled="isScanning || loading"
           />
           <!-- Camera Scan Button -->
           <button
             type="button"
             @click="handleScanVrm"
-            :disabled="saving || isScanning"
+            :disabled="loading || isScanning"
             class="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 text-gray-500 hover:text-primary transition-colors disabled:opacity-50"
             title="Scan registration plate"
           >
@@ -74,43 +74,8 @@
           </div>
         </div>
 
-        <input
-          v-model="form.vinNumber"
-          type="text"
-          placeholder="VIN Number"
-          class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:border-primary text-sm"
-        />
-
-        <input
-          v-model="form.make"
-          type="text"
-          placeholder="Make"
-          class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:border-primary text-sm"
-        />
-
-        <input
-          v-model="form.model"
-          type="text"
-          placeholder="Model"
-          class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:border-primary text-sm"
-        />
-
-        <input
-          v-model="form.year"
-          type="text"
-          placeholder="Year"
-          class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:border-primary text-sm"
-        />
-
-        <!-- Photo Upload Placeholder -->
-        <div class="bg-gray-200 rounded-lg aspect-video flex items-center justify-center">
-          <svg class="w-20 h-20 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-          </svg>
-        </div>
-
-        <PrimaryButton type="submit" :loading="saving" class="w-full">
-          SAVE
+        <PrimaryButton type="submit" :loading="loading" class="w-full">
+          LOOK UP VEHICLE
         </PrimaryButton>
 
         <div v-if="error" class="text-red-600 text-sm text-center">
@@ -124,20 +89,12 @@
 </template>
 
 <script setup lang="ts">
-import { formatVrm } from '~/utils/vrmFormatter';
-
 const router = useRouter();
 const { scanVrm: performScan, isScanning } = useVrmScanner();
+const { basicLookup } = useVehicle();
 
-const form = ref({
-  registrationNumber: '',
-  vinNumber: '',
-  make: '',
-  model: '',
-  year: ''
-});
-
-const saving = ref(false);
+const vrm = ref('');
+const loading = ref(false);
 const error = ref('');
 const showScanModal = ref(false);
 
@@ -154,46 +111,37 @@ const confirmScan = async () => {
   const result = await performScan();
   
   if (result.success && result.vrm) {
-    form.value.registrationNumber = result.vrm.toUpperCase().replace(/\s/g, '');
+    vrm.value = result.vrm.toUpperCase().replace(/\s/g, '');
   } else if (result.error && result.error !== 'Scan cancelled') {
     error.value = result.error;
   }
 };
 
-const handleSave = async () => {
-  if (!form.value.registrationNumber) {
+const handleLookup = async () => {
+  if (!vrm.value) {
     error.value = 'Registration number is required';
     return;
   }
 
-  saving.value = true;
+  loading.value = true;
   error.value = '';
 
   try {
-    // Save to Supabase garage_vehicles table
-    const supabase = useSupabaseClient();
-    const { user } = useAuth();
+    const cleanVrm = vrm.value.toUpperCase().replace(/\s/g, '');
     
-    if (user.value) {
-      const { error: insertError } = await (supabase as any)
-        .from('garage_vehicles')
-        .insert({
-          user_id: user.value.id,
-          vrm: form.value.registrationNumber.toUpperCase().replace(/\s/g, ''),
-          make: form.value.make || null,
-          model: form.value.model || null,
-          year: form.value.year || null,
-          created_at: new Date().toISOString()
-        });
-      
-      if (insertError) throw insertError;
+    // Do basic DVLA lookup
+    const result = await basicLookup(cleanVrm);
+    
+    if (result.success) {
+      // Redirect to confirm page where user can view info and purchase premium
+      router.push(`/confirm-vehicle/${cleanVrm}`);
+    } else {
+      error.value = result.error || 'Vehicle not found';
     }
-    
-    router.push('/garage');
-  } catch (err) {
-    error.value = 'Failed to add vehicle';
+  } catch (err: any) {
+    error.value = err.message || 'Failed to look up vehicle';
   } finally {
-    saving.value = false;
+    loading.value = false;
   }
 };
 </script>
