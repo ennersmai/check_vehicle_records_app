@@ -118,6 +118,7 @@
 
 <script setup lang="ts">
 const { signUp } = useAuth();
+const { associateLookupsWithUser } = useSessionLookups();
 const router = useRouter();
 
 const form = ref({
@@ -144,6 +145,8 @@ const handleSignup = async () => {
   loading.value = false;
 
   if (result.success) {
+    // Associate any free lookups done before signup with this user
+    await associateLookupsWithUser();
     router.push('/verify-email');
   } else {
     error.value = result.error || 'Signup failed';

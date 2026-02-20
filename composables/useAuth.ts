@@ -13,9 +13,9 @@ export const useAuth = () => {
       
       if (error) throw error;
       user.value = data.user;
-      return { success: true };
+      return { success: true, user: data.user };
     } catch (error: any) {
-      return { success: false, error: error.message };
+      return { success: false, error: error.message, user: null };
     } finally {
       loading.value = false;
     }
@@ -34,9 +34,9 @@ export const useAuth = () => {
       
       if (error) throw error;
       user.value = data.user;
-      return { success: true };
+      return { success: true, user: data.user };
     } catch (error: any) {
-      return { success: false, error: error.message };
+      return { success: false, error: error.message, user: null };
     } finally {
       loading.value = false;
     }

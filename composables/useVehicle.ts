@@ -2,20 +2,31 @@ import type { VehicleLookupResponse } from '~/types';
 
 export const useVehicle = () => {
   const supabase = useSupabaseClient();
+  const { user } = useAuth();
+  const { addSessionLookup } = useSessionLookups();
   const loading = useState('vehicle-loading', () => false);
 
   /**
    * Basic vehicle lookup - tries cache first, then DVLA, then CheckCarDetails
    * All data is cached permanently in the database
+   * If user is not logged in, tracks the lookup in session storage for later association
    */
   const lookupVehicle = async (vrm: string): Promise<VehicleLookupResponse> => {
     loading.value = true;
+    const normalizedVrm = vrm.toUpperCase().replace(/\s/g, '');
+    
     try {
       const { data, error } = await supabase.functions.invoke('lookup_vehicle', {
-        body: { vrm: vrm.toUpperCase().replace(/\s/g, '') }
+        body: { vrm: normalizedVrm }
       });
 
       if (error) throw error;
+      
+      // Always track successful lookups in session storage
+      // After login, associateLookupsWithUser will create user-specific records
+      if (data?.success) {
+        addSessionLookup(normalizedVrm);
+      }
       
       return data as VehicleLookupResponse;
     } catch (error: any) {
@@ -63,17 +74,21 @@ export const useVehicle = () => {
    */
   const getCachedVehicle = async (vrm: string) => {
     try {
+      // Use limit(1) instead of single() - multiple users can have records for same VRM
       const { data, error } = await supabase
         .from('vehicle_lookups')
         .select('*')
         .eq('vrm', vrm.toUpperCase().replace(/\s/g, ''))
-        .single();
+        .limit(1);
 
-      if (error || !data) throw error;
+      const record = data?.[0];
+      if (error || !record) throw error;
       
       // Return the actual vehicle data (prefer DVLA) with image URL
-      const vehicleData = data.dvla_data || data.checkcardetails_data || {};
-      const imageUrl = data.image_data?.VehicleImages?.ImageDetailsList?.[0]?.ImageUrl || null;
+      // Prefer base64 image (permanent) over URL (expires)
+      const vehicleData = record.dvla_data || record.checkcardetails_data || {};
+      const imageUrl = record.image_data?.base64Image || 
+                       record.image_data?.VehicleImages?.ImageDetailsList?.[0]?.ImageUrl || null;
       
       return { ...vehicleData, imageUrl };
     } catch (error) {

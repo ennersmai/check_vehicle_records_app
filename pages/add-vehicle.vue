@@ -90,13 +90,21 @@
 
 <script setup lang="ts">
 const router = useRouter();
-const { scanVrm: performScan, isScanning } = useVrmScanner();
-const { basicLookup } = useVehicle();
+const { user } = useAuth();
+const { lookupVehicle } = useVehicle();
 
 const vrm = ref('');
 const loading = ref(false);
 const error = ref('');
 const showScanModal = ref(false);
+const isScanning = ref(false);
+
+// Check login on mount - add vehicle requires auth
+onMounted(() => {
+  if (!user.value) {
+    router.push('/login?redirect=/add-vehicle');
+  }
+});
 
 // Handle OCR scan - show instruction modal first
 const handleScanVrm = () => {
@@ -107,13 +115,21 @@ const handleScanVrm = () => {
 // User confirmed scan from modal - open camera
 const confirmScan = async () => {
   showScanModal.value = false;
+  isScanning.value = true;
   
-  const result = await performScan();
-  
-  if (result.success && result.vrm) {
-    vrm.value = result.vrm.toUpperCase().replace(/\s/g, '');
-  } else if (result.error && result.error !== 'Scan cancelled') {
-    error.value = result.error;
+  try {
+    const { scanVrm } = useVrmScanner();
+    const result = await scanVrm();
+    
+    if (result.success && result.vrm) {
+      vrm.value = result.vrm.toUpperCase().replace(/\s/g, '');
+    } else if (result.error && result.error !== 'Scan cancelled') {
+      error.value = result.error;
+    }
+  } catch (err: any) {
+    error.value = err.message || 'Camera error';
+  } finally {
+    isScanning.value = false;
   }
 };
 
@@ -130,7 +146,7 @@ const handleLookup = async () => {
     const cleanVrm = vrm.value.toUpperCase().replace(/\s/g, '');
     
     // Do basic DVLA lookup
-    const result = await basicLookup(cleanVrm);
+    const result = await lookupVehicle(cleanVrm);
     
     if (result.success) {
       // Redirect to confirm page where user can view info and purchase premium

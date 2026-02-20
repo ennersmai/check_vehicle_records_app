@@ -71,12 +71,17 @@
 const route = useRoute();
 const router = useRouter();
 const { user } = useAuth();
+const { lookupVehicle } = useVehicle();
 
 const vrm = computed(() => route.query.vrm as string);
 
-onMounted(() => {
+onMounted(async () => {
   if (!user.value) {
     router.push({ path: '/login', query: { redirect: route.fullPath } });
+  } else if (vrm.value) {
+    // User is logged in - ensure they have a lookup record for this VRM
+    // This handles the case where user did free lookup before login
+    await lookupVehicle(vrm.value);
   }
 });
 

@@ -1,3 +1,0 @@
-com.cvr.app.test
-style WhiteBackgroundDialogTheme
-style WhiteBackgroundTheme

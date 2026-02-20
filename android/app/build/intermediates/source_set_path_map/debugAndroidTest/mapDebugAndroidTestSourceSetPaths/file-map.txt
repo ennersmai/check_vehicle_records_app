@@ -1,8 +1,0 @@
-com.cvr.app.test.app-jetified-tracing-1.2.0-0 C:\Users\Mai\.gradle\caches\8.13\transforms\911ad5c42e72ee39151d4a95862c86e5\transformed\jetified-tracing-1.2.0\res
-com.cvr.app.test.app-jetified-core-1.5.0-1 C:\Users\Mai\.gradle\caches\8.13\transforms\985746708273bd648cda3fda6fe5ba69\transformed\jetified-core-1.5.0\res
-com.cvr.app.test.app-jetified-annotation-experimental-1.4.1-2 C:\Users\Mai\.gradle\caches\8.13\transforms\f754aed988e739499aab7d4da46a6156\transformed\jetified-annotation-experimental-1.4.1\res
-com.cvr.app.test.app-androidTest-3 C:\Users\Mai\Desktop\cvr\android\app\build\generated\res\resValues\androidTest\debug
-com.cvr.app.test.app-updated_navigation_xml-4 C:\Users\Mai\Desktop\cvr\android\app\build\generated\updated_navigation_xml\debugAndroidTest
-com.cvr.app.test.app-mergeDebugAndroidTestResources-5 C:\Users\Mai\Desktop\cvr\android\app\build\intermediates\incremental\debugAndroidTest\mergeDebugAndroidTestResources\merged.dir
-com.cvr.app.test.app-mergeDebugAndroidTestResources-6 C:\Users\Mai\Desktop\cvr\android\app\build\intermediates\incremental\debugAndroidTest\mergeDebugAndroidTestResources\stripped.dir
-com.cvr.app.test.app-debugAndroidTest-7 C:\Users\Mai\Desktop\cvr\android\app\build\intermediates\merged_res\debugAndroidTest\mergeDebugAndroidTestResources

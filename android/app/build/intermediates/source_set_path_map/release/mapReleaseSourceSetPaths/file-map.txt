@@ -45,6 +45,7 @@ com.cvr.app-release-43 C:\Users\Mai\Desktop\cvr\android\app\build\intermediates\
 com.cvr.app-main-44 C:\Users\Mai\Desktop\cvr\android\app\src\main\res
 com.cvr.app-release-45 C:\Users\Mai\Desktop\cvr\android\app\src\release\res
 com.cvr.app-release-46 C:\Users\Mai\Desktop\cvr\node_modules\@capacitor\android\capacitor\build\intermediates\packaged_res\release\packageReleaseResources
-com.cvr.app-release-47 C:\Users\Mai\Desktop\cvr\node_modules\@capacitor\camera\android\build\intermediates\packaged_res\release\packageReleaseResources
-com.cvr.app-release-48 C:\Users\Mai\Desktop\cvr\node_modules\@jcesarmobile\capacitor-ocr\android\build\intermediates\packaged_res\release\packageReleaseResources
-com.cvr.app-release-49 C:\Users\Mai\Desktop\cvr\node_modules\@revenuecat\purchases-capacitor\android\build\intermediates\packaged_res\release\packageReleaseResources
+com.cvr.app-release-47 C:\Users\Mai\Desktop\cvr\node_modules\@capacitor\app\android\build\intermediates\packaged_res\release\packageReleaseResources
+com.cvr.app-release-48 C:\Users\Mai\Desktop\cvr\node_modules\@capacitor\camera\android\build\intermediates\packaged_res\release\packageReleaseResources
+com.cvr.app-release-49 C:\Users\Mai\Desktop\cvr\node_modules\@jcesarmobile\capacitor-ocr\android\build\intermediates\packaged_res\release\packageReleaseResources
+com.cvr.app-release-50 C:\Users\Mai\Desktop\cvr\node_modules\@revenuecat\purchases-capacitor\android\build\intermediates\packaged_res\release\packageReleaseResources

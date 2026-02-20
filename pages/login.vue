@@ -81,7 +81,8 @@
 </template>
 
 <script setup lang="ts">
-const { signIn } = useAuth();
+const { signIn, user } = useAuth();
+const { associateLookupsWithUser } = useSessionLookups();
 const router = useRouter();
 const route = useRoute();
 
@@ -104,6 +105,9 @@ const handleLogin = async () => {
   loading.value = false;
 
   if (result.success) {
+    // Associate any free lookups done before login with this user
+    await associateLookupsWithUser();
+    
     const redirect = route.query.redirect as string;
     router.push(redirect || '/home');
   } else {
