@@ -68,8 +68,7 @@
               </li>
             </ul>
             <div class="flex gap-3">
-              <button @click="showScanModal = false" class="flex-1 py-2.5 border border-gray-200 rounded-lg text-sm text-gray-600 font-medium">Cancel</button>
-              <button @click="confirmScan" class="flex-1 py-2.5 bg-primary text-white rounded-lg text-sm font-medium">Open Camera</button>
+              <button @click="confirmScan" class="w-full py-2.5 bg-primary text-white rounded-lg text-sm font-medium">Continue</button>
             </div>
           </div>
         </div>

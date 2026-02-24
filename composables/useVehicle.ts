@@ -1,7 +1,7 @@
 import type { VehicleLookupResponse } from '~/types';
 
 export const useVehicle = () => {
-  const supabase = useSupabaseClient();
+  const supabase = useSupabaseClient() as any;
   const { user } = useAuth();
   const { addSessionLookup } = useSessionLookups();
   const loading = useState('vehicle-loading', () => false);

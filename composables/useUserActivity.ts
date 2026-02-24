@@ -1,7 +1,7 @@
 import type { UserActivity, ActivityType } from '~/types';
 
 export const useUserActivity = () => {
-  const supabase = useSupabaseClient();
+  const supabase = useSupabaseClient() as any;
   const { user } = useAuth();
 
   const addActivity = async (vrm: string, type: ActivityType, nickname?: string) => {
