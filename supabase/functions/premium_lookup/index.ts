@@ -54,12 +54,14 @@ serve(async (req) => {
 
     // STEP 1: Check if premium lookup already exists (permanent cache)
     console.log(`Checking premium cache for VRM: ${normalizedVrm}`)
-    const { data: cachedPremium, error: cacheError } = await supabaseClient
+    const { data: cachedPremiums, error: cacheError } = await supabaseClient
       .from('premium_lookups')
       .select('*')
       .eq('vrm', normalizedVrm)
       .eq('user_id', user.id)
-      .single()
+      .limit(1)
+    
+    const cachedPremium = cachedPremiums?.[0] || null
 
     if (cachedPremium && !cacheError) {
       console.log(`Premium cache HIT for VRM: ${normalizedVrm}`)
@@ -102,11 +104,14 @@ serve(async (req) => {
     }
 
     // STEP 3: Get basic lookup data (should already be cached)
-    const { data: basicLookup } = await supabaseClient
+    // Use limit(1) - multiple users can have records for same VRM
+    const { data: basicLookups } = await supabaseClient
       .from('vehicle_lookups')
       .select('*')
       .eq('vrm', normalizedVrm)
-      .single()
+      .limit(1)
+    
+    const basicLookup = basicLookups?.[0] || null
 
     // STEP 4: Fetch premium data from CheckCarDetails API in parallel
     console.log('Fetching premium data from CheckCarDetails API...')
