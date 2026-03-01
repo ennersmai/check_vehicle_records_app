@@ -98,17 +98,8 @@ export const usePayment = () => {
       });
     }
 
-    // If VRM is provided and only 1 check, auto-redeem for that vehicle
-    if (vrm && numChecks === 1) {
-      await (supabase as any)
-        .from('user_vouchers')
-        .update({ 
-          is_redeemed: true, 
-          redeemed_at: new Date().toISOString(),
-          vehicle_vrm: vrm.toUpperCase().replace(/\s/g, '')
-        })
-        .eq('voucher_code', voucherCodes[0]);
-    }
+    // Don't auto-redeem here - let premium_lookup handle redemption
+    // after successfully fetching and storing the premium data
 
     return voucherCodes;
   };
