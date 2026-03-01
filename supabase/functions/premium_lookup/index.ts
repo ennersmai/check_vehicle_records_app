@@ -34,7 +34,7 @@ serve(async (req) => {
 
     const normalizedVrm = vrm.toUpperCase().replace(/\s/g, '')
 
-    // Initialize Supabase client
+    // Initialize Supabase clients
     const supabaseClient = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_ANON_KEY') ?? '',
@@ -43,6 +43,12 @@ serve(async (req) => {
           headers: { Authorization: req.headers.get('Authorization')! },
         },
       }
+    )
+
+    // Service role client for DB writes (bypasses RLS)
+    const supabaseAdmin = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     )
 
     // Get authenticated user
@@ -88,24 +94,30 @@ serve(async (req) => {
     // STEP 2: Validate voucher if provided
     let voucherId = null
     if (voucherCode) {
-      const { data: voucher, error: voucherError } = await supabaseClient
+      console.log(`Validating voucher: ${voucherCode.toUpperCase()} for user ${user.id}`)
+      const { data: vouchers, error: voucherError } = await supabaseAdmin
         .from('user_vouchers')
         .select('*')
         .eq('voucher_code', voucherCode.toUpperCase())
         .eq('user_id', user.id)
         .eq('is_redeemed', false)
-        .single()
+        .limit(1)
 
+      const voucher = vouchers?.[0] || null
       if (voucherError || !voucher) {
+        console.error('Voucher validation failed:', voucherError?.message || 'not found/already redeemed')
         throw new Error('Invalid or already redeemed voucher code')
       }
 
       voucherId = voucher.id
+      console.log(`Voucher validated: ${voucherId}`)
+    } else {
+      throw new Error('Voucher code is required for premium lookups')
     }
 
     // STEP 3: Get basic lookup data (should already be cached)
-    // Use limit(1) - multiple users can have records for same VRM
-    const { data: basicLookups } = await supabaseClient
+    // Use limit(1) with admin client - multiple users can have records for same VRM
+    const { data: basicLookups } = await supabaseAdmin
       .from('vehicle_lookups')
       .select('*')
       .eq('vrm', normalizedVrm)
@@ -158,8 +170,9 @@ serve(async (req) => {
 
     console.log('Premium data fetched successfully')
 
-    // STEP 5: Store premium lookup permanently
-    const { data: premiumLookup, error: insertError } = await supabaseClient
+    // STEP 5: Store premium lookup permanently (use admin to bypass RLS)
+    console.log('Storing premium lookup data...')
+    const { data: premiumLookup, error: insertError } = await supabaseAdmin
       .from('premium_lookups')
       .insert({
         vrm: normalizedVrm,
@@ -178,12 +191,14 @@ serve(async (req) => {
 
     if (insertError) {
       console.error('Error storing premium lookup:', insertError)
-      throw new Error('Failed to store premium lookup')
+      throw new Error('Failed to store premium lookup: ' + insertError.message)
     }
+    console.log('Premium lookup stored successfully')
 
-    // STEP 6: Mark voucher as redeemed if used
+    // STEP 6: Mark voucher as redeemed (use admin to bypass RLS)
     if (voucherId) {
-      await supabaseClient
+      console.log(`Marking voucher ${voucherId} as redeemed for VRM ${normalizedVrm}`)
+      const { error: redeemError } = await supabaseAdmin
         .from('user_vouchers')
         .update({
           is_redeemed: true,
@@ -191,6 +206,12 @@ serve(async (req) => {
           vehicle_vrm: normalizedVrm
         })
         .eq('id', voucherId)
+      
+      if (redeemError) {
+        console.error('Error marking voucher as redeemed:', redeemError)
+      } else {
+        console.log('Voucher marked as redeemed successfully')
+      }
     }
 
     // STEP 7: Return merged data

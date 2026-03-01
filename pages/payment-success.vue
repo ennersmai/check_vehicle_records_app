@@ -19,11 +19,24 @@
       <h1 class="text-3xl font-bold text-green-600 mb-2">Payment Successful</h1>
       <p class="text-gray-600 text-center mb-4">Your Premium Check has<br />been activated.</p>
 
-      <!-- Show voucher codes if multiple purchased -->
-      <div v-if="voucherCodes.length > 1" class="bg-gray-50 rounded-lg p-4 mb-6 w-full max-w-sm">
-        <p class="text-sm text-gray-700 mb-2 font-medium">Your voucher codes:</p>
+      <!-- Premium lookup progress -->
+      <div v-if="premiumLoading" class="flex flex-col items-center mb-6">
+        <svg class="animate-spin h-8 w-8 text-primary mb-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        <p class="text-sm text-gray-600">Fetching premium report...</p>
+      </div>
+
+      <div v-if="premiumError" class="bg-red-50 border border-red-200 rounded-lg p-3 mb-4 w-full max-w-sm text-sm text-red-700 text-center">
+        {{ premiumError }}
+      </div>
+
+      <!-- Show voucher codes if multiple purchased (remaining unused codes) -->
+      <div v-if="remainingVouchers.length > 0" class="bg-gray-50 rounded-lg p-4 mb-6 w-full max-w-sm">
+        <p class="text-sm text-gray-700 mb-2 font-medium">Your remaining voucher codes:</p>
         <div class="space-y-2">
-          <div v-for="code in voucherCodes" :key="code" class="bg-white border border-gray-200 rounded px-3 py-2 font-mono text-sm text-center">
+          <div v-for="code in remainingVouchers" :key="code" class="bg-white border border-gray-200 rounded px-3 py-2 font-mono text-sm text-center">
             {{ code }}
           </div>
         </div>
@@ -31,8 +44,8 @@
       </div>
 
       <div class="w-full max-w-sm space-y-4">
-        <PrimaryButton @click="viewPremiumDetails" class="w-full">
-          VIEW PREMIUM DETAILS
+        <PrimaryButton @click="viewPremiumDetails" :loading="premiumLoading" class="w-full">
+          {{ premiumReady ? 'VIEW PREMIUM DETAILS' : (premiumLoading ? 'LOADING...' : 'VIEW PREMIUM DETAILS') }}
         </PrimaryButton>
 
         <button 
@@ -54,6 +67,7 @@
 <script setup lang="ts">
 const route = useRoute();
 const router = useRouter();
+const { premiumLookup } = useVehicle();
 
 const vrm = computed(() => route.query.vrm as string);
 const checks = computed(() => route.query.checks as string);
@@ -64,16 +78,51 @@ const voucherCodes = computed(() => {
   return vouchers.value.split(',').filter(Boolean);
 });
 
+const premiumReady = ref(false);
+const premiumLoading = ref(false);
+const premiumError = ref('');
+
+// For multi-credit purchases, show remaining vouchers (exclude the one used for current VRM)
+const remainingVouchers = computed(() => {
+  if (!vrm.value || voucherCodes.value.length <= 1) return [];
+  return voucherCodes.value.slice(1);
+});
+
 const viewPremiumDetails = () => {
-  if (vrm.value) {
+  if (vrm.value && premiumReady.value) {
     router.push(`/vehicle-premium/${vrm.value}`);
+  } else if (vrm.value) {
+    // Premium data not ready yet - try redeem page as fallback
+    router.push(`/redeem-voucher?vrm=${vrm.value}`);
   } else {
     router.push('/home');
   }
 };
 
-onMounted(() => {
+onMounted(async () => {
   const numChecks = parseInt(checks.value) || 1;
   console.log(`Payment successful: ${numChecks} premium check(s) activated`);
+  
+  // If we have a VRM and voucher codes, auto-trigger the premium lookup
+  // This uses the first voucher code for the current vehicle
+  if (vrm.value && voucherCodes.value.length > 0) {
+    premiumLoading.value = true;
+    try {
+      console.log(`Auto-triggering premium lookup for ${vrm.value} with voucher ${voucherCodes.value[0]}`);
+      const result = await premiumLookup(vrm.value, voucherCodes.value[0]);
+      if (result.success) {
+        premiumReady.value = true;
+        console.log('Premium lookup completed successfully');
+      } else {
+        premiumError.value = result.error || 'Failed to fetch premium data';
+        console.error('Premium lookup failed:', result.error);
+      }
+    } catch (err: any) {
+      premiumError.value = err.message || 'Failed to fetch premium data';
+      console.error('Premium lookup error:', err);
+    } finally {
+      premiumLoading.value = false;
+    }
+  }
 });
 </script>

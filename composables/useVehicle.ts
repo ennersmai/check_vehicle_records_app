@@ -105,10 +105,11 @@ export const useVehicle = () => {
         .from('premium_lookups')
         .select('*')
         .eq('vrm', vrm.toUpperCase().replace(/\s/g, ''))
-        .single();
+        .limit(1);
 
-      if (error) throw error;
-      return data;
+      const record = data?.[0];
+      if (error || !record) throw error;
+      return record;
     } catch (error) {
       return null;
     }
