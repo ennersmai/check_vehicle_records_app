@@ -677,14 +677,29 @@ onUnmounted(() => {
   }
 });
 
-// Traffic light status indicators - will be updated from real data
+// Traffic light status indicators - derived from mapped premium data
 const statusIndicators = computed(() => {
-  const hasFinance = premiumData.value?.outstandingFinance?.includes('Finance recorded');
-  const hasStolen = premiumData.value?.stolenRecord?.includes('Stolen record');
-  const hasWriteOff = premiumData.value?.writtenOffRecord?.includes('Write-off');
-  const hasMileageIssues = premiumData.value?.mileageSummary?.mileageIssues === 'Yes';
-  const hasValidMot = premiumData.value?.motStatus === 'Valid';
-  const isImportedExported = premiumData.value?.importedExported !== 'No';
+  const p = premiumData.value;
+  if (!p) return [];
+
+  // Finance: check text flag OR array
+  const hasFinance = p.outstandingFinance?.includes('Finance recorded') || (p.financeRecords?.length > 0);
+  
+  // Write-off: check text flag OR array
+  const hasWriteOff = p.writtenOffRecord?.includes('Write-off') || (p.writeOffRecords?.length > 0);
+  
+  // Stolen: check text flag OR array
+  const hasStolen = p.stolenRecord?.includes('Stolen record') || (p.stolenRecords?.length > 0);
+  
+  // Mileage: check mileageIssues flag OR issues description string
+  const hasMileageIssues = p.mileageSummary?.mileageIssues === 'Yes' || (p.mileageSummary?.issues && p.mileageSummary.issues.length > 0);
+  const mileageStatusHigh = p.mileageSummary?.status === 'HIGH';
+  
+  // MOT: check status
+  const hasValidMot = p.motStatus === 'Valid';
+  
+  // Import/Export
+  const isImportedExported = p.importedExported && p.importedExported !== 'No';
   
   return [
     { 
@@ -695,7 +710,7 @@ const statusIndicators = computed(() => {
     { 
       id: 2, 
       label: hasWriteOff ? 'Previous Accidents Found' : 'No Previous Accidents',
-      status: hasWriteOff ? 'yellow' : 'green'
+      status: hasWriteOff ? 'red' : 'green'
     },
     { 
       id: 3, 
@@ -704,8 +719,8 @@ const statusIndicators = computed(() => {
     },
     { 
       id: 4, 
-      label: hasMileageIssues ? 'Mileage Discrepancy' : 'No Mileage Issues',
-      status: hasMileageIssues ? 'yellow' : 'green'
+      label: hasMileageIssues ? 'Mileage Discrepancy' : (mileageStatusHigh ? 'High Mileage' : 'No Mileage Issues'),
+      status: hasMileageIssues ? 'red' : (mileageStatusHigh ? 'yellow' : 'green')
     },
     { 
       id: 5, 

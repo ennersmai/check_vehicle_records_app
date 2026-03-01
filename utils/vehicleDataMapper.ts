@@ -88,6 +88,7 @@ export interface NormalizedPremiumData extends NormalizedVehicleData {
     averageMileage: number
     status: string
     issues: string
+    mileageIssues: string
   }
   
   // Images
@@ -387,6 +388,7 @@ export function mapPremiumData(
       averageMileage: mileageData?.summary?.averageMileage || 0,
       status: mileageData?.summary?.averageMileageStatus || '',
       issues: mileageData?.summary?.mileageIssueDescription || '',
+      mileageIssues: mileageData?.summary?.mileageIssues || 'No',
     },
     
     // Images
@@ -499,23 +501,27 @@ export function mapPremiumData(
  * Calculate traffic light status for premium indicators
  */
 export function calculateTrafficLightStatus(premiumData: NormalizedPremiumData) {
+  const hasFinance = premiumData.outstandingFinance?.includes('Finance recorded') || premiumData.financeRecords?.length > 0
+  const hasWriteOff = premiumData.writtenOffRecord?.includes('Write-off') || premiumData.writeOffRecords?.length > 0
+  const hasStolen = premiumData.stolenRecord?.includes('Stolen record') || premiumData.stolenRecords?.length > 0
+  
   return [
     {
       id: 1,
-      label: 'Outstanding Finance',
-      status: premiumData.financeRecords?.length > 0 ? 'red' : 'green',
+      label: hasFinance ? 'Outstanding Finance' : 'No Outstanding Finance',
+      status: hasFinance ? 'red' : 'green',
       detail: premiumData.outstandingFinance
     },
     {
       id: 2,
-      label: 'Previous Accidents',
-      status: premiumData.writeOffRecords?.length > 0 ? 'red' : 'green',
+      label: hasWriteOff ? 'Previous Accidents Found' : 'No Previous Accidents',
+      status: hasWriteOff ? 'red' : 'green',
       detail: premiumData.writtenOffRecord
     },
     {
       id: 3,
-      label: 'Stolen Market',
-      status: premiumData.stolenRecords?.length > 0 ? 'red' : 'green',
+      label: hasStolen ? 'Stolen Record' : 'Not Stolen',
+      status: hasStolen ? 'red' : 'green',
       detail: premiumData.stolenRecord
     },
     {
@@ -635,6 +641,7 @@ function formatValuation(value: string | number | undefined): string {
 
 function getMileageStatus(summary: any): 'green' | 'yellow' | 'red' {
   if (!summary) return 'green'
+  if (summary.mileageIssues === 'Yes') return 'red'
   if (summary.issues && summary.issues.length > 0) return 'red'
   if (summary.status === 'HIGH') return 'yellow'
   return 'green'
