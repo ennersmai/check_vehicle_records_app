@@ -205,28 +205,22 @@ export const usePayment = () => {
       }
     }
 
-    // --- "Already owned" path: sync and retry once ---
-    console.warn('Product already owned — syncing and retrying');
+    // --- "Already owned" path ---
+    // The user already paid but the consumable was never consumed/acknowledged.
+    // Do NOT retry purchaseStoreProduct — it just triggers another native Google Play
+    // error dialog. Instead, try to clear the stuck purchase and grant vouchers directly.
+    console.warn('Product already owned — granting vouchers for stuck purchase');
     try {
       await Purchases.syncPurchases();
     } catch (syncErr) {
       console.warn('Retry syncPurchases warning:', syncErr);
     }
-
-    // Small delay to let the store process the sync
-    await new Promise(r => setTimeout(r, 1500));
-
     try {
-      const result = await attemptPurchase(Purchases, productId);
-      if (result?.customerInfo) {
-        const voucherCodes = await createVouchers(numChecks, vrm);
-        return { success: true, voucherCodes, customerInfo: result.customerInfo };
-      }
-    } catch (retryErr: any) {
-      console.warn('Retry purchase also failed:', retryErr?.message);
+      await Purchases.restorePurchases();
+    } catch (restoreErr) {
+      console.warn('restorePurchases warning:', restoreErr);
     }
 
-    // --- Retry failed too: the product is truly stuck ---
     // The user DID pay previously, so grant vouchers if they don't already have any.
     // Check Supabase for unredeemed vouchers to prevent double-granting.
     try {
