@@ -140,12 +140,22 @@ export const usePayment = () => {
 
   // Helper: detect "already own/active" errors from Google Play or RevenueCat
   const isAlreadyOwnedError = (err: any): boolean => {
-    const msg = (err?.message || '').toLowerCase();
-    return err?.code === 7
-      || msg.includes('already own')
+    // RevenueCat error code 6 = PRODUCT_ALREADY_PURCHASED_ERROR
+    if (err?.code === 6 || err?.code === '6') return true;
+    // Check all possible message locations in the error object
+    const msg = [
+      err?.message,
+      err?.underlyingErrorMessage,
+      err?.readableErrorCode,
+      typeof err === 'string' ? err : '',
+      JSON.stringify(err)
+    ].join(' ').toLowerCase();
+    console.warn('Purchase error details for matching:', JSON.stringify(err, null, 2));
+    return msg.includes('already own')
       || msg.includes('already purchased')
       || msg.includes('already active')
-      || msg.includes('product is already');
+      || msg.includes('product is already')
+      || msg.includes('product_already_purchased');
   };
 
   // Helper: attempt a single store purchase call
