@@ -72,36 +72,57 @@ const route = useRoute();
 const router = useRouter();
 const { user } = useAuth();
 const { lookupVehicle } = useVehicle();
+const { fetchOfferings } = usePayment();
 
 const vrm = computed(() => route.query.vrm as string);
 
-onMounted(async () => {
-  if (!user.value) {
-    router.push({ path: '/login', query: { redirect: route.fullPath } });
-  } else if (vrm.value) {
-    // User is logged in - ensure they have a lookup record for this VRM
-    // This handles the case where user did free lookup before login
-    await lookupVehicle(vrm.value);
-  }
-});
-
-const packages = [
+// Fallback prices used only when store prices aren't available (web dev)
+const fallbackPackages = [
   { id: 1, name: 'One time purchase', price: '£9.99', checks: 1, productId: 'com.cvr.app.credits.1' },
   { id: 5, name: 'Purchase 5 checks', price: '£24.99', checks: 5, productId: 'com.cvr.app.credits.5' },
   { id: 10, name: 'Purchase 10 checks', price: '£39.99', checks: 10, productId: 'com.cvr.app.credits.10' }
 ];
 
+const packages = ref(fallbackPackages);
+
+onMounted(async () => {
+  if (!user.value) {
+    router.push({ path: '/login', query: { redirect: route.fullPath } });
+    return;
+  }
+
+  if (vrm.value) {
+    await lookupVehicle(vrm.value);
+  }
+
+  // Fetch real prices from RevenueCat / store
+  try {
+    const offerings = await fetchOfferings();
+    if (offerings.length > 0) {
+      packages.value = offerings.map(o => ({
+        id: o.credits,
+        name: o.credits === 1 ? 'One time purchase' : `Purchase ${o.credits} checks`,
+        price: o.price,
+        checks: o.credits,
+        productId: o.productId
+      }));
+    }
+  } catch (e) {
+    console.warn('Could not fetch store prices, using fallback:', e);
+  }
+});
+
 const selectedPackage = ref<number | null>(null);
 const showInfo = ref(false);
 
 const selectedPackagePrice = computed(() => {
-  const pkg = packages.find(p => p.id === selectedPackage.value);
+  const pkg = packages.value.find(p => p.id === selectedPackage.value);
   return pkg ? pkg.price : '£0.00';
 });
 
 const handleConfirm = () => {
   if (selectedPackage.value) {
-    const pkg = packages.find(p => p.id === selectedPackage.value);
+    const pkg = packages.value.find(p => p.id === selectedPackage.value);
     router.push({
       path: '/checkout',
       query: {

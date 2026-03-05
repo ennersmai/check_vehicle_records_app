@@ -157,6 +157,14 @@ export const usePayment = () => {
         console.warn('RevenueCat login warning:', loginErr);
       }
 
+      // Sync any pending/unacknowledged purchases before buying
+      // This clears stuck consumables that were paid but never consumed
+      try {
+        await Purchases.syncPurchases();
+      } catch (syncErr) {
+        console.warn('RevenueCat syncPurchases warning:', syncErr);
+      }
+
       // Purchase the product (NON_SUBSCRIPTION = consumable in-app purchase)
       const result = await Purchases.purchaseStoreProduct({ 
         product: { 
@@ -177,6 +185,22 @@ export const usePayment = () => {
       if (err?.code === 1 || err?.message?.includes('cancel') || err?.userCancelled) {
         return { success: false, error: 'Purchase cancelled' };
       }
+
+      // "Already own this item" — previous purchase stuck unconsumed
+      const errMsg = (err?.message || '').toLowerCase();
+      if (errMsg.includes('already own') || errMsg.includes('already purchased') || err?.code === 7) {
+        // Try to sync purchases to consume the stuck item, then grant the credits
+        try {
+          await Purchases.syncPurchases();
+          // The user already paid — grant their vouchers
+          const voucherCodes = await createVouchers(numChecks, vrm);
+          return { success: true, voucherCodes };
+        } catch (syncErr) {
+          console.error('Failed to sync stuck purchase:', syncErr);
+          return { success: false, error: 'You have a pending purchase. Please restart the app and try again.' };
+        }
+      }
+
       console.error('RevenueCat purchase error:', err);
       return { success: false, error: err.message || 'Payment failed. Please try again.' };
     }
