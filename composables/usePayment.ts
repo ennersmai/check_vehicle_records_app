@@ -138,6 +138,26 @@ export const usePayment = () => {
     }
   };
 
+  // Helper: detect "already own/active" errors from Google Play or RevenueCat
+  const isAlreadyOwnedError = (err: any): boolean => {
+    const msg = (err?.message || '').toLowerCase();
+    return err?.code === 7
+      || msg.includes('already own')
+      || msg.includes('already purchased')
+      || msg.includes('already active')
+      || msg.includes('product is already');
+  };
+
+  // Helper: attempt a single store purchase call
+  const attemptPurchase = async (Purchases: any, productId: string) => {
+    return Purchases.purchaseStoreProduct({
+      product: {
+        identifier: productId,
+        productCategory: 'NON_SUBSCRIPTION'
+      }
+    });
+  };
+
   // Purchase via RevenueCat (mobile in-app purchase)
   const purchaseWithRevenueCat = async (productId: string, numChecks: number, vrm?: string): Promise<PurchaseResult> => {
     if (!user.value) {
@@ -149,60 +169,87 @@ export const usePayment = () => {
       return { success: false, error: 'In-app purchases not available' };
     }
 
+    // Login user to RevenueCat with their Supabase user ID
     try {
-      // Login user to RevenueCat with their Supabase user ID
-      try {
-        await Purchases.logIn({ appUserID: user.value.id });
-      } catch (loginErr) {
-        console.warn('RevenueCat login warning:', loginErr);
-      }
+      await Purchases.logIn({ appUserID: user.value.id });
+    } catch (loginErr) {
+      console.warn('RevenueCat login warning:', loginErr);
+    }
 
-      // Sync any pending/unacknowledged purchases before buying
-      // This clears stuck consumables that were paid but never consumed
-      try {
-        await Purchases.syncPurchases();
-      } catch (syncErr) {
-        console.warn('RevenueCat syncPurchases warning:', syncErr);
-      }
+    // Sync any pending/unacknowledged purchases before buying
+    // This clears stuck consumables that were paid but never consumed
+    try {
+      await Purchases.syncPurchases();
+    } catch (syncErr) {
+      console.warn('RevenueCat syncPurchases warning:', syncErr);
+    }
 
-      // Purchase the product (NON_SUBSCRIPTION = consumable in-app purchase)
-      const result = await Purchases.purchaseStoreProduct({ 
-        product: { 
-          identifier: productId, 
-          productCategory: 'NON_SUBSCRIPTION' 
-        } 
-      });
-      
+    // --- First attempt ---
+    try {
+      const result = await attemptPurchase(Purchases, productId);
       if (result?.customerInfo) {
-        // Payment successful - create vouchers
         const voucherCodes = await createVouchers(numChecks, vrm);
         return { success: true, voucherCodes, customerInfo: result.customerInfo };
       }
-
       return { success: false, error: 'Purchase was not completed' };
     } catch (err: any) {
-      // User cancelled
+      // User cancelled — exit immediately
       if (err?.code === 1 || err?.message?.includes('cancel') || err?.userCancelled) {
         return { success: false, error: 'Purchase cancelled' };
       }
 
-      // "Already own this item" — previous purchase stuck unconsumed
-      const errMsg = (err?.message || '').toLowerCase();
-      if (errMsg.includes('already own') || errMsg.includes('already purchased') || err?.code === 7) {
-        // Try to sync purchases to consume the stuck item, then grant the credits
-        try {
-          await Purchases.syncPurchases();
-          // The user already paid — grant their vouchers
-          const voucherCodes = await createVouchers(numChecks, vrm);
-          return { success: true, voucherCodes };
-        } catch (syncErr) {
-          console.error('Failed to sync stuck purchase:', syncErr);
-          return { success: false, error: 'You have a pending purchase. Please restart the app and try again.' };
-        }
+      // Not an "already owned" error — fail
+      if (!isAlreadyOwnedError(err)) {
+        console.error('RevenueCat purchase error:', err);
+        return { success: false, error: err.message || 'Payment failed. Please try again.' };
+      }
+    }
+
+    // --- "Already owned" path: sync and retry once ---
+    console.warn('Product already owned — syncing and retrying');
+    try {
+      await Purchases.syncPurchases();
+    } catch (syncErr) {
+      console.warn('Retry syncPurchases warning:', syncErr);
+    }
+
+    // Small delay to let the store process the sync
+    await new Promise(r => setTimeout(r, 1500));
+
+    try {
+      const result = await attemptPurchase(Purchases, productId);
+      if (result?.customerInfo) {
+        const voucherCodes = await createVouchers(numChecks, vrm);
+        return { success: true, voucherCodes, customerInfo: result.customerInfo };
+      }
+    } catch (retryErr: any) {
+      console.warn('Retry purchase also failed:', retryErr?.message);
+    }
+
+    // --- Retry failed too: the product is truly stuck ---
+    // The user DID pay previously, so grant vouchers if they don't already have any.
+    // Check Supabase for unredeemed vouchers to prevent double-granting.
+    try {
+      const { count } = await (supabase as any)
+        .from('user_vouchers')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', user.value.id)
+        .eq('is_redeemed', false);
+
+      if (count && count > 0) {
+        // User already has credits from a previous recovery — don't double-grant
+        return {
+          success: false,
+          error: `You already have ${count} unused credit${count > 1 ? 's' : ''}. Go back and use ${count > 1 ? 'them' : 'it'} from your dashboard.`
+        };
       }
 
-      console.error('RevenueCat purchase error:', err);
-      return { success: false, error: err.message || 'Payment failed. Please try again.' };
+      // No unredeemed vouchers — user paid but never got credits, grant them now
+      const voucherCodes = await createVouchers(numChecks, vrm);
+      return { success: true, voucherCodes };
+    } catch (dbErr) {
+      console.error('Failed to check/create vouchers for stuck purchase:', dbErr);
+      return { success: false, error: 'You have a pending purchase. Please restart the app and try again.' };
     }
   };
 
