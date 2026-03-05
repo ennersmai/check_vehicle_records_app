@@ -63,14 +63,14 @@
 </template>
 
 <script setup lang="ts">
-import { Capacitor } from '@capacitor/core';
-
 const route = useRoute();
 const router = useRouter();
 const { purchase } = usePayment();
 
 const paymentProvider = computed(() => {
-  const platform = Capacitor.getPlatform();
+  if (import.meta.server) return 'Store';
+  const cap = (window as any).Capacitor;
+  const platform = cap?.getPlatform?.() || 'web';
   return platform === 'ios' ? 'App Store' : 'Google Play';
 });
 

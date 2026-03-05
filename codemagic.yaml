@@ -138,9 +138,9 @@ workflows:
           /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $IOS_BUILD_NUMBER" "$PLIST_PATH" || \
             /usr/libexec/PlistBuddy -c "Add :CFBundleVersion string $IOS_BUILD_NUMBER" "$PLIST_PATH"
 
-          # Bump marketing version to 1.0.1 (required after 1.0 was approved)
-          /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString 1.0.1" "$PLIST_PATH" || \
-            /usr/libexec/PlistBuddy -c "Add :CFBundleShortVersionString string 1.0.1" "$PLIST_PATH"
+          # Bump marketing version to 1.0.2
+          /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString 1.0.2" "$PLIST_PATH" || \
+            /usr/libexec/PlistBuddy -c "Add :CFBundleShortVersionString string 1.0.2" "$PLIST_PATH"
 
           /usr/libexec/PlistBuddy -c "Set :NSCameraUsageDescription Scan number plates to auto-fill vehicle registration." "$PLIST_PATH" || \
             /usr/libexec/PlistBuddy -c "Add :NSCameraUsageDescription string Scan number plates to auto-fill vehicle registration." "$PLIST_PATH"
