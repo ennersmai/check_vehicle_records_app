@@ -189,13 +189,8 @@ export const usePayment = () => {
       console.warn('RevenueCat login warning:', loginErr);
     }
 
-    // Restore + sync before buying — this consumes any stuck Google Play tokens
-    // so purchaseStoreProduct doesn't hit "You already own this item"
-    try {
-      await Purchases.restorePurchases();
-    } catch (restoreErr) {
-      console.warn('RevenueCat restorePurchases (pre-purchase) warning:', restoreErr);
-    }
+    // Lightweight sync only — do NOT call restorePurchases() here as it
+    // corrupts RevenueCat state and causes "unknown backend error" on other products
     try {
       await Purchases.syncPurchases();
     } catch (syncErr) {
@@ -223,21 +218,39 @@ export const usePayment = () => {
       }
 
       // --- "ALREADY OWNED" FALLBACK ---
-      // Only reaches here if Google Play says "you already own this item",
-      // meaning there is a genuinely stuck unconsumed purchase.
-      console.warn('Purchase threw already-owned error — granting vouchers for stuck payment');
-      try {
-        await Purchases.restorePurchases();
-      } catch (restoreErr) {
-        console.warn('restorePurchases warning:', restoreErr);
-      }
+      // Google Play says "you already own this item" — there is a stuck unconsumed token.
+      // ONLY grant vouchers if the user has NEVER received vouchers before (genuinely stuck).
+      // If they already have vouchers, they already got their credits — don't give more free ones.
+      console.warn('Purchase threw already-owned error — checking if vouchers already granted');
 
       try {
+        // Check if this user has ANY vouchers ever created (redeemed or not)
+        const { count } = await (supabase as any)
+          .from('user_vouchers')
+          .select('*', { count: 'exact', head: true })
+          .eq('user_id', user.value.id);
+
+        if (count && count > 0) {
+          // User already has vouchers from a prior purchase — do NOT grant more
+          console.warn(`User already has ${count} vouchers — not granting free ones for stuck purchase`);
+          return {
+            success: false,
+            error: 'You have a pending purchase that needs to be cleared. Please go to Google Play Store → Settings → Clear Cache, then try again.'
+          };
+        }
+
+        // User has ZERO vouchers — they genuinely paid but never got credits
+        console.warn('User has no vouchers — granting for genuinely stuck purchase');
+        try {
+          await Purchases.restorePurchases();
+        } catch (restoreErr) {
+          console.warn('restorePurchases warning:', restoreErr);
+        }
         const voucherCodes = await createVouchers(numChecks, vrm);
         return { success: true, voucherCodes };
       } catch (dbErr) {
-        console.error('Failed to create vouchers for stuck purchase:', dbErr);
-        return { success: false, error: 'You have a pending purchase. Please restart the app and try again.' };
+        console.error('Failed to check/create vouchers for stuck purchase:', dbErr);
+        return { success: false, error: 'Purchase could not be completed. Please clear Google Play cache and try again.' };
       }
     }
   };
