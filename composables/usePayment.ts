@@ -194,89 +194,43 @@ export const usePayment = () => {
       console.warn('RevenueCat syncPurchases warning:', syncErr);
     }
 
-    // --- PRE-CHECK: detect stuck unconsumed purchases BEFORE calling purchaseStoreProduct ---
-    // This avoids triggering the native Google Play "You already own this item" dialog entirely.
-    // After syncPurchases, check if RevenueCat already knows about a purchase for this product.
-    let hasStuckPurchase = false;
+    // --- ALWAYS attempt the real purchase — this is the only way to charge the user ---
     try {
-      const info = await Purchases.getCustomerInfo();
-      const transactions = info?.customerInfo?.nonSubscriptionTransactions
-        || info?.nonSubscriptionTransactions
-        || [];
-      console.log('Non-subscription transactions:', JSON.stringify(transactions));
-      hasStuckPurchase = transactions.some((t: any) =>
-        t.productIdentifier === productId || t.productId === productId
-      );
-      if (hasStuckPurchase) {
-        console.warn(`Stuck purchase detected for ${productId} — skipping purchaseStoreProduct`);
+      const result = await attemptPurchase(Purchases, productId);
+      if (result?.customerInfo) {
+        const voucherCodes = await createVouchers(numChecks, vrm);
+        return { success: true, voucherCodes, customerInfo: result.customerInfo };
       }
-    } catch (infoErr) {
-      console.warn('getCustomerInfo pre-check warning:', infoErr);
-    }
+      return { success: false, error: 'Purchase was not completed' };
+    } catch (err: any) {
+      // User cancelled — exit immediately
+      if (err?.code === 1 || err?.message?.includes('cancel') || err?.userCancelled) {
+        return { success: false, error: 'Purchase cancelled' };
+      }
 
-    // If no stuck purchase detected, proceed with normal purchase flow
-    if (!hasStuckPurchase) {
+      // Not an "already owned" error — fail with the actual error
+      if (!isAlreadyOwnedError(err)) {
+        console.error('RevenueCat purchase error:', err);
+        return { success: false, error: err.message || 'Payment failed. Please try again.' };
+      }
+
+      // --- "ALREADY OWNED" FALLBACK ---
+      // Only reaches here if Google Play says "you already own this item",
+      // meaning there is a genuinely stuck unconsumed purchase.
+      console.warn('Purchase threw already-owned error — granting vouchers for stuck payment');
       try {
-        const result = await attemptPurchase(Purchases, productId);
-        if (result?.customerInfo) {
-          const voucherCodes = await createVouchers(numChecks, vrm);
-          return { success: true, voucherCodes, customerInfo: result.customerInfo };
-        }
-        return { success: false, error: 'Purchase was not completed' };
-      } catch (err: any) {
-        // User cancelled — exit immediately
-        if (err?.code === 1 || err?.message?.includes('cancel') || err?.userCancelled) {
-          return { success: false, error: 'Purchase cancelled' };
-        }
-
-        // Not an "already owned" error — fail
-        if (!isAlreadyOwnedError(err)) {
-          console.error('RevenueCat purchase error:', err);
-          return { success: false, error: err.message || 'Payment failed. Please try again.' };
-        }
-
-        // Fall through to stuck-purchase handler below
-        console.warn('Purchase threw already-owned error — handling as stuck purchase');
-      }
-    }
-
-    // --- STUCK PURCHASE PATH ---
-    // Either pre-check detected a stuck purchase, or purchaseStoreProduct threw "already owned".
-    // The user DID pay previously. Grant vouchers if they don't already have unredeemed ones.
-    try {
-      await Purchases.restorePurchases();
-    } catch (restoreErr) {
-      console.warn('restorePurchases warning:', restoreErr);
-    }
-
-    try {
-      const { count } = await (supabase as any)
-        .from('user_vouchers')
-        .select('*', { count: 'exact', head: true })
-        .eq('user_id', user.value.id)
-        .eq('is_redeemed', false);
-
-      if (count && count > 0) {
-        // User already has credits — fetch their codes so payment-success can use one
-        const { data: existingVouchers } = await (supabase as any)
-          .from('user_vouchers')
-          .select('voucher_code')
-          .eq('user_id', user.value.id)
-          .eq('is_redeemed', false)
-          .order('created_at', { ascending: false });
-        const codes = (existingVouchers || []).map((v: any) => v.voucher_code);
-        return {
-          success: true,
-          voucherCodes: codes
-        };
+        await Purchases.restorePurchases();
+      } catch (restoreErr) {
+        console.warn('restorePurchases warning:', restoreErr);
       }
 
-      // No unredeemed vouchers — user paid but never got credits, grant them now
-      const voucherCodes = await createVouchers(numChecks, vrm);
-      return { success: true, voucherCodes };
-    } catch (dbErr) {
-      console.error('Failed to check/create vouchers for stuck purchase:', dbErr);
-      return { success: false, error: 'You have a pending purchase. Please restart the app and try again.' };
+      try {
+        const voucherCodes = await createVouchers(numChecks, vrm);
+        return { success: true, voucherCodes };
+      } catch (dbErr) {
+        console.error('Failed to create vouchers for stuck purchase:', dbErr);
+        return { success: false, error: 'You have a pending purchase. Please restart the app and try again.' };
+      }
     }
   };
 
