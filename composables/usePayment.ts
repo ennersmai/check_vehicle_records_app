@@ -161,14 +161,12 @@ export const usePayment = () => {
       || msg.includes('pendingpurchase');
   };
 
-  // Helper: attempt a single store purchase call
-  const attemptPurchase = async (Purchases: any, productId: string) => {
-    return Purchases.purchaseStoreProduct({
-      product: {
-        identifier: productId,
-        productCategory: 'NON_SUBSCRIPTION'
-      }
-    });
+  // Helper: check if user cancelled the purchase (works on both iOS and Android)
+  const isUserCancelled = (err: any): boolean => {
+    if (err?.userCancelled === true) return true;
+    if (err?.code === 1 || err?.code === '1') return true;
+    const msg = (err?.message || '').toLowerCase();
+    return msg.includes('cancel') || msg.includes('user cancelled');
   };
 
   // Purchase via RevenueCat (mobile in-app purchase)
@@ -189,17 +187,27 @@ export const usePayment = () => {
       console.warn('RevenueCat login warning:', loginErr);
     }
 
-    // Lightweight sync only — do NOT call restorePurchases() here as it
-    // corrupts RevenueCat state and causes "unknown backend error" on other products
+    // Fetch offerings to get the REAL package object for purchasePackage()
+    let rcPackage: any = null;
     try {
-      await Purchases.syncPurchases();
-    } catch (syncErr) {
-      console.warn('RevenueCat syncPurchases warning:', syncErr);
+      const offerings = await Purchases.getOfferings();
+      const packages = offerings?.current?.availablePackages || [];
+      rcPackage = packages.find((pkg: any) => {
+        const pkgProductId = pkg.product?.identifier || pkg.identifier || '';
+        return pkgProductId === productId;
+      });
+    } catch (offerErr) {
+      console.warn('Failed to fetch offerings:', offerErr);
     }
 
-    // --- ALWAYS attempt the real purchase — this is the only way to charge the user ---
+    if (!rcPackage) {
+      console.error(`No package found for product ${productId} in offerings`);
+      return { success: false, error: 'Product not available. Please try again.' };
+    }
+
+    // --- PURCHASE ATTEMPT using real package object ---
     try {
-      const result = await attemptPurchase(Purchases, productId);
+      const result = await Purchases.purchasePackage({ aPackage: rcPackage });
       if (result?.customerInfo) {
         const voucherCodes = await createVouchers(numChecks, vrm);
         return { success: true, voucherCodes, customerInfo: result.customerInfo };
@@ -207,7 +215,7 @@ export const usePayment = () => {
       return { success: false, error: 'Purchase was not completed' };
     } catch (err: any) {
       // User cancelled — exit immediately
-      if (err?.code === 1 || err?.message?.includes('cancel') || err?.userCancelled) {
+      if (isUserCancelled(err)) {
         return { success: false, error: 'Purchase cancelled' };
       }
 
@@ -217,17 +225,51 @@ export const usePayment = () => {
         return { success: false, error: err.message || 'Payment failed. Please try again.' };
       }
 
-      // --- "ALREADY OWNED" FALLBACK ---
-      // Google Play says "you already own this item" — stuck unconsumed token.
-      // Grant vouchers so the user isn't blocked. With corrected RevenueCat config
-      // (consumable packages, no $rc_lifetime), this should rarely happen going forward.
-      console.warn('Purchase threw already-owned error — granting vouchers for stuck payment');
+      // --- "ALREADY OWNED" — consume the stuck token, then retry ---
+      console.warn('Purchase threw already-owned error — syncing to consume stuck token');
       try {
-        const voucherCodes = await createVouchers(numChecks, vrm);
-        return { success: true, voucherCodes };
-      } catch (dbErr) {
-        console.error('Failed to create vouchers for stuck purchase:', dbErr);
-        return { success: false, error: 'Purchase could not be completed. Please try again.' };
+        await Purchases.syncPurchases();
+      } catch (syncErr) {
+        console.warn('syncPurchases warning:', syncErr);
+      }
+      try {
+        await Purchases.restorePurchases();
+      } catch (restoreErr) {
+        console.warn('restorePurchases warning:', restoreErr);
+      }
+
+      // Brief pause to let the store process the consumption
+      await new Promise(r => setTimeout(r, 1500));
+
+      // Retry the purchase — token should now be consumed
+      try {
+        console.log('Retrying purchase after consuming stuck token...');
+        const retryResult = await Purchases.purchasePackage({ aPackage: rcPackage });
+        if (retryResult?.customerInfo) {
+          const voucherCodes = await createVouchers(numChecks, vrm);
+          return { success: true, voucherCodes, customerInfo: retryResult.customerInfo };
+        }
+        return { success: false, error: 'Purchase was not completed on retry' };
+      } catch (retryErr: any) {
+        if (isUserCancelled(retryErr)) {
+          return { success: false, error: 'Purchase cancelled' };
+        }
+
+        // If retry ALSO fails with already-owned, the token is truly stuck.
+        // Grant vouchers as last resort — user already paid for this token.
+        if (isAlreadyOwnedError(retryErr)) {
+          console.warn('Retry also failed with already-owned — granting vouchers as last resort');
+          try {
+            const voucherCodes = await createVouchers(numChecks, vrm);
+            return { success: true, voucherCodes };
+          } catch (dbErr) {
+            console.error('Failed to create vouchers:', dbErr);
+            return { success: false, error: 'Purchase could not be completed. Please clear your app store cache and try again.' };
+          }
+        }
+
+        console.error('Retry purchase error:', retryErr);
+        return { success: false, error: retryErr.message || 'Payment failed on retry. Please try again.' };
       }
     }
   };
