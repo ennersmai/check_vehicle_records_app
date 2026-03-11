@@ -153,9 +153,12 @@ export const usePayment = () => {
     console.warn('Purchase error details for matching:', JSON.stringify(err, null, 2));
     return msg.includes('already own')
       || msg.includes('already purchased')
+      || msg.includes('already been purchased')
       || msg.includes('already active')
       || msg.includes('product is already')
-      || msg.includes('product_already_purchased');
+      || msg.includes('product_already_purchased')
+      || msg.includes('item_already_owned')
+      || msg.includes('pendingpurchase');
   };
 
   // Helper: attempt a single store purchase call
@@ -186,8 +189,13 @@ export const usePayment = () => {
       console.warn('RevenueCat login warning:', loginErr);
     }
 
-    // Sync any pending/unacknowledged purchases before buying
-    // This clears stuck consumables that were paid but never consumed
+    // Restore + sync before buying — this consumes any stuck Google Play tokens
+    // so purchaseStoreProduct doesn't hit "You already own this item"
+    try {
+      await Purchases.restorePurchases();
+    } catch (restoreErr) {
+      console.warn('RevenueCat restorePurchases (pre-purchase) warning:', restoreErr);
+    }
     try {
       await Purchases.syncPurchases();
     } catch (syncErr) {
