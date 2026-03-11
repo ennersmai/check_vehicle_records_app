@@ -8,17 +8,7 @@ export default defineNuxtPlugin(async () => {
     };
   }
 
-  const apiKey = useRuntimeConfig().public.revenueCatApiKey;
-
-  // Skip if no API key configured (web mode)
-  if (!apiKey) {
-    console.log('RevenueCat API key not configured, skipping initialization');
-    return {
-      provide: {
-        purchases: null
-      }
-    };
-  }
+  const config = useRuntimeConfig().public;
 
   try {
     // Access RevenueCat through Capacitor's global plugin registry
@@ -26,13 +16,24 @@ export default defineNuxtPlugin(async () => {
     if (cap?.Plugins?.Purchases) {
       const Purchases = cap.Plugins.Purchases;
       
-      // Configure RevenueCat
+      // Use the correct API key based on platform
+      const platform = cap.getPlatform?.() || 'web';
+      const apiKey = platform === 'ios'
+        ? config.revenueCatAppleApiKey
+        : config.revenueCatGoogleApiKey;
+
+      if (!apiKey) {
+        console.warn(`RevenueCat: No API key for platform "${platform}"`);
+        return { provide: { purchases: null } };
+      }
+
+      // Configure RevenueCat with platform-specific key
       await Purchases.configure({
         apiKey,
         appUserID: null,
       });
 
-      console.log('RevenueCat configured successfully');
+      console.log(`RevenueCat configured for ${platform} with ${(apiKey as string).substring(0, 4)}... key`);
 
       return {
         provide: {
