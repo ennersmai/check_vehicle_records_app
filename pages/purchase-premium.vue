@@ -123,6 +123,8 @@ const selectedPackagePrice = computed(() => {
 const handleConfirm = () => {
   if (selectedPackage.value) {
     const pkg = packages.value.find(p => p.id === selectedPackage.value);
+    console.log(`[CVR] Selected package id=${selectedPackage.value}, found pkg:`, JSON.stringify(pkg));
+    console.log(`[CVR] All packages:`, JSON.stringify(packages.value.map(p => ({ id: p.id, productId: p.productId, checks: p.checks }))));
     router.push({
       path: '/checkout',
       query: {

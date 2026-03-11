@@ -91,9 +91,11 @@ const error = ref('');
 const handlePurchase = async () => {
   processing.value = true;
   error.value = '';
+  console.log(`[CVR] Checkout: productId=${productId.value}, checks=${checks.value}, price=${price.value}`);
   
   try {
     const numChecks = parseInt(checks.value) || 1;
+    console.log(`[CVR] Calling purchase(numChecks=${numChecks}, productId=${productId.value})`);
     const result = await purchase(numChecks, productId.value, vrm.value);
     
     if (result.success) {

@@ -58,40 +58,7 @@ serve(async (req) => {
       throw new Error('Authentication required for premium lookups')
     }
 
-    // STEP 1: Check if premium lookup already exists (permanent cache)
-    console.log(`Checking premium cache for VRM: ${normalizedVrm}`)
-    const { data: cachedPremiums, error: cacheError } = await supabaseClient
-      .from('premium_lookups')
-      .select('*')
-      .eq('vrm', normalizedVrm)
-      .eq('user_id', user.id)
-      .limit(1)
-    
-    const cachedPremium = cachedPremiums?.[0] || null
-
-    if (cachedPremium && !cacheError) {
-      console.log(`Premium cache HIT for VRM: ${normalizedVrm}`)
-      
-      return new Response(
-        JSON.stringify({
-          success: true,
-          data: {
-            basic: cachedPremium.vehicle_lookup_id, // Will be populated by UI
-            history: cachedPremium.history_data,
-            mot: cachedPremium.mot_data,
-            mileage: cachedPremium.mileage_data,
-            images: cachedPremium.image_data,
-            specs: cachedPremium.specs_data,
-            valuation: cachedPremium.valuation_data
-          }
-        } as PremiumLookupResponse),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      )
-    }
-
-    console.log(`Premium cache MISS for VRM: ${normalizedVrm}`)
-
-    // STEP 2: Validate voucher if provided
+    // STEP 1: Validate and redeem voucher FIRST (before cache check)
     let voucherId = null
     if (voucherCode) {
       console.log(`Validating voucher: ${voucherCode.toUpperCase()} for user ${user.id}`)
@@ -111,9 +78,59 @@ serve(async (req) => {
 
       voucherId = voucher.id
       console.log(`Voucher validated: ${voucherId}`)
+
+      // Mark voucher as redeemed immediately
+      console.log(`Marking voucher ${voucherId} as redeemed for VRM ${normalizedVrm}`)
+      const { error: redeemError } = await supabaseAdmin
+        .from('user_vouchers')
+        .update({
+          is_redeemed: true,
+          redeemed_at: new Date().toISOString(),
+          vehicle_vrm: normalizedVrm
+        })
+        .eq('id', voucherId)
+      
+      if (redeemError) {
+        console.error('Error marking voucher as redeemed:', redeemError)
+      } else {
+        console.log('Voucher marked as redeemed successfully')
+      }
     } else {
       throw new Error('Voucher code is required for premium lookups')
     }
+
+    // STEP 2: Check if premium lookup already exists (permanent cache)
+    console.log(`Checking premium cache for VRM: ${normalizedVrm}`)
+    const { data: cachedPremiums, error: cacheError } = await supabaseClient
+      .from('premium_lookups')
+      .select('*')
+      .eq('vrm', normalizedVrm)
+      .eq('user_id', user.id)
+      .limit(1)
+    
+    const cachedPremium = cachedPremiums?.[0] || null
+
+    if (cachedPremium && !cacheError) {
+      console.log(`Premium cache HIT for VRM: ${normalizedVrm}`)
+      
+      return new Response(
+        JSON.stringify({
+          success: true,
+          data: {
+            basic: cachedPremium.vehicle_lookup_id,
+            history: cachedPremium.history_data,
+            mot: cachedPremium.mot_data,
+            mileage: cachedPremium.mileage_data,
+            images: cachedPremium.image_data,
+            specs: cachedPremium.specs_data,
+            valuation: cachedPremium.valuation_data
+          }
+        } as PremiumLookupResponse),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      )
+    }
+
+    console.log(`Premium cache MISS for VRM: ${normalizedVrm}`)
 
     // STEP 3: Get basic lookup data (should already be cached)
     // Use limit(1) with admin client - multiple users can have records for same VRM
@@ -195,26 +212,7 @@ serve(async (req) => {
     }
     console.log('Premium lookup stored successfully')
 
-    // STEP 6: Mark voucher as redeemed (use admin to bypass RLS)
-    if (voucherId) {
-      console.log(`Marking voucher ${voucherId} as redeemed for VRM ${normalizedVrm}`)
-      const { error: redeemError } = await supabaseAdmin
-        .from('user_vouchers')
-        .update({
-          is_redeemed: true,
-          redeemed_at: new Date().toISOString(),
-          vehicle_vrm: normalizedVrm
-        })
-        .eq('id', voucherId)
-      
-      if (redeemError) {
-        console.error('Error marking voucher as redeemed:', redeemError)
-      } else {
-        console.log('Voucher marked as redeemed successfully')
-      }
-    }
-
-    // STEP 7: Return merged data
+    // STEP 6: Return merged data
     return new Response(
       JSON.stringify({
         success: true,

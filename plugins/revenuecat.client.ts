@@ -27,6 +27,14 @@ export default defineNuxtPlugin(async () => {
         return { provide: { purchases: null } };
       }
 
+      // Enable debug logs BEFORE configure so we see everything in logcat
+      try {
+        await Purchases.setLogLevel({ level: 'DEBUG' });
+      } catch (e) {
+        // Fallback for older SDK versions
+        try { await Purchases.setDebugLogsEnabled({ enabled: true }); } catch (_) {}
+      }
+
       // Configure RevenueCat with platform-specific key
       await Purchases.configure({
         apiKey,

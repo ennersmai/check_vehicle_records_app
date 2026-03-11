@@ -10,6 +10,9 @@ public class MainActivity extends BridgeActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Enable WebView debugging so console.log appears in logcat
+        WebView.setWebContentsDebuggingEnabled(true);
+
         // Disable elastic overscroll on the WebView
         WebView webView = getBridge().getWebView();
         if (webView != null) {

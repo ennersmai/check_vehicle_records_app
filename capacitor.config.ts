@@ -4,6 +4,9 @@ const config: CapacitorConfig = {
   appId: 'com.cvr.app',
   appName: 'CVR',
   webDir: '.vercel/output/static',
+  android: {
+    webContentsDebuggingEnabled: true
+  },
   server: {
     androidScheme: 'https'
   },
