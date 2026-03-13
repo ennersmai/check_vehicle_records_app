@@ -5,6 +5,8 @@
  * Flow: User pays via Google Play → RevenueCat confirms → vouchers created in Supabase → 
  *       user redeems voucher for premium vehicle lookup
  */
+import { Purchases } from '@revenuecat/purchases-capacitor';
+import { Capacitor } from '@capacitor/core';
 
 interface PurchaseResult {
   success: boolean;
@@ -51,12 +53,11 @@ interface UserVoucherRow {
   updated_at?: string | null;
 }
 
-// Access RevenueCat through Capacitor's global plugin registry
+// Access RevenueCat SDK - only available on native platforms
 const getPurchases = () => {
-  if (typeof window !== 'undefined' && (window as any).Capacitor?.Plugins?.Purchases) {
-    return (window as any).Capacitor.Plugins.Purchases;
-  }
-  return null;
+  if (typeof window === 'undefined') return null;
+  if (!Capacitor.isNativePlatform()) return null;
+  return Purchases;
 };
 
 export const usePayment = () => {
@@ -68,7 +69,7 @@ export const usePayment = () => {
 
   // Check if we're in mobile context
   const checkMobileContext = () => {
-    isMobile.value = !!(typeof window !== 'undefined' && (window as any).Capacitor?.isNativePlatform?.());
+    isMobile.value = typeof window !== 'undefined' && Capacitor.isNativePlatform();
   };
 
   // Generate a random voucher code
@@ -250,7 +251,7 @@ export const usePayment = () => {
 
       // Step 2: check customerInfo for an existing transaction for this product
       try {
-        const customerInfo = await Purchases.getCustomerInfo();
+        const customerInfo = await Purchases.getCustomerInfo() as any;
         const nonSubTxns: any[] = customerInfo?.customerInfo?.nonSubscriptionTransactions || customerInfo?.nonSubscriptionTransactions || [];
         console.log(`[CVR] nonSubscriptionTransactions count: ${nonSubTxns.length}`);
         nonSubTxns.forEach((t: any) => {

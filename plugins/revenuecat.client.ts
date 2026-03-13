@@ -1,66 +1,42 @@
-export default defineNuxtPlugin(async () => {
-  // Skip on server-side rendering - this prevents SSR errors
-  if (process.server) {
-    return {
-      provide: {
-        purchases: null
-      }
-    };
-  }
+import { Purchases, LOG_LEVEL } from '@revenuecat/purchases-capacitor';
+import { Capacitor } from '@capacitor/core';
 
+export default defineNuxtPlugin(async () => {
   const config = useRuntimeConfig().public;
 
+  const platform = Capacitor.getPlatform();
+
+  // Only initialise on native platforms
+  if (platform !== 'ios' && platform !== 'android') {
+    return { provide: { purchases: null } };
+  }
+
   try {
-    // Access RevenueCat through Capacitor's global plugin registry
-    const cap = (window as any).Capacitor;
-    if (cap?.Plugins?.Purchases) {
-      const Purchases = cap.Plugins.Purchases;
-      
-      // Use the correct API key based on platform
-      const platform = cap.getPlatform?.() || 'web';
-      const apiKey = platform === 'ios'
-        ? config.revenueCatAppleApiKey
-        : config.revenueCatGoogleApiKey;
+    const apiKey = platform === 'ios'
+      ? config.revenueCatAppleApiKey
+      : config.revenueCatGoogleApiKey;
 
-      if (!apiKey) {
-        console.warn(`RevenueCat: No API key for platform "${platform}"`);
-        return { provide: { purchases: null } };
-      }
-
-      // Enable debug logs BEFORE configure so we see everything in logcat
-      try {
-        await Purchases.setLogLevel({ level: 'DEBUG' });
-      } catch (e) {
-        // Fallback for older SDK versions
-        try { await Purchases.setDebugLogsEnabled({ enabled: true }); } catch (_) {}
-      }
-
-      // Configure RevenueCat with platform-specific key
-      await Purchases.configure({
-        apiKey,
-        appUserID: null,
-      });
-
-      console.log(`RevenueCat configured for ${platform} with ${(apiKey as string).substring(0, 4)}... key`);
-
-      return {
-        provide: {
-          purchases: Purchases
-        }
-      };
+    if (!apiKey) {
+      console.warn(`[CVR] RevenueCat: No API key for platform "${platform}"`);
+      return { provide: { purchases: null } };
     }
+
+    await Purchases.setLogLevel({ level: LOG_LEVEL.DEBUG });
+
+    await Purchases.configure({
+      apiKey,
+      appUserID: null,
+    });
+
+    console.log(`[CVR] RevenueCat configured for ${platform} with ${(apiKey as string).substring(0, 4)}... key`);
 
     return {
       provide: {
-        purchases: null
+        purchases: Purchases
       }
     };
   } catch (error) {
-    console.error('RevenueCat initialization error:', error);
-    return {
-      provide: {
-        purchases: null
-      }
-    };
+    console.error('[CVR] RevenueCat initialization error:', error);
+    return { provide: { purchases: null } };
   }
 });
