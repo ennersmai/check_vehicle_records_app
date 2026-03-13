@@ -238,25 +238,47 @@ export const usePayment = () => {
         return { success: false, error: err.message || 'Payment failed. Please try again.' };
       }
 
-      // --- "ALREADY OWNED" — consume the stuck token, then retry ---
-      console.warn('Purchase threw already-owned error — syncing to consume stuck token');
+      // --- "ALREADY OWNED" — check if RevenueCat already recorded this purchase ---
+      console.warn('Purchase threw already-owned error — checking nonSubscriptionTransactions');
+
+      // Step 1: sync so RevenueCat knows about the pending token
       try {
         await Purchases.syncPurchases();
       } catch (syncErr) {
         console.warn('syncPurchases warning:', syncErr);
       }
+
+      // Step 2: check customerInfo for an existing transaction for this product
+      try {
+        const customerInfo = await Purchases.getCustomerInfo();
+        const nonSubTxns: any[] = customerInfo?.customerInfo?.nonSubscriptionTransactions || customerInfo?.nonSubscriptionTransactions || [];
+        console.log(`[CVR] nonSubscriptionTransactions count: ${nonSubTxns.length}`);
+        nonSubTxns.forEach((t: any) => {
+          console.log(`[CVR]   txn: productIdentifier=${t.productIdentifier}, purchaseDate=${t.purchaseDate}`);
+        });
+
+        const hasTxnForProduct = nonSubTxns.some((t: any) => t.productIdentifier === productId);
+        if (hasTxnForProduct) {
+          // RevenueCat already recorded the purchase — grant vouchers immediately
+          console.warn(`[CVR] Found existing transaction for ${productId} — granting vouchers`);
+          const voucherCodes = await createVouchers(numChecks, vrm);
+          return { success: true, voucherCodes, customerInfo: customerInfo?.customerInfo || customerInfo };
+        }
+      } catch (ciErr) {
+        console.warn('getCustomerInfo warning:', ciErr);
+      }
+
+      // Step 3: no recorded transaction — try restorePurchases then retry purchase
       try {
         await Purchases.restorePurchases();
       } catch (restoreErr) {
         console.warn('restorePurchases warning:', restoreErr);
       }
 
-      // Brief pause to let the store process the consumption
       await new Promise(r => setTimeout(r, 1500));
 
-      // Retry the purchase — token should now be consumed
       try {
-        console.log('Retrying purchase after consuming stuck token...');
+        console.log('[CVR] Retrying purchase after sync/restore...');
         const retryResult = await Purchases.purchasePackage({ aPackage: rcPackage });
         if (retryResult?.customerInfo) {
           const voucherCodes = await createVouchers(numChecks, vrm);
@@ -268,16 +290,15 @@ export const usePayment = () => {
           return { success: false, error: 'Purchase cancelled' };
         }
 
-        // If retry ALSO fails with already-owned, the token is truly stuck.
-        // Grant vouchers as last resort — user already paid for this token.
+        // Retry also failed with already-owned — grant vouchers as last resort
         if (isAlreadyOwnedError(retryErr)) {
-          console.warn('Retry also failed with already-owned — granting vouchers as last resort');
+          console.warn('[CVR] Retry also already-owned — granting vouchers as last resort');
           try {
             const voucherCodes = await createVouchers(numChecks, vrm);
             return { success: true, voucherCodes };
           } catch (dbErr) {
             console.error('Failed to create vouchers:', dbErr);
-            return { success: false, error: 'Purchase could not be completed. Please clear your app store cache and try again.' };
+            return { success: false, error: 'Purchase could not be completed. Please contact support.' };
           }
         }
 
