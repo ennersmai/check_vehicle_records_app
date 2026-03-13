@@ -51,15 +51,12 @@ interface UserVoucherRow {
   updated_at?: string | null;
 }
 
-// Access RevenueCat via the Nuxt plugin inject (set up in revenuecat.client.ts)
+// Access RevenueCat through Capacitor's global plugin registry
 const getPurchases = () => {
-  if (typeof window === 'undefined') return null;
-  try {
-    const { $purchases } = useNuxtApp();
-    return ($purchases as any) || null;
-  } catch {
-    return null;
+  if (typeof window !== 'undefined' && (window as any).Capacitor?.Plugins?.Purchases) {
+    return (window as any).Capacitor.Plugins.Purchases;
   }
+  return null;
 };
 
 export const usePayment = () => {
@@ -71,7 +68,7 @@ export const usePayment = () => {
 
   // Check if we're in mobile context
   const checkMobileContext = () => {
-    isMobile.value = !!getPurchases();
+    isMobile.value = !!(typeof window !== 'undefined' && (window as any).Capacitor?.isNativePlatform?.());
   };
 
   // Generate a random voucher code
