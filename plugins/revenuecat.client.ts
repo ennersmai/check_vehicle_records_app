@@ -1,17 +1,23 @@
-import { Purchases, LOG_LEVEL } from '@revenuecat/purchases-capacitor';
-import { Capacitor } from '@capacitor/core';
-
 export default defineNuxtPlugin(async () => {
-  const config = useRuntimeConfig().public;
-
-  const platform = Capacitor.getPlatform();
-
-  // Only initialise on native platforms
-  if (platform !== 'ios' && platform !== 'android') {
+  if (process.server) {
     return { provide: { purchases: null } };
   }
 
+  const config = useRuntimeConfig().public;
+
   try {
+    const cap = (window as any).Capacitor;
+    if (!cap?.Plugins?.Purchases) {
+      return { provide: { purchases: null } };
+    }
+
+    const Purchases = cap.Plugins.Purchases;
+    const platform = cap.getPlatform?.() || 'web';
+
+    if (platform !== 'ios' && platform !== 'android') {
+      return { provide: { purchases: null } };
+    }
+
     const apiKey = platform === 'ios'
       ? config.revenueCatAppleApiKey
       : config.revenueCatGoogleApiKey;
@@ -21,7 +27,11 @@ export default defineNuxtPlugin(async () => {
       return { provide: { purchases: null } };
     }
 
-    await Purchases.setLogLevel({ level: LOG_LEVEL.DEBUG });
+    try {
+      await Purchases.setLogLevel({ level: 'DEBUG' });
+    } catch (e) {
+      try { await Purchases.setDebugLogsEnabled({ enabled: true }); } catch (_) {}
+    }
 
     await Purchases.configure({
       apiKey,
@@ -30,11 +40,7 @@ export default defineNuxtPlugin(async () => {
 
     console.log(`[CVR] RevenueCat configured for ${platform} with ${(apiKey as string).substring(0, 4)}... key`);
 
-    return {
-      provide: {
-        purchases: Purchases
-      }
-    };
+    return { provide: { purchases: Purchases } };
   } catch (error) {
     console.error('[CVR] RevenueCat initialization error:', error);
     return { provide: { purchases: null } };

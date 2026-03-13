@@ -5,8 +5,6 @@
  * Flow: User pays via Google Play → RevenueCat confirms → vouchers created in Supabase → 
  *       user redeems voucher for premium vehicle lookup
  */
-import { Purchases } from '@revenuecat/purchases-capacitor';
-import { Capacitor } from '@capacitor/core';
 
 interface PurchaseResult {
   success: boolean;
@@ -53,11 +51,15 @@ interface UserVoucherRow {
   updated_at?: string | null;
 }
 
-// Access RevenueCat SDK - only available on native platforms
+// Access RevenueCat via the Nuxt plugin inject (set up in revenuecat.client.ts)
 const getPurchases = () => {
   if (typeof window === 'undefined') return null;
-  if (!Capacitor.isNativePlatform()) return null;
-  return Purchases;
+  try {
+    const { $purchases } = useNuxtApp();
+    return ($purchases as any) || null;
+  } catch {
+    return null;
+  }
 };
 
 export const usePayment = () => {
@@ -69,7 +71,7 @@ export const usePayment = () => {
 
   // Check if we're in mobile context
   const checkMobileContext = () => {
-    isMobile.value = typeof window !== 'undefined' && Capacitor.isNativePlatform();
+    isMobile.value = !!getPurchases();
   };
 
   // Generate a random voucher code
