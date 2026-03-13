@@ -8,8 +8,8 @@ android {
         applicationId "com.cvr.app"
         minSdkVersion 24
         targetSdkVersion 36
-        versionCode 49
-        versionName "1.0.46"
+        versionCode 50
+        versionName "1.0.47"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 

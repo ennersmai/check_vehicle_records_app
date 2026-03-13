@@ -120,7 +120,7 @@ export const usePayment = () => {
           console.log(`[CVR] Package[${i}]: identifier=${pkg.identifier}, packageType=${pkg.packageType}, product.identifier=${pkg.product?.identifier}, product.productCategory=${pkg.product?.productCategory}, product.productType=${pkg.product?.productType}`);
         });
         const packs: CreditPack[] = offerings.current.availablePackages.map((pkg: any) => {
-          const productId = pkg.product?.identifier || pkg.identifier || '';
+          const productId = pkg.product?.identifier ?? '';
           const credits = PRODUCT_CREDITS[productId] || 1;
           console.log(`[CVR] Mapped: productId=${productId} → credits=${credits}`);
           return {
@@ -201,12 +201,11 @@ export const usePayment = () => {
       const packages = offerings?.current?.availablePackages || [];
       console.log(`[CVR] Found ${packages.length} packages in current offering`);
       packages.forEach((pkg: any, i: number) => {
-        const pid = pkg.product?.identifier || pkg.identifier || '';
+        const pid = pkg.product?.identifier ?? '';
         console.log(`[CVR]   package[${i}]: product.identifier=${pid}, packageType=${pkg.packageType}, product.productCategory=${pkg.product?.productCategory}`);
       });
       rcPackage = packages.find((pkg: any) => {
-        const pkgProductId = pkg.product?.identifier || pkg.identifier || '';
-        return pkgProductId === productId;
+        return (pkg.product?.identifier ?? '') === productId;
       });
       console.log(`[CVR] Matched package: ${rcPackage ? rcPackage.product?.identifier : 'NONE'}`);
     } catch (offerErr) {
