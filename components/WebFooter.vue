@@ -31,7 +31,7 @@
           <div>
             <h4 class="font-semibold text-white mb-4">Support</h4>
             <ul class="space-y-2 text-sm">
-              <li><a href="#" class="text-blue-100 hover:text-white transition">How it Works</a></li>
+              <li><NuxtLink to="/how-it-works" class="text-blue-100 hover:text-white transition">How it Works</NuxtLink></li>
               <li><NuxtLink to="/support" class="text-blue-100 hover:text-white transition">Report an Issue</NuxtLink></li>
             </ul>
           </div>
