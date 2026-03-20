@@ -1,0 +1,197 @@
+<template>
+  <div class="min-h-screen bg-white font-sans">
+    <WebNav />
+
+    <section class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20">
+      <h1 class="text-3xl font-bold text-primary mb-2">My Searches</h1>
+      <p class="text-gray-500 mb-10">View your recent vehicle lookups.</p>
+
+      <!-- Not Logged In -->
+      <div v-if="!user" class="text-center py-20">
+        <svg class="w-16 h-16 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+        </svg>
+        <p class="text-gray-500 mb-4">Log in to see your searches</p>
+        <NuxtLink to="/login?redirect=/web/my-searches" class="text-primary font-medium hover:underline">Log In</NuxtLink>
+      </div>
+
+      <!-- Loading -->
+      <div v-else-if="loading" class="flex flex-col items-center justify-center py-20">
+        <svg class="animate-spin h-8 w-8 text-primary mb-4" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        <p class="text-gray-500 text-sm">Loading your searches...</p>
+      </div>
+
+      <!-- Searches List -->
+      <div v-else>
+        <div v-if="recentSearches.length > 0" class="space-y-4">
+          <div
+            v-for="search in recentSearches"
+            :key="search.id"
+            class="border border-gray-200 rounded-xl p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 hover:shadow-sm transition"
+          >
+            <div class="flex items-center gap-4 flex-1 min-w-0">
+              <div class="bg-yellow-300 px-3 py-1 rounded font-bold text-sm flex-shrink-0">
+                {{ search.vrm }}
+              </div>
+              <div class="min-w-0">
+                <p class="font-medium text-gray-900 text-sm truncate">
+                  {{ search.make }} {{ search.model ? search.model + ' -' : '' }} {{ search.fuelType }} {{ search.year ? '- ' + search.year : '' }}
+                </p>
+                <p class="text-xs text-gray-500">Last checked: {{ search.lastChecked }}</p>
+              </div>
+              <span v-if="search.isPremium" class="text-xs bg-primary text-white px-2 py-1 rounded flex-shrink-0">Premium</span>
+            </div>
+            <div class="flex gap-2 flex-shrink-0">
+              <button
+                @click="confirmDelete(search)"
+                class="p-2 text-red-500 hover:bg-red-50 rounded-lg transition"
+                title="Delete search"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+              </button>
+              <button
+                @click="viewReport(search.vrm, search.isPremium)"
+                class="bg-primary text-white px-6 py-2 rounded-lg text-sm font-medium hover:bg-primary-link transition"
+              >
+                View Report
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Empty -->
+        <div v-else class="text-center py-20">
+          <svg class="w-16 h-16 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+          <p class="text-gray-500">No recent searches</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Delete Confirmation Modal -->
+    <div v-if="showDeleteModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-6" @click.self="showDeleteModal = false">
+      <div class="bg-white rounded-2xl p-6 max-w-sm w-full shadow-xl">
+        <div class="text-center mb-4">
+          <div class="w-14 h-14 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-3">
+            <svg class="w-7 h-7 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            </svg>
+          </div>
+          <h3 class="text-lg font-semibold text-gray-900">Delete Search</h3>
+          <p class="text-sm text-gray-500 mt-2">Are you sure you want to delete the search for <strong>{{ deleteTarget?.vrm }}</strong>?</p>
+        </div>
+        <div class="flex gap-3">
+          <button @click="showDeleteModal = false" class="flex-1 py-2.5 border border-gray-200 rounded-lg text-sm text-gray-600 font-medium">Cancel</button>
+          <button @click="deleteSearch" :disabled="deleting" class="flex-1 py-2.5 bg-red-500 text-white rounded-lg text-sm font-medium disabled:opacity-50">
+            {{ deleting ? 'Deleting...' : 'Delete' }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <WebFooter />
+  </div>
+</template>
+
+<script setup lang="ts">
+const router = useRouter();
+const supabase = useSupabaseClient();
+const { user } = useAuth();
+
+const recentSearches = ref<any[]>([]);
+const loading = ref(true);
+
+const fetchRecentSearches = async () => {
+  if (!user.value) return;
+  loading.value = true;
+  try {
+    const { data: lookups, error } = await (supabase as any)
+      .from('vehicle_lookups')
+      .select('*')
+      .eq('user_id', user.value.id)
+      .order('created_at', { ascending: false })
+      .limit(20);
+
+    if (error) throw error;
+
+    const { data: premiumLookups } = await (supabase as any)
+      .from('premium_lookups')
+      .select('*')
+      .eq('user_id', user.value.id)
+      .order('created_at', { ascending: false });
+
+    const premiumVrms = new Set((premiumLookups || []).map((p: any) => p.vrm));
+
+    recentSearches.value = (lookups || []).map((lookup: any) => {
+      const vehicleData = lookup.dvla_data || lookup.checkcardetails_data || {};
+      return {
+        id: lookup.id,
+        vrm: lookup.vrm,
+        make: vehicleData.make || 'Unknown',
+        model: vehicleData.model || '',
+        fuelType: vehicleData.fuelType || '',
+        year: vehicleData.yearOfManufacture || '',
+        lastChecked: new Date(lookup.created_at).toLocaleDateString('en-GB', {
+          day: 'numeric',
+          month: 'short',
+          year: 'numeric'
+        }),
+        isPremium: premiumVrms.has(lookup.vrm)
+      };
+    });
+  } catch (error) {
+    console.error('Error fetching recent searches:', error);
+  } finally {
+    loading.value = false;
+  }
+};
+
+onMounted(() => {
+  fetchRecentSearches();
+});
+
+const viewReport = (vrm: string, isPremium: boolean) => {
+  if (isPremium) {
+    router.push(`/vehicle-premium/${vrm.replace(/\s/g, '')}`);
+  } else {
+    router.push(`/vehicle/${vrm.replace(/\s/g, '')}`);
+  }
+};
+
+const showDeleteModal = ref(false);
+const deleteTarget = ref<any>(null);
+const deleting = ref(false);
+
+const confirmDelete = (search: any) => {
+  deleteTarget.value = search;
+  showDeleteModal.value = true;
+};
+
+const deleteSearch = async () => {
+  if (!deleteTarget.value || !user.value) return;
+  deleting.value = true;
+  try {
+    const { error } = await (supabase as any)
+      .from('vehicle_lookups')
+      .delete()
+      .eq('id', deleteTarget.value.id)
+      .eq('user_id', user.value.id);
+
+    if (error) throw error;
+
+    recentSearches.value = recentSearches.value.filter((s: any) => s.id !== deleteTarget.value.id);
+    showDeleteModal.value = false;
+    deleteTarget.value = null;
+  } catch (err) {
+    console.error('Error deleting search:', err);
+  } finally {
+    deleting.value = false;
+  }
+};
+</script>

@@ -92,8 +92,10 @@ const showPassword = ref(false);
 const loading = ref(false);
 const error = ref('');
 
+const isWeb = typeof window !== 'undefined' && !(window as any).Capacitor?.isNativePlatform?.();
+
 const handleBack = () => {
-  router.push('/home');
+  router.push(isWeb ? '/landing' : '/home');
 };
 
 const handleLogin = async () => {
@@ -109,7 +111,7 @@ const handleLogin = async () => {
     await associateLookupsWithUser();
     
     const redirect = route.query.redirect as string;
-    router.push(redirect || '/home');
+    router.push(redirect || (isWeb ? '/landing' : '/home'));
   } else {
     error.value = result.error || 'Login failed';
   }

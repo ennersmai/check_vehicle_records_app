@@ -1,6 +1,7 @@
 <template>
-  <div class="min-h-screen bg-white pb-36 flex flex-col">
-    <div class="px-6 pt-8 py-4">
+  <div class="min-h-screen bg-white flex flex-col" :class="{ 'pb-36': !isWeb }">
+    <WebNav v-if="isWeb" />
+    <div v-else class="px-6 pt-8 py-4">
       <button @click="$router.back()" class="flex items-center text-gray-900 hover:text-gray-700">
         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
@@ -33,13 +34,16 @@
       </div>
     </div>
 
-    <BottomNav />
+    <BottomNav v-if="!isWeb" />
+    <WebFooter v-if="isWeb" />
   </div>
 </template>
 
 <script setup lang="ts">
 const route = useRoute();
 const router = useRouter();
+const isWeb = ref(false);
+onMounted(() => { isWeb.value = !(window as any).Capacitor?.isNativePlatform?.(); });
 
 const errorMessage = computed(() => {
   const err = route.query.error as string;
@@ -55,7 +59,7 @@ const tryAgain = () => {
   if (vrm.value) {
     router.push(`/redeem-voucher?vrm=${vrm.value}`);
   } else {
-    router.push('/home');
+    router.push(isWeb.value ? '/landing' : '/home');
   }
 };
 </script>

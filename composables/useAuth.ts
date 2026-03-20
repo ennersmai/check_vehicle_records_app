@@ -56,10 +56,14 @@ export const useAuth = () => {
     }
   };
 
-  const resetPassword = async (email: string) => {
+  const resetPassword = async (email: string, redirectTo?: string) => {
     loading.value = true;
     try {
-      const { error } = await supabase.auth.resetPasswordForEmail(email);
+      const options: any = {};
+      if (redirectTo) {
+        options.redirectTo = redirectTo;
+      }
+      const { error } = await supabase.auth.resetPasswordForEmail(email, options);
       if (error) throw error;
       return { success: true };
     } catch (error: any) {

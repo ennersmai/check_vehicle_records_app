@@ -50,6 +50,7 @@
 </template>
 
 <script setup lang="ts">
+const config = useRuntimeConfig();
 const { resetPassword } = useAuth();
 
 const email = ref('');
@@ -62,7 +63,11 @@ const handleReset = async () => {
   success.value = false;
   loading.value = true;
 
-  const result = await resetPassword(email.value);
+  // Build the redirect URL for the reset-password page
+  const baseUrl = window.location.origin;
+  const redirectTo = `${baseUrl}/reset-password`;
+
+  const result = await resetPassword(email.value, redirectTo);
   
   loading.value = false;
 

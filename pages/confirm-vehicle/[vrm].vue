@@ -1,6 +1,7 @@
 <template>
-  <div class="min-h-screen bg-white pb-36">
-    <div class="px-6 pt-8 py-4">
+  <div class="min-h-screen bg-white" :class="{ 'pb-36': !isWeb }">
+    <WebNav v-if="isWeb" />
+    <div v-else class="px-6 pt-8 py-4">
       <button @click="$router.back()" class="flex items-center text-gray-900 hover:text-gray-700">
         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
@@ -27,7 +28,7 @@
       </div>
       <h2 class="text-xl font-bold text-gray-900 mb-2">{{ errorTitle }}</h2>
       <p class="text-gray-600 text-center mb-6">{{ error }}</p>
-      <PrimaryButton @click="$router.push('/home')" class="w-full max-w-sm">
+      <PrimaryButton @click="$router.push(isWeb ? '/landing' : '/home')" class="w-full max-w-sm">
         TRY ANOTHER VEHICLE
       </PrimaryButton>
     </div>
@@ -86,16 +87,18 @@
         CONFIRM
       </PrimaryButton>
 
-      <button @click="$router.push('/home')" class="text-gray-600 text-sm">
+      <button @click="$router.push(isWeb ? '/landing' : '/home')" class="text-gray-600 text-sm">
         Enter another registration number
       </button>
 
     </div>
 
-    <BottomNav />
+    <BottomNav v-if="!isWeb" />
+    <WebFooter v-if="isWeb" />
 
-    <!-- Fullscreen Image Modal -->
-    <FullscreenImageModal 
+    <!-- Fullscreen Image Modal (mobile) -->
+    <FullscreenImageModal
+      v-if="!isWeb"
       :imageUrl="fullscreenImage" 
       :scale="imageScale" 
       :translateX="imageTranslateX" 
@@ -104,6 +107,12 @@
       @touchstart="handleTouchStart"
       @touchmove="handleTouchMove"
       @touchend="handleTouchEnd"
+    />
+    <!-- Web Image Viewer -->
+    <WebImageViewer
+      v-if="isWeb"
+      :imageUrl="fullscreenImage"
+      @close="closeFullscreen"
     />
   </div>
 </template>
@@ -115,6 +124,7 @@ import { useFullscreenImage } from '~/composables/useFullscreenImage';
 const route = useRoute();
 const router = useRouter();
 const { getCachedVehicle } = useVehicle();
+const isWeb = ref(false);
 const { 
   fullscreenImage, 
   imageScale, 
@@ -136,8 +146,9 @@ const error = ref('');
 const errorTitle = ref('');
 
 onMounted(async () => {
+  isWeb.value = !(window as any).Capacitor?.isNativePlatform?.();
   if (!vrm.value) {
-    router.push('/home');
+    router.push(isWeb.value ? '/landing' : '/home');
     return;
   }
 

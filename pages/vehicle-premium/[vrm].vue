@@ -1,6 +1,7 @@
 <template>
-  <div class="min-h-screen bg-white pb-36">
-    <div class="px-6 pt-8 py-4">
+  <div class="min-h-screen bg-white" :class="{ 'pb-36': !isWeb }">
+    <WebNav v-if="isWeb" />
+    <div v-else class="px-6 pt-8 py-4">
       <button @click="$router.back()" class="flex items-center text-gray-900 hover:text-gray-700">
         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
@@ -33,7 +34,7 @@
     </div>
 
     <!-- Main Content -->
-    <div v-else class="flex flex-col px-10">
+    <div v-else class="flex flex-col" :class="isWeb ? 'max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8' : 'px-10'">
       <!-- Fixed Header Section -->
       <div class="sticky top-0 bg-white z-10 pb-4">
         <h1 class="text-3xl font-bold text-primary mb-1">Vehicle details</h1>
@@ -186,10 +187,12 @@
       </div>
     </div>
 
-    <BottomNav />
+    <BottomNav v-if="!isWeb" />
+    <WebFooter v-if="isWeb" />
 
-    <!-- Fullscreen Image Modal -->
-    <FullscreenImageModal 
+    <!-- Fullscreen Image Modal (mobile) -->
+    <FullscreenImageModal
+      v-if="!isWeb"
       :imageUrl="fullscreenImage" 
       :scale="imageScale" 
       :translateX="imageTranslateX" 
@@ -198,6 +201,12 @@
       @touchstart="handleTouchStart"
       @touchmove="handleTouchMove"
       @touchend="handleTouchEnd"
+    />
+    <!-- Web Image Viewer (desktop) -->
+    <WebImageViewer
+      v-if="isWeb"
+      :imageUrl="fullscreenImage"
+      @close="closeFullscreen"
     />
   </div>
 </template>
@@ -211,6 +220,7 @@ import { useVehicle } from '~/composables/useVehicle';
 const route = useRoute();
 const router = useRouter();
 const { getCachedPremiumLookup, getCachedVehicle } = useVehicle();
+const isWeb = ref(false);
 const { 
   fullscreenImage, 
   imageScale, 
@@ -232,8 +242,9 @@ const error = ref('');
 const errorTitle = ref('');
 
 onMounted(async () => {
+  isWeb.value = !(window as any).Capacitor?.isNativePlatform?.();
   if (!vrm.value) {
-    router.push('/home');
+    router.push(isWeb.value ? '/landing' : '/home');
     return;
   }
 
