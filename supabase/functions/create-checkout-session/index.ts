@@ -1,6 +1,6 @@
-import { serve } from "https://deno.land/std@0.177.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.21.0";
-import Stripe from "https://esm.sh/stripe@14.14.0?target=deno";
+import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import Stripe from 'https://esm.sh/stripe@14.14.0?target=deno'
 
 const PRICING: Record<number, { amount: number; label: string }> = {
   1:  { amount: 999,  label: '1 Premium Vehicle Check' },
@@ -31,8 +31,9 @@ serve(async (req: Request) => {
 
     // Verify user auth
     const authHeader = req.headers.get('Authorization');
+    console.log('Auth header present:', !!authHeader);
     if (!authHeader) {
-      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+      return new Response(JSON.stringify({ error: 'No authorization header' }), {
         status: 401,
         headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
       });
@@ -45,8 +46,9 @@ serve(async (req: Request) => {
     );
 
     const { data: { user }, error: authError } = await supabase.auth.getUser();
+    console.log('getUser result:', { userId: user?.id, error: authError?.message });
     if (authError || !user) {
-      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+      return new Response(JSON.stringify({ error: 'Auth failed: ' + (authError?.message || 'no user') }), {
         status: 401,
         headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
       });

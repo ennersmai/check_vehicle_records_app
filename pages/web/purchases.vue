@@ -59,21 +59,37 @@
             <div
               v-for="purchase in purchaseHistory"
               :key="purchase.id"
-              class="border border-gray-200 rounded-xl p-6 flex items-start gap-4"
+              class="border border-gray-200 rounded-xl p-6"
             >
-              <div class="w-12 h-12 flex items-center justify-center flex-shrink-0 bg-gray-100 rounded-lg">
-                <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
+              <div class="flex items-start gap-4 mb-4">
+                <div class="w-12 h-12 flex items-center justify-center flex-shrink-0 bg-gray-100 rounded-lg">
+                  <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                </div>
+                <div class="flex-1">
+                  <div class="flex items-center gap-2 mb-1">
+                    <h3 class="font-semibold text-gray-900">{{ purchase.package }}</h3>
+                    <span class="text-xs px-2 py-0.5 rounded-full" :class="purchase.source === 'Stripe' ? 'bg-purple-100 text-purple-700' : 'bg-gray-100 text-gray-600'">{{ purchase.source }}</span>
+                  </div>
+                  <p class="text-sm text-gray-600">{{ purchase.date }}</p>
+                  <p v-if="purchase.amount !== '—'" class="text-sm text-gray-600">Amount: <span class="font-medium text-gray-900">{{ purchase.amount }}</span></p>
+                  <p class="text-xs text-gray-400 mt-1">{{ purchase.redeemedCount }} redeemed · {{ purchase.unredeemedCount }} remaining</p>
+                </div>
               </div>
-              <div class="flex-1">
-                <h3 class="font-semibold text-gray-900 mb-1">{{ purchase.package }}</h3>
-                <p class="text-sm text-gray-600">Purchase date: <span class="font-medium text-gray-900">{{ purchase.date }}</span></p>
-                <p class="text-sm text-gray-600">Amount: <span class="font-medium text-gray-900">{{ purchase.amount }}</span></p>
-                <p class="text-sm text-gray-600">Voucher: <span class="font-mono text-primary">{{ purchase.voucherCode }}</span></p>
-                <p v-if="purchase.isRedeemed" class="text-sm text-green-600 mt-1 font-medium">
-                  Redeemed for {{ purchase.redeemedFor || 'vehicle check' }}
-                </p>
+              <div class="border-t border-gray-100 pt-3 space-y-2">
+                <div
+                  v-for="v in purchase.vouchers"
+                  :key="v.code"
+                  class="flex items-center justify-between text-sm px-3 py-2 rounded-lg"
+                  :class="v.isRedeemed ? 'bg-gray-50' : 'bg-primary/5'"
+                >
+                  <div class="flex items-center gap-2">
+                    <span class="font-mono text-xs" :class="v.isRedeemed ? 'text-gray-400' : 'text-primary'">{{ v.code }}</span>
+                  </div>
+                  <span v-if="v.isRedeemed" class="text-xs text-green-600 font-medium">Redeemed{{ v.redeemedFor ? ` for ${v.redeemedFor}` : '' }}</span>
+                  <span v-else class="text-xs text-primary font-medium">Available</span>
+                </div>
               </div>
             </div>
           </div>
@@ -111,6 +127,7 @@ interface VoucherRecord {
   created_at: string;
   redeemed_at?: string;
   vehicle_vrm?: string;
+  purchase_package?: string;
 }
 
 onMounted(async () => {
@@ -129,7 +146,7 @@ const loadVouchers = async () => {
 
     const { data, error } = await (supabase as any)
       .from('user_vouchers')
-      .select('id, voucher_code, is_redeemed, created_at, redeemed_at, vehicle_vrm')
+      .select('id, voucher_code, is_redeemed, created_at, redeemed_at, vehicle_vrm, purchase_package')
       .eq('user_id', user.value!.id)
       .order('created_at', { ascending: false });
 
@@ -143,54 +160,54 @@ const loadVouchers = async () => {
   }
 };
 
-const groupVouchersByPurchase = (vouchers: VoucherRecord[]) => {
-  const groups: any[] = [];
-  let currentGroup: VoucherRecord[] = [];
-  let lastDate: Date | null = null;
-
-  for (const voucher of vouchers) {
-    const voucherDate = new Date(voucher.created_at);
-    if (lastDate && (voucherDate.getTime() - lastDate.getTime() > 10000)) {
-      if (currentGroup.length > 0) {
-        groups.push(createPurchaseRecord(currentGroup));
-      }
-      currentGroup = [voucher];
-    } else {
-      currentGroup.push(voucher);
-    }
-    lastDate = voucherDate;
-  }
-
-  if (currentGroup.length > 0) {
-    groups.push(createPurchaseRecord(currentGroup));
-  }
-
-  return groups;
+const STRIPE_PRICING: Record<number, string> = {
+  1: '£9.99',
+  5: '£24.99',
+  10: '£39.99',
 };
 
-const createPurchaseRecord = (vouchers: VoucherRecord[]) => {
-  const count = vouchers.length;
-  const firstVoucher = vouchers[0];
+const groupVouchersByPurchase = (vouchers: VoucherRecord[]) => {
+  const groups = new Map<string, VoucherRecord[]>();
 
-  let amount = '£0.99';
-  if (count === 5) amount = '£3.99';
-  if (count === 10) amount = '£6.99';
-  if (count !== 1 && count !== 5 && count !== 10) {
-    amount = `£${(count * 0.99).toFixed(2)}`;
+  for (const voucher of vouchers) {
+    const key = voucher.purchase_package || `individual:${voucher.id}`;
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key)!.push(voucher);
   }
 
-  const redeemedVoucher = vouchers.find(v => v.is_redeemed);
+  return Array.from(groups.entries()).map(([key, voucherGroup]) => {
+    const count = voucherGroup.length;
+    const firstVoucher = voucherGroup[0];
+    const isStripe = key.startsWith('stripe:');
 
-  return {
-    id: firstVoucher.id,
-    package: `${count} Credit${count > 1 ? 's' : ''}`,
-    credits: count,
-    amount,
-    date: formatDate(firstVoucher.created_at),
-    voucherCode: firstVoucher.voucher_code,
-    isRedeemed: firstVoucher.is_redeemed,
-    redeemedFor: redeemedVoucher?.vehicle_vrm || null,
-  };
+    let amount = STRIPE_PRICING[count] || `£${(count * 9.99).toFixed(2)}`;
+    let source = 'Purchase';
+    if (isStripe) {
+      source = 'Stripe';
+    } else if (!firstVoucher.purchase_package) {
+      source = 'Manual';
+      amount = '—';
+    }
+
+    const redeemedVouchers = voucherGroup.filter(v => v.is_redeemed);
+    const unredeemed = voucherGroup.filter(v => !v.is_redeemed);
+
+    return {
+      id: key,
+      package: `${count} Credit${count > 1 ? 's' : ''}`,
+      credits: count,
+      amount,
+      source,
+      date: formatDate(firstVoucher.created_at),
+      vouchers: voucherGroup.map(v => ({
+        code: v.voucher_code,
+        isRedeemed: v.is_redeemed,
+        redeemedFor: v.vehicle_vrm || null,
+      })),
+      redeemedCount: redeemedVouchers.length,
+      unredeemedCount: unredeemed.length,
+    };
+  });
 };
 
 const formatDate = (dateString: string) => {
