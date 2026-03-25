@@ -14,7 +14,7 @@
     <div class="bg-primary text-white py-14">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="mb-10">
-          <img src="/Footer-Logo1-Rev4-Final 3.svg" alt="Check Vehicle Records" class="h-14" />
+          <img src="/Footer-Logo1-Rev4-Final-3.svg" alt="Check Vehicle Records" class="h-14" />
         </div>
         <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
           <!-- Company -->
