@@ -16,7 +16,25 @@ onMounted(async () => {
   // Check if running in Capacitor (mobile app) via global window object
   // Don't use import('@capacitor/core') as it's excluded from the bundle
   const isCapacitor = !!(window as any).Capacitor?.isNativePlatform?.();
-  
+
+  // Handle Supabase auth redirects that land on root (e.g. recovery emails)
+  const hash = window.location.hash;
+  const hashParams = new URLSearchParams(hash.substring(1));
+  const type = hashParams.get('type');
+  const accessToken = hashParams.get('access_token');
+  const code = new URLSearchParams(window.location.search).get('code');
+
+  if (type === 'recovery' && accessToken) {
+    // Implicit flow: #access_token=...&type=recovery — forward to reset-password with hash intact
+    navigateTo('/reset-password' + hash);
+    return;
+  }
+  if (code) {
+    // PKCE flow: ?code=... — forward to reset-password with query params preserved
+    navigateTo('/reset-password' + window.location.search);
+    return;
+  }
+
   if (isCapacitor) {
     // Mobile app - show spinner briefly then redirect to home (allow guest browsing)
     await new Promise(resolve => setTimeout(resolve, 500));
