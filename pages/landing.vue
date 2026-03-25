@@ -43,24 +43,10 @@
           </div>
           <!-- Right: Car image + check badges -->
           <div class="flex flex-col items-center md:items-end">
-            <!-- Placeholder car image -->
-            <div class="w-full max-w-md mb-6">
-              <svg viewBox="0 0 480 240" class="w-full" xmlns="http://www.w3.org/2000/svg">
-                <rect width="480" height="240" fill="#e8f0f8" rx="12"/>
-                <g transform="translate(60, 60)">
-                  <rect x="40" y="60" width="280" height="80" rx="20" fill="#1a5276"/>
-                  <rect x="70" y="30" width="200" height="60" rx="15" fill="#1f6f99"/>
-                  <circle cx="100" cy="140" r="25" fill="#333" stroke="#666" stroke-width="4"/>
-                  <circle cx="100" cy="140" r="10" fill="#999"/>
-                  <circle cx="260" cy="140" r="25" fill="#333" stroke="#666" stroke-width="4"/>
-                  <circle cx="260" cy="140" r="10" fill="#999"/>
-                  <rect x="280" y="70" width="40" height="20" rx="5" fill="#ffcc00" opacity="0.8"/>
-                  <rect x="40" y="70" width="40" height="20" rx="5" fill="#fff" opacity="0.6"/>
-                  <rect x="85" y="40" width="50" height="40" rx="5" fill="#a8d8ea" opacity="0.5"/>
-                  <rect x="155" y="40" width="80" height="40" rx="5" fill="#a8d8ea" opacity="0.5"/>
-                </g>
-                <text x="240" y="220" text-anchor="middle" fill="#1a5276" font-size="12" font-family="sans-serif">Vehicle Image Placeholder</text>
-              </svg>
+            <div class="w-[65%]">
+            <!-- Hero car image -->
+            <div class="w-full mb-6">
+              <img src="/car.png" alt="Vehicle" class="w-full h-auto object-contain" />
             </div>
             <!-- Check badges -->
             <div class="grid grid-cols-2 gap-x-6 gap-y-2 text-sm">
@@ -99,6 +85,7 @@
                 </svg>
                 <span class="text-gray-700">Not stolen</span>
               </div>
+            </div>
             </div>
           </div>
         </div>
