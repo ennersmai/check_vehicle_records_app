@@ -5,7 +5,7 @@
         <!-- Logo -->
         <div class="flex-shrink-0">
           <NuxtLink to="/landing">
-            <img src="/cvr_logo.png" alt="Check Vehicle Records" class="h-14" />
+            <img src="/main_A-Logo1-Rev4-Final 2.svg" alt="Check Vehicle Records" class="h-14" />
           </NuxtLink>
         </div>
         <!-- Desktop Menu -->

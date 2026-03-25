@@ -117,80 +117,42 @@
           <!-- Avoid Hidden Issues -->
           <div class="flex flex-col items-center text-center">
             <div class="w-16 h-16 mb-3 flex items-center justify-center">
-              <svg class="w-12 h-12 text-primary" fill="none" stroke="currentColor" viewBox="0 0 48 48">
-                <circle cx="20" cy="20" r="14" stroke-width="2.5"/>
-                <line x1="30" y1="30" x2="42" y2="42" stroke-width="2.5" stroke-linecap="round"/>
-                <path d="M15 20l4 4 7-7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
+              <img src="/avoid_hidden.webp" alt="Avoid Hidden Issues" class="w-16 h-16 object-contain" />
             </div>
             <p class="text-sm font-medium text-gray-800">Avoid Hidden<br/>Issues</p>
           </div>
           <!-- Verify Ownership History -->
           <div class="flex flex-col items-center text-center">
             <div class="w-16 h-16 mb-3 flex items-center justify-center">
-              <svg class="w-12 h-12 text-primary" fill="none" stroke="currentColor" viewBox="0 0 48 48">
-                <rect x="14" y="6" width="20" height="28" rx="3" stroke-width="2.5"/>
-                <circle cx="24" cy="38" r="5" stroke-width="2.5"/>
-                <path d="M24 34v-2" stroke-width="2.5" stroke-linecap="round"/>
-                <line x1="18" y1="14" x2="30" y2="14" stroke-width="2" stroke-linecap="round"/>
-                <line x1="18" y1="20" x2="26" y2="20" stroke-width="2" stroke-linecap="round"/>
-              </svg>
+              <img src="/verify_ownership.webp" alt="Verify Ownership History" class="w-16 h-16 object-contain" />
             </div>
             <p class="text-sm font-medium text-gray-800">Verify Ownership<br/>History</p>
           </div>
           <!-- Spot Mileage Fraud -->
           <div class="flex flex-col items-center text-center">
             <div class="w-16 h-16 mb-3 flex items-center justify-center">
-              <svg class="w-12 h-12 text-primary" fill="none" stroke="currentColor" viewBox="0 0 48 48">
-                <circle cx="24" cy="24" r="16" stroke-width="2.5"/>
-                <path d="M24 14v10l6 6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                <circle cx="24" cy="24" r="2" fill="currentColor"/>
-                <circle cx="16" cy="10" r="2" fill="currentColor" opacity="0.5"/>
-                <circle cx="32" cy="10" r="2" fill="currentColor" opacity="0.5"/>
-                <circle cx="38" cy="18" r="2" fill="currentColor" opacity="0.5"/>
-              </svg>
+              <img src="/spot_mileage_fraud.webp" alt="Spot Mileage Fraud" class="w-16 h-16 object-contain" />
             </div>
             <p class="text-sm font-medium text-gray-800">Spot Mileage<br/>fraud</p>
           </div>
           <!-- Uncover Recalls -->
           <div class="flex flex-col items-center text-center">
             <div class="w-16 h-16 mb-3 flex items-center justify-center">
-              <svg class="w-12 h-12 text-primary" fill="none" stroke="currentColor" viewBox="0 0 48 48">
-                <rect x="10" y="18" width="28" height="16" rx="5" stroke-width="2.5"/>
-                <circle cx="18" cy="34" r="4" stroke-width="2.5"/>
-                <circle cx="30" cy="34" r="4" stroke-width="2.5"/>
-                <path d="M14 18l4-8h12l4 8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                <line x1="24" y1="22" x2="24" y2="28" stroke-width="2.5" stroke-linecap="round"/>
-                <circle cx="24" cy="30" r="1" fill="currentColor"/>
-              </svg>
+              <img src="/uncover_recalls.webp" alt="Uncover Recalls" class="w-16 h-16 object-contain" />
             </div>
             <p class="text-sm font-medium text-gray-800">Uncover<br/>Recalls</p>
           </div>
           <!-- Check for Stolen Records -->
           <div class="flex flex-col items-center text-center">
             <div class="w-16 h-16 mb-3 flex items-center justify-center">
-              <svg class="w-12 h-12 text-primary" fill="none" stroke="currentColor" viewBox="0 0 48 48">
-                <rect x="10" y="18" width="28" height="16" rx="5" stroke-width="2.5"/>
-                <circle cx="18" cy="34" r="4" stroke-width="2.5"/>
-                <circle cx="30" cy="34" r="4" stroke-width="2.5"/>
-                <path d="M14 18l4-8h12l4 8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M32 6l4 4M36 6l-4 4" stroke-width="2" stroke-linecap="round"/>
-                <path d="M28 8l2 2M30 8l-2 2" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
-              </svg>
+              <img src="/stolen_records.webp" alt="Check for Stolen Records" class="w-16 h-16 object-contain" />
             </div>
             <p class="text-sm font-medium text-gray-800">Check for<br/>Stolen Records</p>
           </div>
           <!-- Outstanding Finance -->
           <div class="flex flex-col items-center text-center">
             <div class="w-16 h-16 mb-3 flex items-center justify-center">
-              <svg class="w-12 h-12 text-primary" fill="none" stroke="currentColor" viewBox="0 0 48 48">
-                <rect x="10" y="18" width="28" height="16" rx="5" stroke-width="2.5"/>
-                <circle cx="18" cy="34" r="4" stroke-width="2.5"/>
-                <circle cx="30" cy="34" r="4" stroke-width="2.5"/>
-                <path d="M14 18l4-8h12l4 8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                <rect x="30" y="8" width="12" height="10" rx="2" stroke-width="2" fill="none"/>
-                <text x="36" y="16" text-anchor="middle" font-size="8" fill="currentColor" font-weight="bold">£</text>
-              </svg>
+              <img src="/outsanding_finance.webp" alt="Outstanding Finance" class="w-16 h-16 object-contain" />
             </div>
             <p class="text-sm font-medium text-gray-800">Outstanding<br/>Finance</p>
           </div>
@@ -228,16 +190,7 @@
           <!-- Comprehensive Data -->
           <div class="text-center py-6">
             <div class="w-14 h-14 mx-auto mb-4 flex items-center justify-center">
-              <svg class="w-10 h-10 text-primary" fill="none" stroke="currentColor" viewBox="0 0 48 48">
-                <rect x="8" y="6" width="24" height="32" rx="3" stroke-width="2.5"/>
-                <line x1="14" y1="14" x2="26" y2="14" stroke-width="2" stroke-linecap="round"/>
-                <line x1="14" y1="20" x2="26" y2="20" stroke-width="2" stroke-linecap="round"/>
-                <line x1="14" y1="26" x2="22" y2="26" stroke-width="2" stroke-linecap="round"/>
-                <rect x="28" y="18" width="14" height="20" rx="2" stroke-width="2.5"/>
-                <line x1="32" y1="24" x2="38" y2="24" stroke-width="1.5" stroke-linecap="round"/>
-                <line x1="32" y1="28" x2="38" y2="28" stroke-width="1.5" stroke-linecap="round"/>
-                <line x1="32" y1="32" x2="36" y2="32" stroke-width="1.5" stroke-linecap="round"/>
-              </svg>
+              <img src="/comprehensive_data.webp" alt="Comprehensive Data" class="w-14 h-14 object-contain" />
             </div>
             <h3 class="text-base font-bold text-gray-900 mb-2">Comprehensive data</h3>
             <p class="text-sm text-gray-500 max-w-xs mx-auto">Get accurate, up-to-date vehicle history reports with all essential details.</p>
@@ -245,10 +198,7 @@
           <!-- Trusted Source -->
           <div class="text-center py-6">
             <div class="w-14 h-14 mx-auto mb-4 flex items-center justify-center">
-              <svg class="w-10 h-10 text-primary" fill="none" stroke="currentColor" viewBox="0 0 48 48">
-                <path d="M24 4l-16 8v12c0 10 16 18 16 18s16-8 16-18V12L24 4z" stroke-width="2.5" stroke-linejoin="round"/>
-                <path d="M18 24l4 4 8-8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
+              <img src="/trusted_source.webp" alt="Trusted Source" class="w-14 h-14 object-contain" />
             </div>
             <h3 class="text-base font-bold text-gray-900 mb-2">Trusted Source</h3>
             <p class="text-sm text-gray-500 max-w-xs mx-auto">We provide verified and reliable data from credible providers.</p>
@@ -256,10 +206,7 @@
           <!-- Anytime Access -->
           <div class="text-center py-6">
             <div class="w-14 h-14 mx-auto mb-4 flex items-center justify-center">
-              <svg class="w-10 h-10 text-primary" fill="none" stroke="currentColor" viewBox="0 0 48 48">
-                <circle cx="24" cy="24" r="18" stroke-width="2.5"/>
-                <path d="M24 12v12l8 4" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
+              <img src="/anytime_access.webp" alt="Anytime Access" class="w-14 h-14 object-contain" />
             </div>
             <h3 class="text-base font-bold text-gray-900 mb-2">Anytime Access</h3>
             <p class="text-sm text-gray-500 max-w-xs mx-auto">Available 24/7 allowing you to search for vehicle records at your convenience.</p>
@@ -267,11 +214,7 @@
           <!-- Ease of Use -->
           <div class="text-center py-6">
             <div class="w-14 h-14 mx-auto mb-4 flex items-center justify-center">
-              <svg class="w-10 h-10 text-primary" fill="none" stroke="currentColor" viewBox="0 0 48 48">
-                <path d="M8 40l14-14" stroke-width="2.5" stroke-linecap="round"/>
-                <path d="M22 26l10-20 10 10-20 10z" stroke-width="2.5" stroke-linejoin="round"/>
-                <path d="M6 42l4-4" stroke-width="2.5" stroke-linecap="round"/>
-              </svg>
+              <img src="/ease_of_use.webp" alt="Ease of Use" class="w-14 h-14 object-contain" />
             </div>
             <h3 class="text-base font-bold text-gray-900 mb-2">Ease of Use</h3>
             <p class="text-sm text-gray-500 max-w-xs mx-auto">Our platform is simple and quick to navigate for fast results</p>
@@ -279,12 +222,7 @@
           <!-- Exceptional Support -->
           <div class="text-center py-6">
             <div class="w-14 h-14 mx-auto mb-4 flex items-center justify-center">
-              <svg class="w-10 h-10 text-primary" fill="none" stroke="currentColor" viewBox="0 0 48 48">
-                <circle cx="24" cy="20" r="14" stroke-width="2.5"/>
-                <path d="M14 38c0-6 4-10 10-10s10 4 10 10" stroke-width="2.5" stroke-linecap="round"/>
-                <circle cx="24" cy="18" r="6" stroke-width="2.5"/>
-                <path d="M36 14l4-4M38 16h4" stroke-width="2" stroke-linecap="round"/>
-              </svg>
+              <img src="/support.webp" alt="Exceptional Support" class="w-14 h-14 object-contain" />
             </div>
             <h3 class="text-base font-bold text-gray-900 mb-2">Exceptional Support</h3>
             <p class="text-sm text-gray-500 max-w-xs mx-auto">Our team is always ready to assist with quick and helpful responses.</p>
@@ -292,12 +230,7 @@
           <!-- Affordable Pricing -->
           <div class="text-center py-6">
             <div class="w-14 h-14 mx-auto mb-4 flex items-center justify-center">
-              <svg class="w-10 h-10 text-primary" fill="none" stroke="currentColor" viewBox="0 0 48 48">
-                <rect x="6" y="14" width="36" height="22" rx="4" stroke-width="2.5"/>
-                <circle cx="24" cy="25" r="6" stroke-width="2.5"/>
-                <text x="24" y="28" text-anchor="middle" font-size="10" fill="currentColor" font-weight="bold">£</text>
-                <line x1="6" y1="20" x2="42" y2="20" stroke-width="2"/>
-              </svg>
+              <img src="/affordable_pricing.webp" alt="Affordable Pricing" class="w-14 h-14 object-contain" />
             </div>
             <h3 class="text-base font-bold text-gray-900 mb-2">Affordable Pricing</h3>
             <p class="text-sm text-gray-500 max-w-xs mx-auto">Enjoy transparent and competitive pricing with no hidden fees.</p>
