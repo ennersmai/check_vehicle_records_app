@@ -46,7 +46,7 @@
             <div class="w-[65%]">
             <!-- Hero car image -->
             <div class="w-full mb-6">
-1              <img src="/car.png" alt="Vehicle" class="w-full h-auto object-contain" />
+              <img src="/car.png" alt="Vehicle" class="w-full h-auto object-contain" />
             </div>
             <!-- Check badges -->
             <div class="grid grid-cols-2 gap-x-6 gap-y-2 text-sm">
