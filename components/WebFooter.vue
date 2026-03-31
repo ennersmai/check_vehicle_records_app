@@ -23,7 +23,7 @@
             <ul class="space-y-2 text-sm">
               <li><NuxtLink to="/terms" class="text-blue-100 hover:text-white transition cursor-pointer">Terms and Conditions (T&C)</NuxtLink></li>
               <li><NuxtLink to="/privacy" class="text-blue-100 hover:text-white transition cursor-pointer">Privacy Policy</NuxtLink></li>
-              <li><a href="#" class="text-blue-100 hover:text-white transition cursor-pointer">About us</a></li>
+              <li><NuxtLink to="/web/about" class="text-blue-100 hover:text-white transition cursor-pointer">About us</NuxtLink></li>
               <li><NuxtLink to="/support" class="text-blue-100 hover:text-white transition cursor-pointer">Contact Us</NuxtLink></li>
             </ul>
           </div>
@@ -33,6 +33,8 @@
             <ul class="space-y-2 text-sm">
               <li><NuxtLink to="/how-it-works" class="text-blue-100 hover:text-white transition cursor-pointer">How it Works</NuxtLink></li>
               <li><NuxtLink to="/support" class="text-blue-100 hover:text-white transition cursor-pointer">Report an Issue</NuxtLink></li>
+              <li><NuxtLink to="/web/faqs" class="text-blue-100 hover:text-white transition cursor-pointer">FAQs</NuxtLink></li>
+              <li><NuxtLink to="/web/blog" class="text-blue-100 hover:text-white transition cursor-pointer">Blog</NuxtLink></li>
             </ul>
           </div>
           <!-- Follow us -->

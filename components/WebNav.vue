@@ -34,6 +34,7 @@
                 <div class="border-t border-gray-100 my-1"></div>
                 <NuxtLink to="/web/about" class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition">About</NuxtLink>
                 <NuxtLink to="/web/faqs" class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition">FAQs</NuxtLink>
+                <NuxtLink to="/web/blog" class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition">Blog</NuxtLink>
                 <div class="border-t border-gray-100 my-1"></div>
                 <button @click="handleLogout" class="block w-full text-left px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition font-medium">Log out</button>
               </template>
@@ -41,6 +42,7 @@
               <template v-else>
                 <NuxtLink to="/web/about" class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition">About</NuxtLink>
                 <NuxtLink to="/web/faqs" class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition">FAQs</NuxtLink>
+                <NuxtLink to="/web/blog" class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition">Blog</NuxtLink>
                 <div class="border-t border-gray-100 my-1"></div>
                 <NuxtLink to="/login" class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition">Log in</NuxtLink>
                 <NuxtLink to="/create-account" class="block px-4 py-2.5 text-sm text-primary font-medium hover:bg-gray-50 transition">Create Account</NuxtLink>
@@ -71,6 +73,7 @@
         </template>
         <NuxtLink to="/web/about" class="block py-2 text-sm text-gray-700 hover:text-primary" @click="mobileMenuOpen = false">About</NuxtLink>
         <NuxtLink to="/web/faqs" class="block py-2 text-sm text-gray-700 hover:text-primary" @click="mobileMenuOpen = false">FAQs</NuxtLink>
+        <NuxtLink to="/web/blog" class="block py-2 text-sm text-gray-700 hover:text-primary" @click="mobileMenuOpen = false">Blog</NuxtLink>
         <div class="border-t border-gray-100 my-2"></div>
         <template v-if="user">
           <button @click="handleLogout(); mobileMenuOpen = false" class="block py-2 text-sm text-red-600 font-medium">Log out</button>
