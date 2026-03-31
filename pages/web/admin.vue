@@ -333,6 +333,165 @@
           </div>
         </div>
       </div>
+
+      <!-- Blog Management -->
+      <div v-if="activeTab === 'blog'">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-lg font-semibold text-gray-900">Blog Posts</h2>
+          <button
+            @click="openBlogEditor()"
+            class="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary-link transition"
+          >
+            + New Post
+          </button>
+        </div>
+
+        <div v-if="blogLoading" class="flex justify-center py-16">
+          <svg class="animate-spin h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
+          </svg>
+        </div>
+
+        <div v-else class="bg-white rounded-xl border border-gray-200 overflow-hidden">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="bg-gray-50 border-b border-gray-200">
+                <th class="text-left px-4 py-3 font-medium text-gray-600">Title</th>
+                <th class="text-left px-4 py-3 font-medium text-gray-600 hidden md:table-cell">Slug</th>
+                <th class="text-left px-4 py-3 font-medium text-gray-600 hidden sm:table-cell">Status</th>
+                <th class="text-left px-4 py-3 font-medium text-gray-600 hidden lg:table-cell">Created</th>
+                <th class="text-right px-4 py-3 font-medium text-gray-600">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="post in blogPosts" :key="post.id" class="border-b border-gray-100 hover:bg-gray-50 transition">
+                <td class="px-4 py-3">
+                  <div class="font-medium text-gray-900">{{ post.title }}</div>
+                </td>
+                <td class="px-4 py-3 hidden md:table-cell">
+                  <span class="font-mono text-xs text-gray-500">{{ post.slug }}</span>
+                </td>
+                <td class="px-4 py-3 hidden sm:table-cell">
+                  <span :class="post.is_published ? 'text-green-600 bg-green-50' : 'text-yellow-600 bg-yellow-50'" class="text-xs px-2 py-0.5 rounded-full font-medium">
+                    {{ post.is_published ? 'Published' : 'Draft' }}
+                  </span>
+                </td>
+                <td class="px-4 py-3 text-gray-500 hidden lg:table-cell">{{ formatDate(post.created_at) }}</td>
+                <td class="px-4 py-3">
+                  <div class="flex items-center justify-end gap-1">
+                    <button
+                      @click="toggleBlogPublish(post)"
+                      :class="post.is_published ? 'text-yellow-600 bg-yellow-50 hover:bg-yellow-100' : 'text-green-600 bg-green-50 hover:bg-green-100'"
+                      class="px-2.5 py-1.5 text-xs font-medium rounded-lg transition"
+                    >
+                      {{ post.is_published ? 'Unpublish' : 'Publish' }}
+                    </button>
+                    <button
+                      @click="openBlogEditor(post)"
+                      class="px-2.5 py-1.5 text-xs font-medium text-primary bg-primary/10 rounded-lg hover:bg-primary/20 transition"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      @click="deleteBlogPost(post)"
+                      class="px-2.5 py-1.5 text-xs font-medium text-red-700 bg-red-50 rounded-lg hover:bg-red-100 transition"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              <tr v-if="blogPosts.length === 0">
+                <td colspan="5" class="text-center py-12 text-gray-500">No blog posts yet. Create your first post!</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- FAQ Management -->
+      <div v-if="activeTab === 'faqs'">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-lg font-semibold text-gray-900">Frequently Asked Questions</h2>
+          <button
+            @click="openFaqEditor()"
+            class="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary-link transition"
+          >
+            + New FAQ
+          </button>
+        </div>
+
+        <div v-if="faqLoading" class="flex justify-center py-16">
+          <svg class="animate-spin h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
+          </svg>
+        </div>
+
+        <div v-else class="space-y-3">
+          <div
+            v-for="faq in faqs"
+            :key="faq.id"
+            class="bg-white rounded-xl border border-gray-200 p-5"
+          >
+            <div class="flex items-start justify-between gap-4">
+              <div class="flex-1">
+                <h3 class="font-medium text-gray-900 mb-2">{{ faq.question }}</h3>
+                <p class="text-sm text-gray-600 line-clamp-2">{{ faq.answer }}</p>
+                <div class="flex items-center gap-3 mt-3">
+                  <span :class="faq.is_published ? 'text-green-600 bg-green-50' : 'text-yellow-600 bg-yellow-50'" class="text-xs px-2 py-0.5 rounded-full font-medium">
+                    {{ faq.is_published ? 'Published' : 'Draft' }}
+                  </span>
+                  <span class="text-xs text-gray-400">Order: {{ faq.sort_order }}</span>
+                </div>
+              </div>
+              <div class="flex items-center gap-1 flex-shrink-0">
+                <button
+                  @click="moveFaq(faq, -1)"
+                  class="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded transition"
+                  title="Move up"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/>
+                  </svg>
+                </button>
+                <button
+                  @click="moveFaq(faq, 1)"
+                  class="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded transition"
+                  title="Move down"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                  </svg>
+                </button>
+                <button
+                  @click="toggleFaqPublish(faq)"
+                  :class="faq.is_published ? 'text-yellow-600 bg-yellow-50 hover:bg-yellow-100' : 'text-green-600 bg-green-50 hover:bg-green-100'"
+                  class="px-2.5 py-1.5 text-xs font-medium rounded-lg transition"
+                >
+                  {{ faq.is_published ? 'Unpublish' : 'Publish' }}
+                </button>
+                <button
+                  @click="openFaqEditor(faq)"
+                  class="px-2.5 py-1.5 text-xs font-medium text-primary bg-primary/10 rounded-lg hover:bg-primary/20 transition"
+                >
+                  Edit
+                </button>
+                <button
+                  @click="deleteFaq(faq)"
+                  class="px-2.5 py-1.5 text-xs font-medium text-red-700 bg-red-50 rounded-lg hover:bg-red-100 transition"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          </div>
+          <div v-if="faqs.length === 0" class="text-center py-12 text-gray-500 bg-white rounded-xl border border-gray-200">
+            No FAQs yet. Create your first FAQ!
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Assign Vouchers Modal -->
@@ -400,6 +559,167 @@
       </div>
     </div>
 
+    <!-- Blog Editor Modal -->
+    <div v-if="blogModal.show" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" @click.self="blogModal.show = false">
+      <div class="bg-white rounded-2xl p-6 w-full max-w-2xl shadow-xl max-h-[90vh] overflow-y-auto">
+        <h3 class="text-lg font-bold text-gray-900 mb-4">{{ blogModal.editing ? 'Edit Post' : 'New Blog Post' }}</h3>
+
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Title *</label>
+            <input
+              v-model="blogModal.title"
+              type="text"
+              class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:border-primary"
+              placeholder="Enter post title"
+            />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Slug *</label>
+            <input
+              v-model="blogModal.slug"
+              type="text"
+              class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:border-primary font-mono text-sm"
+              placeholder="url-friendly-slug"
+            />
+            <p class="text-xs text-gray-400 mt-1">URL: /web/blog/{{ blogModal.slug || 'slug' }}</p>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Excerpt</label>
+            <textarea
+              v-model="blogModal.excerpt"
+              rows="2"
+              class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:border-primary"
+              placeholder="Brief description for SEO and previews"
+            ></textarea>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Content *</label>
+            <textarea
+              v-model="blogModal.content"
+              rows="10"
+              class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:border-primary font-mono text-sm"
+              placeholder="Write your blog post content here..."
+            ></textarea>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Featured Image URL</label>
+            <input
+              v-model="blogModal.featured_image"
+              type="text"
+              class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:border-primary"
+              placeholder="https://example.com/image.jpg"
+            />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Meta Title</label>
+            <input
+              v-model="blogModal.meta_title"
+              type="text"
+              class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:border-primary"
+              placeholder="SEO title (optional)"
+            />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Meta Description</label>
+            <textarea
+              v-model="blogModal.meta_description"
+              rows="2"
+              class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:border-primary"
+              placeholder="SEO description (optional)"
+            ></textarea>
+          </div>
+          <div class="flex items-center gap-2">
+            <input
+              v-model="blogModal.is_published"
+              type="checkbox"
+              id="blog-published"
+              class="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary"
+            />
+            <label for="blog-published" class="text-sm text-gray-700">Publish immediately</label>
+          </div>
+        </div>
+
+        <div v-if="blogModal.error" class="bg-red-50 text-red-700 text-sm rounded-lg p-3 mt-4">{{ blogModal.error }}</div>
+
+        <div class="flex gap-3 mt-6">
+          <button @click="blogModal.show = false" class="flex-1 px-4 py-2.5 border border-gray-200 rounded-lg text-sm font-medium hover:bg-gray-50 transition">
+            Cancel
+          </button>
+          <button
+            @click="handleSaveBlog"
+            :disabled="blogModal.loading"
+            class="flex-1 px-4 py-2.5 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary-link transition disabled:opacity-50"
+          >
+            {{ blogModal.loading ? 'Saving...' : 'Save Post' }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- FAQ Editor Modal -->
+    <div v-if="faqModal.show" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" @click.self="faqModal.show = false">
+      <div class="bg-white rounded-2xl p-6 w-full max-w-lg shadow-xl">
+        <h3 class="text-lg font-bold text-gray-900 mb-4">{{ faqModal.editing ? 'Edit FAQ' : 'New FAQ' }}</h3>
+
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Question *</label>
+            <input
+              v-model="faqModal.question"
+              type="text"
+              class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:border-primary"
+              placeholder="Enter the question"
+            />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Answer *</label>
+            <textarea
+              v-model="faqModal.answer"
+              rows="5"
+              class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:border-primary"
+              placeholder="Enter the answer"
+            ></textarea>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Sort Order</label>
+            <input
+              v-model.number="faqModal.sort_order"
+              type="number"
+              min="0"
+              class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:border-primary"
+              placeholder="0"
+            />
+            <p class="text-xs text-gray-400 mt-1">Lower numbers appear first</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <input
+              v-model="faqModal.is_published"
+              type="checkbox"
+              id="faq-published"
+              class="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary"
+            />
+            <label for="faq-published" class="text-sm text-gray-700">Publish immediately</label>
+          </div>
+        </div>
+
+        <div v-if="faqModal.error" class="bg-red-50 text-red-700 text-sm rounded-lg p-3 mt-4">{{ faqModal.error }}</div>
+
+        <div class="flex gap-3 mt-6">
+          <button @click="faqModal.show = false" class="flex-1 px-4 py-2.5 border border-gray-200 rounded-lg text-sm font-medium hover:bg-gray-50 transition">
+            Cancel
+          </button>
+          <button
+            @click="handleSaveFaq"
+            :disabled="faqModal.loading"
+            class="flex-1 px-4 py-2.5 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary-link transition disabled:opacity-50"
+          >
+            {{ faqModal.loading ? 'Saving...' : 'Save FAQ' }}
+          </button>
+        </div>
+      </div>
+    </div>
+
     <WebFooter />
   </div>
 </template>
@@ -423,6 +743,8 @@ const tabs = [
   { id: 'kpis', label: 'Dashboard' },
   { id: 'users', label: 'Users' },
   { id: 'vouchers', label: 'Vouchers' },
+  { id: 'blog', label: 'Blog' },
+  { id: 'faqs', label: 'FAQs' },
 ];
 
 // ── KPIs ────────────────────────────────────────────────────────────────────
@@ -469,6 +791,42 @@ const assignModal = ref({
 const deleteModal = ref({
   show: false,
   user: null as any,
+  loading: false,
+  error: '',
+});
+
+// ── Blog Management ──────────────────────────────────────────────────────────
+const blogPosts = ref<any[]>([]);
+const blogLoading = ref(false);
+
+const blogModal = ref({
+  show: false,
+  editing: false,
+  id: null as string | null,
+  title: '',
+  slug: '',
+  excerpt: '',
+  content: '',
+  featured_image: '',
+  meta_title: '',
+  meta_description: '',
+  is_published: false,
+  loading: false,
+  error: '',
+});
+
+// ── FAQ Management ───────────────────────────────────────────────────────────
+const faqs = ref<any[]>([]);
+const faqLoading = ref(false);
+
+const faqModal = ref({
+  show: false,
+  editing: false,
+  id: null as string | null,
+  question: '',
+  answer: '',
+  sort_order: 0,
+  is_published: false,
   loading: false,
   error: '',
 });
@@ -621,6 +979,266 @@ const getSourceBadgeClass = (pkg: string | null) => {
   return 'bg-green-100 text-green-700';
 };
 
+// ── Blog Management Functions ────────────────────────────────────────────────
+const loadBlogPosts = async () => {
+  blogLoading.value = true;
+  try {
+    const { data, error } = await supabase
+      .from('blog_posts')
+      .select('*')
+      .order('created_at', { ascending: false });
+    if (error) throw error;
+    blogPosts.value = data || [];
+  } catch (err: any) {
+    console.error('Failed to load blog posts:', err);
+  } finally {
+    blogLoading.value = false;
+  }
+};
+
+const openBlogEditor = (post?: any) => {
+  if (post) {
+    blogModal.value = {
+      show: true,
+      editing: true,
+      id: post.id,
+      title: post.title,
+      slug: post.slug,
+      excerpt: post.excerpt || '',
+      content: post.content,
+      featured_image: post.featured_image || '',
+      meta_title: post.meta_title || '',
+      meta_description: post.meta_description || '',
+      is_published: post.is_published,
+      loading: false,
+      error: '',
+    };
+  } else {
+    blogModal.value = {
+      show: true,
+      editing: false,
+      id: null,
+      title: '',
+      slug: '',
+      excerpt: '',
+      content: '',
+      featured_image: '',
+      meta_title: '',
+      meta_description: '',
+      is_published: false,
+      loading: false,
+      error: '',
+    };
+  }
+};
+
+const handleSaveBlog = async () => {
+  blogModal.value.loading = true;
+  blogModal.value.error = '';
+
+  if (!blogModal.value.title || !blogModal.value.slug || !blogModal.value.content) {
+    blogModal.value.error = 'Title, slug, and content are required';
+    blogModal.value.loading = false;
+    return;
+  }
+
+  try {
+    const postData = {
+      title: blogModal.value.title,
+      slug: blogModal.value.slug.toLowerCase().replace(/[^a-z0-9-]/g, '-').replace(/-+/g, '-'),
+      excerpt: blogModal.value.excerpt,
+      content: blogModal.value.content,
+      featured_image: blogModal.value.featured_image || null,
+      meta_title: blogModal.value.meta_title || null,
+      meta_description: blogModal.value.meta_description || null,
+      is_published: blogModal.value.is_published,
+      author_id: user.value?.id,
+    };
+
+    if (blogModal.value.editing && blogModal.value.id) {
+      const { error } = await supabase
+        .from('blog_posts')
+        .update(postData)
+        .eq('id', blogModal.value.id);
+      if (error) throw error;
+    } else {
+      const { error } = await supabase
+        .from('blog_posts')
+        .insert([postData]);
+      if (error) throw error;
+    }
+
+    blogModal.value.show = false;
+    await loadBlogPosts();
+  } catch (err: any) {
+    blogModal.value.error = err.message || 'Failed to save post';
+  } finally {
+    blogModal.value.loading = false;
+  }
+};
+
+const toggleBlogPublish = async (post: any) => {
+  try {
+    const { error } = await supabase
+      .from('blog_posts')
+      .update({ is_published: !post.is_published })
+      .eq('id', post.id);
+    if (error) throw error;
+    await loadBlogPosts();
+  } catch (err: any) {
+    alert('Failed to update post: ' + err.message);
+  }
+};
+
+const deleteBlogPost = async (post: any) => {
+  if (!confirm(`Delete "${post.title}"? This cannot be undone.`)) return;
+  try {
+    const { error } = await supabase
+      .from('blog_posts')
+      .delete()
+      .eq('id', post.id);
+    if (error) throw error;
+    await loadBlogPosts();
+  } catch (err: any) {
+    alert('Failed to delete post: ' + err.message);
+  }
+};
+
+// ── FAQ Management Functions ─────────────────────────────────────────────────
+const loadFaqs = async () => {
+  faqLoading.value = true;
+  try {
+    const { data, error } = await supabase
+      .from('faqs')
+      .select('*')
+      .order('sort_order', { ascending: true });
+    if (error) throw error;
+    faqs.value = data || [];
+  } catch (err: any) {
+    console.error('Failed to load FAQs:', err);
+  } finally {
+    faqLoading.value = false;
+  }
+};
+
+const openFaqEditor = (faq?: any) => {
+  if (faq) {
+    faqModal.value = {
+      show: true,
+      editing: true,
+      id: faq.id,
+      question: faq.question,
+      answer: faq.answer,
+      sort_order: faq.sort_order,
+      is_published: faq.is_published,
+      loading: false,
+      error: '',
+    };
+  } else {
+    faqModal.value = {
+      show: true,
+      editing: false,
+      id: null,
+      question: '',
+      answer: '',
+      sort_order: faqs.value.length,
+      is_published: false,
+      loading: false,
+      error: '',
+    };
+  }
+};
+
+const handleSaveFaq = async () => {
+  faqModal.value.loading = true;
+  faqModal.value.error = '';
+
+  if (!faqModal.value.question || !faqModal.value.answer) {
+    faqModal.value.error = 'Question and answer are required';
+    faqModal.value.loading = false;
+    return;
+  }
+
+  try {
+    const faqData = {
+      question: faqModal.value.question,
+      answer: faqModal.value.answer,
+      sort_order: faqModal.value.sort_order,
+      is_published: faqModal.value.is_published,
+    };
+
+    if (faqModal.value.editing && faqModal.value.id) {
+      const { error } = await supabase
+        .from('faqs')
+        .update(faqData)
+        .eq('id', faqModal.value.id);
+      if (error) throw error;
+    } else {
+      const { error } = await supabase
+        .from('faqs')
+        .insert([faqData]);
+      if (error) throw error;
+    }
+
+    faqModal.value.show = false;
+    await loadFaqs();
+  } catch (err: any) {
+    faqModal.value.error = err.message || 'Failed to save FAQ';
+  } finally {
+    faqModal.value.loading = false;
+  }
+};
+
+const toggleFaqPublish = async (faq: any) => {
+  try {
+    const { error } = await supabase
+      .from('faqs')
+      .update({ is_published: !faq.is_published })
+      .eq('id', faq.id);
+    if (error) throw error;
+    await loadFaqs();
+  } catch (err: any) {
+    alert('Failed to update FAQ: ' + err.message);
+  }
+};
+
+const moveFaq = async (faq: any, direction: number) => {
+  const currentIndex = faqs.value.findIndex(f => f.id === faq.id);
+  const newIndex = currentIndex + direction;
+  if (newIndex < 0 || newIndex >= faqs.value.length) return;
+
+  const otherFaq = faqs.value[newIndex];
+  
+  try {
+    // Swap sort orders
+    await supabase
+      .from('faqs')
+      .update({ sort_order: faq.sort_order })
+      .eq('id', otherFaq.id);
+    await supabase
+      .from('faqs')
+      .update({ sort_order: otherFaq.sort_order })
+      .eq('id', faq.id);
+    await loadFaqs();
+  } catch (err: any) {
+    alert('Failed to reorder FAQ: ' + err.message);
+  }
+};
+
+const deleteFaq = async (faq: any) => {
+  if (!confirm(`Delete this FAQ? This cannot be undone.`)) return;
+  try {
+    const { error } = await supabase
+      .from('faqs')
+      .delete()
+      .eq('id', faq.id);
+    if (error) throw error;
+    await loadFaqs();
+  } catch (err: any) {
+    alert('Failed to delete FAQ: ' + err.message);
+  }
+};
+
 // ── Init ────────────────────────────────────────────────────────────────────
 onMounted(async () => {
   if (!user.value || !ADMIN_UIDS.has(user.value.id)) {
@@ -630,6 +1248,6 @@ onMounted(async () => {
   }
 
   initialLoading.value = false;
-  await Promise.all([loadKpis(), loadUsers()]);
+  await Promise.all([loadKpis(), loadUsers(), loadBlogPosts(), loadFaqs()]);
 });
 </script>

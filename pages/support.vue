@@ -34,8 +34,8 @@
             </div>
             <h3 class="text-xl font-semibold text-gray-900 mb-2">General Support</h3>
             <p class="text-gray-600 mb-4">For general inquiries and support</p>
-            <a href="mailto:support@checkvehiclerecords.co.uk" class="text-blue-600 hover:underline font-medium">
-              support@checkvehiclerecords.co.uk
+            <a href="mailto:info@checkvehiclerecords.co.uk" class="text-blue-600 hover:underline font-medium">
+              info@checkvehiclerecords.co.uk
             </a>
           </div>
 
@@ -45,10 +45,10 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
               </svg>
             </div>
-            <h3 class="text-xl font-semibold text-gray-900 mb-2">Billing & Subscriptions</h3>
-            <p class="text-gray-600 mb-4">Questions about payments or subscriptions</p>
-            <a href="mailto:billing@checkvehiclerecords.co.uk" class="text-blue-600 hover:underline font-medium">
-              billing@checkvehiclerecords.co.uk
+            <h3 class="text-xl font-semibold text-gray-900 mb-2">Billing & Payments</h3>
+            <p class="text-gray-600 mb-4">Questions about payments or purchases</p>
+            <a href="mailto:info@checkvehiclerecords.co.uk" class="text-blue-600 hover:underline font-medium">
+              info@checkvehiclerecords.co.uk
             </a>
           </div>
 
@@ -60,8 +60,8 @@
             </div>
             <h3 class="text-xl font-semibold text-gray-900 mb-2">Privacy & Data</h3>
             <p class="text-gray-600 mb-4">Privacy concerns and data requests</p>
-            <a href="mailto:privacy@checkvehiclerecords.co.uk" class="text-blue-600 hover:underline font-medium">
-              privacy@checkvehiclerecords.co.uk
+            <a href="mailto:info@checkvehiclerecords.co.uk" class="text-blue-600 hover:underline font-medium">
+              info@checkvehiclerecords.co.uk
             </a>
           </div>
 
@@ -73,8 +73,8 @@
             </div>
             <h3 class="text-xl font-semibold text-gray-900 mb-2">Legal & Terms</h3>
             <p class="text-gray-600 mb-4">Legal inquiries and terms questions</p>
-            <a href="mailto:legal@checkvehiclerecords.co.uk" class="text-blue-600 hover:underline font-medium">
-              legal@checkvehiclerecords.co.uk
+            <a href="mailto:info@checkvehiclerecords.co.uk" class="text-blue-600 hover:underline font-medium">
+              info@checkvehiclerecords.co.uk
             </a>
           </div>
         </div>
@@ -86,20 +86,9 @@
         
         <div class="space-y-6">
           <div>
-            <h3 class="text-lg font-semibold text-gray-900 mb-2">How do I cancel my subscription?</h3>
-            <p class="text-gray-700">
-              You can cancel your subscription at any time through your device's subscription settings:
-            </p>
-            <ul class="list-disc list-inside mt-2 ml-4 text-gray-700">
-              <li><strong>iOS:</strong> Settings → Your Name → Subscriptions → Check Vehicle Records</li>
-              <li><strong>Android:</strong> Google Play Store → Menu → Subscriptions → Check Vehicle Records</li>
-            </ul>
-          </div>
-
-          <div>
             <h3 class="text-lg font-semibold text-gray-900 mb-2">How accurate are the vehicle reports?</h3>
             <p class="text-gray-700">
-              We aggregate data from multiple reliable sources to provide comprehensive reports. However, we recommend 
+              We aggregate data from multiple reliable sources to provide comprehensive reports. However, we recommend
               conducting your own due diligence and physical inspection before purchasing any vehicle.
             </p>
           </div>
@@ -107,15 +96,15 @@
           <div>
             <h3 class="text-lg font-semibold text-gray-900 mb-2">Can I get a refund?</h3>
             <p class="text-gray-700">
-              Refund requests are handled according to Apple App Store and Google Play Store policies. Please contact 
-              the respective store's support for refund requests, or email us at billing@checkvehiclerecords.co.uk for assistance.
+              Refund requests are handled according to Apple App Store and Google Play Store policies. Please contact
+              the respective store's support for refund requests, or email us at info@checkvehiclerecords.co.uk for assistance.
             </p>
           </div>
 
           <div>
             <h3 class="text-lg font-semibold text-gray-900 mb-2">Is my data secure?</h3>
             <p class="text-gray-700">
-              Yes, we take data security seriously. All data is encrypted in transit and at rest. We never sell your 
+              Yes, we take data security seriously. All data is encrypted in transit and at rest. We never sell your
               personal information to third parties. Read our <NuxtLink to="/privacy" class="text-blue-600 hover:underline">Privacy Policy</NuxtLink> for more details.
             </p>
           </div>
@@ -123,15 +112,15 @@
           <div>
             <h3 class="text-lg font-semibold text-gray-900 mb-2">What payment methods do you accept?</h3>
             <p class="text-gray-700">
-              We accept all payment methods supported by Apple App Store and Google Play Store, including credit/debit 
-              cards, Apple Pay, and Google Pay.
+              We accept all major credit and debit cards through Stripe, as well as payment methods supported by Apple App Store
+              and Google Play Store, including Apple Pay and Google Pay.
             </p>
           </div>
 
           <div>
             <h3 class="text-lg font-semibold text-gray-900 mb-2">How long does it take to receive a report?</h3>
             <p class="text-gray-700">
-              Most vehicle reports are generated instantly. In rare cases where data needs to be retrieved from external 
+              Most vehicle reports are generated instantly. In rare cases where data needs to be retrieved from external
               sources, it may take a few minutes.
             </p>
           </div>

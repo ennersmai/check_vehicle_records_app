@@ -1,0 +1,26 @@
+{
+  "name": "Check Vehicle Records UK",
+  "short_name": "CVR",
+  "description": "Check Vehicle Records UK - Get comprehensive vehicle history checks including MOT history, mileage verification, finance outstanding, stolen records & more.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2563eb",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/cvr_logo.png",
+      "sizes": "any",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/cvr_logo512_mobile.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["utilities", "lifestyle"],
+  "lang": "en-GB"
+}

@@ -46,7 +46,7 @@
             <div class="w-[65%]">
             <!-- Hero car image -->
             <div class="w-full mb-6">
-              <img src="/car.png" alt="Vehicle" class="w-full h-auto object-contain" />
+1              <img src="/car.png" alt="Vehicle" class="w-full h-auto object-contain" />
             </div>
             <!-- Check badges -->
             <div class="grid grid-cols-2 gap-x-6 gap-y-2 text-sm">
@@ -58,9 +58,9 @@
                 <span class="text-gray-700">No mileage issues</span>
               </div>
               <div class="flex items-center space-x-2">
-                <svg class="w-5 h-5 text-red-500 flex-shrink-0" viewBox="0 0 24 24" fill="none">
+                <svg class="w-5 h-5 text-primary flex-shrink-0" viewBox="0 0 24 24" fill="none">
                   <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
-                  <path d="M15 9l-6 6M9 9l6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                  <path d="M8 12l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
                 <span class="text-gray-700">Finance outstanding</span>
               </div>
