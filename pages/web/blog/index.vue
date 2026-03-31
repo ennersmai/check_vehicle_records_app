@@ -5,8 +5,8 @@
     <!-- Hero Section -->
     <section class="bg-gradient-to-br from-primary/5 via-white to-blue-50 py-16 md:py-24">
       <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <div class="flex flex-col items-center mb-4">
-          <img src="/blog_logo.png" alt="CVR Blog" class="h-16 md:h-20 mb-2" />
+        <div class="flex items-center justify-center mb-4">
+          <img src="/blog_logo.png" alt="CVR Blog" class="h-24 md:h-28 mr-4" />
           <h1 class="text-4xl md:text-5xl font-bold text-gray-900">Blog</h1>
         </div>
         <p class="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">Expert tips, guides, and insights for UK vehicle buyers. Stay informed about vehicle history checks, MOT records, and car buying advice.</p>
