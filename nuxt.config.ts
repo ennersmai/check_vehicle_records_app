@@ -100,10 +100,10 @@ export default defineNuxtConfig({
         { name: 'canonical', content: 'https://checkvehiclerecords.co.uk/' }
       ],
       link: [
-        { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+        { rel: 'icon', type: 'image/x-icon', href: '/main_icon.ico' },
         { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/cvr_logo.png' },
         { rel: 'icon', type: 'image/png', sizes: '16x16', href: '/cvr_logo.png' },
-        { rel: 'shortcut icon', href: '/favicon.ico' },
+        { rel: 'shortcut icon', href: '/main_icon.ico' },
         { rel: 'apple-touch-icon', sizes: '180x180', href: '/cvr_logo512_mobile.png' },
         { rel: 'apple-touch-icon', sizes: '512x512', href: '/cvr_logo512_mobile.png' },
         { rel: 'manifest', href: '/site.webmanifest' },
