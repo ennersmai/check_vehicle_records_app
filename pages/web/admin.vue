@@ -496,7 +496,7 @@
 
     <!-- Assign Vouchers Modal -->
     <div v-if="assignModal.show" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" @click.self="assignModal.show = false">
-      <div class="bg-white rounded-2xl p-6 w-full max-w-md shadow-xl">
+      <div class="bg-white rounded-2xl p-6 w-full max-w-md shadow-xl border-2 border-cyan-500">
         <h3 class="text-lg font-bold text-gray-900 mb-1">Assign Credits</h3>
         <p class="text-sm text-gray-500 mb-6">Assign premium check credits to <span class="font-medium text-gray-900">{{ assignModal.user?.email }}</span></p>
 
@@ -506,10 +506,10 @@
             :key="opt"
             @click="assignModal.credits = opt"
             class="w-full flex items-center justify-between px-4 py-3 border-2 rounded-xl transition"
-            :class="assignModal.credits === opt ? 'border-primary bg-primary/5' : 'border-gray-200 hover:border-gray-300'"
+            :class="assignModal.credits === opt ? 'border-cyan-500 bg-cyan-50 shadow-lg shadow-cyan-500/25' : 'border-cyan-300 hover:border-cyan-400 hover:shadow-md hover:shadow-cyan-400/20'"
           >
             <span class="font-medium text-gray-900">{{ opt }} Credit{{ opt > 1 ? 's' : '' }}</span>
-            <span v-if="assignModal.credits === opt" class="text-primary font-bold text-sm">Selected</span>
+            <span v-if="assignModal.credits === opt" class="text-cyan-600 font-bold text-sm">Selected</span>
           </button>
         </div>
 
@@ -519,13 +519,13 @@
         </div>
 
         <div class="flex gap-3">
-          <button @click="assignModal.show = false" class="flex-1 px-4 py-2.5 border border-gray-200 rounded-lg text-sm font-medium hover:bg-gray-50 transition">
+          <button @click="assignModal.show = false" class="flex-1 px-4 py-2.5 border-2 border-cyan-300 rounded-lg text-sm font-medium hover:bg-cyan-50 hover:border-cyan-400 hover:shadow-lg hover:shadow-cyan-400/25 transition">
             Cancel
           </button>
           <button
             @click="handleAssignVouchers"
             :disabled="assignModal.loading"
-            class="flex-1 px-4 py-2.5 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary-link transition disabled:opacity-50"
+            class="flex-1 px-4 py-2.5 bg-cyan-500 text-white rounded-lg text-sm font-medium hover:bg-cyan-600 hover:shadow-lg hover:shadow-cyan-500/25 transition disabled:opacity-50"
           >
             {{ assignModal.loading ? 'Assigning...' : 'Assign' }}
           </button>
@@ -535,7 +535,7 @@
 
     <!-- Confirm Delete Modal -->
     <div v-if="deleteModal.show" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" @click.self="deleteModal.show = false">
-      <div class="bg-white rounded-2xl p-6 w-full max-w-md shadow-xl">
+      <div class="bg-white rounded-2xl p-6 w-full max-w-md shadow-xl border-2 border-cyan-500">
         <h3 class="text-lg font-bold text-red-600 mb-1">Delete User</h3>
         <p class="text-sm text-gray-600 mb-2">Are you sure you want to delete this user?</p>
         <p class="text-sm font-medium text-gray-900 mb-1">{{ deleteModal.user?.email }}</p>
@@ -545,13 +545,13 @@
         <div v-if="deleteModal.error" class="bg-red-50 text-red-700 text-sm rounded-lg p-3 mb-4">{{ deleteModal.error }}</div>
 
         <div class="flex gap-3">
-          <button @click="deleteModal.show = false" class="flex-1 px-4 py-2.5 border border-gray-200 rounded-lg text-sm font-medium hover:bg-gray-50 transition">
+          <button @click="deleteModal.show = false" class="flex-1 px-4 py-2.5 border-2 border-cyan-300 rounded-lg text-sm font-medium hover:bg-cyan-50 hover:border-cyan-400 hover:shadow-lg hover:shadow-cyan-400/25 transition">
             Cancel
           </button>
           <button
             @click="handleDeleteUser"
             :disabled="deleteModal.loading"
-            class="flex-1 px-4 py-2.5 bg-red-600 text-white rounded-lg text-sm font-medium hover:bg-red-700 transition disabled:opacity-50"
+            class="flex-1 px-4 py-2.5 bg-red-600 text-white rounded-lg text-sm font-medium hover:bg-red-700 hover:shadow-lg hover:shadow-red-600/25 transition disabled:opacity-50"
           >
             {{ deleteModal.loading ? 'Deleting...' : 'Delete User' }}
           </button>
@@ -561,7 +561,7 @@
 
     <!-- Blog Editor Modal -->
     <div v-if="blogModal.show" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" @click.self="blogModal.show = false">
-      <div class="bg-white rounded-2xl p-6 w-full max-w-2xl shadow-xl max-h-[90vh] overflow-y-auto">
+      <div class="bg-white rounded-2xl p-6 w-full max-w-2xl shadow-xl max-h-[90vh] overflow-y-auto border-2 border-cyan-500">
         <h3 class="text-lg font-bold text-gray-900 mb-4">{{ blogModal.editing ? 'Edit Post' : 'New Blog Post' }}</h3>
 
         <div class="space-y-4">
@@ -570,7 +570,7 @@
             <input
               v-model="blogModal.title"
               type="text"
-              class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:border-primary"
+              class="w-full px-4 py-2.5 border-2 border-cyan-300 rounded-lg focus:outline-none focus:border-cyan-500 focus:shadow-lg focus:shadow-cyan-500/20"
               placeholder="Enter post title"
             />
           </div>
@@ -579,7 +579,7 @@
             <input
               v-model="blogModal.slug"
               type="text"
-              class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:border-primary font-mono text-sm"
+              class="w-full px-4 py-2.5 border-2 border-cyan-300 rounded-lg focus:outline-none focus:border-cyan-500 focus:shadow-lg focus:shadow-cyan-500/20 font-mono text-sm"
               placeholder="url-friendly-slug"
             />
             <p class="text-xs text-gray-400 mt-1">URL: /web/blog/{{ blogModal.slug || 'slug' }}</p>
@@ -589,7 +589,7 @@
             <textarea
               v-model="blogModal.excerpt"
               rows="2"
-              class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:border-primary"
+              class="w-full px-4 py-2.5 border-2 border-cyan-300 rounded-lg focus:outline-none focus:border-cyan-500 focus:shadow-lg focus:shadow-cyan-500/20"
               placeholder="Brief description for SEO and previews"
             ></textarea>
           </div>
@@ -606,7 +606,7 @@
               <input
                 v-model="blogModal.featured_image"
                 type="text"
-                class="flex-1 px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:border-primary"
+                class="flex-1 px-4 py-2.5 border-2 border-cyan-300 rounded-lg focus:outline-none focus:border-cyan-500 focus:shadow-lg focus:shadow-cyan-500/20"
                 placeholder="https://example.com/image.jpg or upload below"
               />
               <input
@@ -620,7 +620,7 @@
                 type="button"
                 @click="triggerFileInput"
                 :disabled="uploadingImage"
-                class="px-4 py-2.5 border border-gray-200 rounded-lg text-sm font-medium hover:bg-gray-50 transition disabled:opacity-50"
+                class="px-4 py-2.5 border-2 border-cyan-300 rounded-lg text-sm font-medium hover:bg-cyan-50 hover:border-cyan-400 hover:shadow-lg hover:shadow-cyan-400/25 transition disabled:opacity-50"
               >
                 {{ uploadingImage ? 'Uploading...' : 'Upload' }}
               </button>
@@ -636,7 +636,7 @@
             <input
               v-model="blogModal.meta_title"
               type="text"
-              class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:border-primary"
+              class="w-full px-4 py-2.5 border-2 border-cyan-300 rounded-lg focus:outline-none focus:border-cyan-500 focus:shadow-lg focus:shadow-cyan-500/20"
               placeholder="SEO title (optional)"
             />
           </div>
@@ -645,7 +645,7 @@
             <textarea
               v-model="blogModal.meta_description"
               rows="2"
-              class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:border-primary"
+              class="w-full px-4 py-2.5 border-2 border-cyan-300 rounded-lg focus:outline-none focus:border-cyan-500 focus:shadow-lg focus:shadow-cyan-500/20"
               placeholder="SEO description (optional)"
             ></textarea>
           </div>
@@ -654,7 +654,7 @@
               v-model="blogModal.published"
               type="checkbox"
               id="blog-published"
-              class="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary"
+              class="w-4 h-4 text-cyan-500 border-cyan-300 rounded focus:ring-cyan-500"
             />
             <label for="blog-published" class="text-sm text-gray-700">Publish immediately</label>
           </div>
@@ -663,13 +663,13 @@
         <div v-if="blogModal.error" class="bg-red-50 text-red-700 text-sm rounded-lg p-3 mt-4">{{ blogModal.error }}</div>
 
         <div class="flex gap-3 mt-6">
-          <button @click="blogModal.show = false" class="flex-1 px-4 py-2.5 border border-gray-200 rounded-lg text-sm font-medium hover:bg-gray-50 transition">
+          <button @click="blogModal.show = false" class="flex-1 px-4 py-2.5 border-2 border-cyan-300 rounded-lg text-sm font-medium hover:bg-cyan-50 hover:border-cyan-400 hover:shadow-lg hover:shadow-cyan-400/25 transition">
             Cancel
           </button>
           <button
             @click="handleSaveBlog"
             :disabled="blogModal.loading"
-            class="flex-1 px-4 py-2.5 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary-link transition disabled:opacity-50"
+            class="flex-1 px-4 py-2.5 bg-cyan-500 text-white rounded-lg text-sm font-medium hover:bg-cyan-600 hover:shadow-lg hover:shadow-cyan-500/25 transition disabled:opacity-50"
           >
             {{ blogModal.loading ? 'Saving...' : 'Save Post' }}
           </button>
@@ -679,7 +679,7 @@
 
     <!-- FAQ Editor Modal -->
     <div v-if="faqModal.show" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" @click.self="faqModal.show = false">
-      <div class="bg-white rounded-2xl p-6 w-full max-w-lg shadow-xl">
+      <div class="bg-white rounded-2xl p-6 w-full max-w-lg shadow-xl border-2 border-cyan-500">
         <h3 class="text-lg font-bold text-gray-900 mb-4">{{ faqModal.editing ? 'Edit FAQ' : 'New FAQ' }}</h3>
 
         <div class="space-y-4">
@@ -688,7 +688,7 @@
             <input
               v-model="faqModal.question"
               type="text"
-              class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:border-primary"
+              class="w-full px-4 py-2.5 border-2 border-cyan-300 rounded-lg focus:outline-none focus:border-cyan-500 focus:shadow-lg focus:shadow-cyan-500/20"
               placeholder="Enter the question"
             />
           </div>
@@ -697,7 +697,7 @@
             <textarea
               v-model="faqModal.answer"
               rows="5"
-              class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:border-primary"
+              class="w-full px-4 py-2.5 border-2 border-cyan-300 rounded-lg focus:outline-none focus:border-cyan-500 focus:shadow-lg focus:shadow-cyan-500/20"
               placeholder="Enter the answer"
             ></textarea>
           </div>
@@ -707,7 +707,7 @@
               v-model.number="faqModal.sort_order"
               type="number"
               min="0"
-              class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:border-primary"
+              class="w-full px-4 py-2.5 border-2 border-cyan-300 rounded-lg focus:outline-none focus:border-cyan-500 focus:shadow-lg focus:shadow-cyan-500/20"
               placeholder="0"
             />
             <p class="text-xs text-gray-400 mt-1">Lower numbers appear first</p>
@@ -717,7 +717,7 @@
               v-model="faqModal.published"
               type="checkbox"
               id="faq-published"
-              class="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary"
+              class="w-4 h-4 text-cyan-500 border-cyan-300 rounded focus:ring-cyan-500"
             />
             <label for="faq-published" class="text-sm text-gray-700">Publish immediately</label>
           </div>
@@ -726,13 +726,13 @@
         <div v-if="faqModal.error" class="bg-red-50 text-red-700 text-sm rounded-lg p-3 mt-4">{{ faqModal.error }}</div>
 
         <div class="flex gap-3 mt-6">
-          <button @click="faqModal.show = false" class="flex-1 px-4 py-2.5 border border-gray-200 rounded-lg text-sm font-medium hover:bg-gray-50 transition">
+          <button @click="faqModal.show = false" class="flex-1 px-4 py-2.5 border-2 border-cyan-300 rounded-lg text-sm font-medium hover:bg-cyan-50 hover:border-cyan-400 hover:shadow-lg hover:shadow-cyan-400/25 transition">
             Cancel
           </button>
           <button
             @click="handleSaveFaq"
             :disabled="faqModal.loading"
-            class="flex-1 px-4 py-2.5 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary-link transition disabled:opacity-50"
+            class="flex-1 px-4 py-2.5 bg-cyan-500 text-white rounded-lg text-sm font-medium hover:bg-cyan-600 hover:shadow-lg hover:shadow-cyan-500/25 transition disabled:opacity-50"
           >
             {{ faqModal.loading ? 'Saving...' : 'Save FAQ' }}
           </button>
