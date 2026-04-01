@@ -595,12 +595,10 @@
           </div>
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">Content *</label>
-            <textarea
+            <RichTextEditor 
               v-model="blogModal.content"
-              rows="10"
-              class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:border-primary font-mono text-sm"
               placeholder="Write your blog post content here..."
-            ></textarea>
+            />
           </div>
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">Featured Image</label>
@@ -860,22 +858,42 @@ const handleFileSelect = async (event: Event) => {
 
   uploadingImage.value = true;
   try {
+    // Debug: Check if user is authenticated
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) {
+      throw new Error('User not authenticated: ' + (authError?.message || 'No user found'));
+    }
+    
+    console.log('Uploading image for user:', user.id);
+
     // Generate unique filename
     const fileExt = file.name.split('.').pop();
     const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
     const filePath = `blog/${fileName}`;
 
+    console.log('Uploading to path:', filePath);
+
     // Upload to Supabase storage bucket 'blog-images'
     const { data, error } = await supabase.storage
       .from('blog-images')
-      .upload(filePath, file, { upsert: true });
+      .upload(filePath, file, { 
+        upsert: true,
+        cacheControl: '3600'
+      });
 
-    if (error) throw error;
+    if (error) {
+      console.error('Storage upload error:', error);
+      throw error;
+    }
+
+    console.log('Upload successful:', data);
 
     // Get public URL
     const { data: { publicUrl } } = supabase.storage
       .from('blog-images')
       .getPublicUrl(filePath);
+
+    console.log('Public URL:', publicUrl);
 
     // Set the featured image URL
     blogModal.value.featured_image = publicUrl;

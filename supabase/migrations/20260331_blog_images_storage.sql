@@ -27,52 +27,57 @@ VALUES (
   ARRAY['image/jpeg', 'image/png', 'image/webp', 'image/gif']
 ) ON CONFLICT (id) DO NOTHING;
 
--- Enable RLS on storage.objects
+-- Enable RLS on storage.objects and create policies
 DO $$
 BEGIN
-  IF NOT EXISTS (
-    SELECT 1 FROM pg_tables 
-    WHERE schemaname = 'storage' AND tablename = 'objects'
-  ) THEN
-    -- Storage objects table may not exist in this context; skip
-    RAISE NOTICE 'storage.objects table does not exist, skipping RLS';
-  ELSE
-    -- Create policy to allow public read access
-    CREATE POLICY "Public can view blog images"
-      ON storage.objects FOR SELECT
-      USING (bucket_id = 'blog-images');
+  -- Enable RLS if not already enabled
+  ALTER TABLE storage.objects ENABLE ROW LEVEL SECURITY;
+  
+  -- Remove existing policies if they exist to avoid conflicts
+  DROP POLICY IF EXISTS "Public can view blog images" ON storage.objects;
+  DROP POLICY IF EXISTS "Admins can upload blog images" ON storage.objects;
+  DROP POLICY IF EXISTS "Admins can update blog images" ON storage.objects;
+  DROP POLICY IF EXISTS "Admins can delete blog images" ON storage.objects;
+  
+  -- Create policy to allow public read access to blog images
+  CREATE POLICY "Public can view blog images"
+    ON storage.objects FOR SELECT
+    USING (bucket_id = 'blog-images');
 
-    -- Create policy to allow authenticated users to upload (admins)
-    CREATE POLICY "Admins can upload blog images"
-      ON storage.objects FOR INSERT
-      WITH CHECK (
-        bucket_id = 'blog-images' AND
-        auth.uid() IN (
-          SELECT id FROM auth.users 
-          WHERE id IN ('d99958fe-f7cb-439a-a42b-43663e5f39a2', '01f951f1-597e-4419-80d2-00753f6cf210')
-        )
-      );
+  -- Create policy to allow authenticated users to upload blog images (admins only)
+  CREATE POLICY "Admins can upload blog images"
+    ON storage.objects FOR INSERT
+    WITH CHECK (
+      bucket_id = 'blog-images' AND
+      auth.uid() IN (
+        'd99958fe-f7cb-439a-a42b-43663e5f39a2', 
+        '01f951f1-597e-4419-80d2-00753f6cf210'
+      )
+    );
 
-    -- Create policy to allow authenticated users to update/delete (admins)
-    CREATE POLICY "Admins can update blog images"
-      ON storage.objects FOR UPDATE
-      USING (
-        bucket_id = 'blog-images' AND
-        auth.uid() IN (
-          SELECT id FROM auth.users 
-          WHERE id IN ('d99958fe-f7cb-439a-a42b-43663e5f39a2', '01f951f1-597e-4419-80d2-00753f6cf210')
-        )
-      );
+  -- Create policy to allow authenticated users to update blog images (admins only)
+  CREATE POLICY "Admins can update blog images"
+    ON storage.objects FOR UPDATE
+    USING (
+      bucket_id = 'blog-images' AND
+      auth.uid() IN (
+        'd99958fe-f7cb-439a-a42b-43663e5f39a2', 
+        '01f951f1-597e-4419-80d2-00753f6cf210'
+      )
+    );
 
-    CREATE POLICY "Admins can delete blog images"
-      ON storage.objects FOR DELETE
-      USING (
-        bucket_id = 'blog-images' AND
-        auth.uid() IN (
-          SELECT id FROM auth.users 
-          WHERE id IN ('d99958fe-f7cb-439a-a42b-43663e5f39a2', '01f951f1-597e-4419-80d2-00753f6cf210')
-        )
-      );
-  END IF;
+  -- Create policy to allow authenticated users to delete blog images (admins only)
+  CREATE POLICY "Admins can delete blog images"
+    ON storage.objects FOR DELETE
+    USING (
+      bucket_id = 'blog-images' AND
+      auth.uid() IN (
+        'd99958fe-f7cb-439a-a42b-43663e5f39a2', 
+        '01f951f1-597e-4419-80d2-00753f6cf210'
+      )
+    );
+EXCEPTION
+  WHEN OTHERS THEN
+    RAISE NOTICE 'Error setting up RLS policies for storage.objects: %', SQLERRM;
 END
 $$;

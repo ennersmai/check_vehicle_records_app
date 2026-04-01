@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS profiles (
 
 -- Create user_activity table
 CREATE TABLE IF NOT EXISTS user_activity (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   vrm TEXT NOT NULL REFERENCES vehicles(vrm) ON DELETE CASCADE,
   type TEXT NOT NULL CHECK (type IN ('SEARCH', 'GARAGE')),
@@ -53,40 +53,49 @@ ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE user_activity ENABLE ROW LEVEL SECURITY;
 
 -- RLS Policies for vehicles (public read, system write)
+DROP POLICY IF EXISTS "Vehicles are viewable by everyone" ON vehicles;
 CREATE POLICY "Vehicles are viewable by everyone"
   ON vehicles FOR SELECT
   USING (true);
 
+DROP POLICY IF EXISTS "Vehicles can be inserted by authenticated users" ON vehicles;
 CREATE POLICY "Vehicles can be inserted by authenticated users"
   ON vehicles FOR INSERT
   WITH CHECK (auth.role() = 'authenticated');
 
+DROP POLICY IF EXISTS "Vehicles can be updated by authenticated users" ON vehicles;
 CREATE POLICY "Vehicles can be updated by authenticated users"
   ON vehicles FOR UPDATE
   USING (auth.role() = 'authenticated');
 
 -- RLS Policies for profiles
+DROP POLICY IF EXISTS "Users can view their own profile" ON profiles;
 CREATE POLICY "Users can view their own profile"
   ON profiles FOR SELECT
   USING (auth.uid() = id);
 
+DROP POLICY IF EXISTS "Users can update their own profile" ON profiles;
 CREATE POLICY "Users can update their own profile"
   ON profiles FOR UPDATE
   USING (auth.uid() = id);
 
 -- RLS Policies for user_activity
+DROP POLICY IF EXISTS "Users can view their own activity" ON user_activity;
 CREATE POLICY "Users can view their own activity"
   ON user_activity FOR SELECT
   USING (auth.uid() = user_id);
 
+DROP POLICY IF EXISTS "Users can insert their own activity" ON user_activity;
 CREATE POLICY "Users can insert their own activity"
   ON user_activity FOR INSERT
   WITH CHECK (auth.uid() = user_id);
 
+DROP POLICY IF EXISTS "Users can update their own activity" ON user_activity;
 CREATE POLICY "Users can update their own activity"
   ON user_activity FOR UPDATE
   USING (auth.uid() = user_id);
 
+DROP POLICY IF EXISTS "Users can delete their own activity" ON user_activity;
 CREATE POLICY "Users can delete their own activity"
   ON user_activity FOR DELETE
   USING (auth.uid() = user_id);
@@ -102,6 +111,7 @@ END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 -- Trigger to create profile on user signup
+DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
 CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();

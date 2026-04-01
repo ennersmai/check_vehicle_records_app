@@ -15,11 +15,13 @@ CREATE TABLE IF NOT EXISTS blog_posts (
 ALTER TABLE blog_posts ENABLE ROW LEVEL SECURITY;
 
 -- Public can read published posts
+DROP POLICY IF EXISTS "Public can read published blog posts" ON blog_posts;
 CREATE POLICY "Public can read published blog posts"
   ON blog_posts FOR SELECT
   USING (published = true);
 
 -- Admins can manage all blog posts
+DROP POLICY IF EXISTS "Admins can manage all blog posts" ON blog_posts;
 CREATE POLICY "Admins can manage all blog posts"
   ON blog_posts FOR ALL
   USING (
@@ -48,11 +50,13 @@ CREATE TABLE IF NOT EXISTS faqs (
 ALTER TABLE faqs ENABLE ROW LEVEL SECURITY;
 
 -- Public can read published FAQs
+DROP POLICY IF EXISTS "Public can read published FAQs" ON faqs;
 CREATE POLICY "Public can read published FAQs"
   ON faqs FOR SELECT
   USING (published = true);
 
 -- Admins can manage all FAQs
+DROP POLICY IF EXISTS "Admins can manage all FAQs" ON faqs;
 CREATE POLICY "Admins can manage all FAQs"
   ON faqs FOR ALL
   USING (
@@ -84,11 +88,13 @@ END;
 $$ language 'plpgsql';
 
 -- Triggers for updated_at
+DROP TRIGGER IF EXISTS update_blog_posts_updated_at ON blog_posts;
 CREATE TRIGGER update_blog_posts_updated_at
   BEFORE UPDATE ON blog_posts
   FOR EACH ROW
   EXECUTE FUNCTION update_updated_at_column();
 
+DROP TRIGGER IF EXISTS update_faqs_updated_at ON faqs;
 CREATE TRIGGER update_faqs_updated_at
   BEFORE UPDATE ON faqs
   FOR EACH ROW
