@@ -740,6 +740,82 @@
       </div>
     </div>
 
+    <!-- Recovery Email Modal -->
+    <div v-if="recoveryModal.show" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" @click.self="recoveryModal.show = false">
+      <div class="bg-white rounded-2xl p-6 w-full max-w-md shadow-xl border-2 border-cyan-500">
+        <h3 class="text-lg font-bold text-gray-900 mb-1">Send Recovery Email</h3>
+        <p class="text-sm text-gray-600 mb-2">Send password recovery email to this user?</p>
+        <p class="text-sm font-medium text-gray-900 mb-1">{{ recoveryModal.user?.email }}</p>
+        <p class="text-xs text-gray-400 font-mono mb-6">{{ recoveryModal.user?.id }}</p>
+
+        <div v-if="recoveryModal.error" class="bg-red-50 text-red-700 text-sm rounded-lg p-3 mb-4">{{ recoveryModal.error }}</div>
+
+        <div class="flex gap-3">
+          <button @click="recoveryModal.show = false" class="flex-1 px-4 py-2.5 border-2 border-cyan-300 rounded-lg text-sm font-medium hover:bg-cyan-50 hover:border-cyan-400 hover:shadow-lg hover:shadow-cyan-400/25 transition">
+            Cancel
+          </button>
+          <button
+            @click="handleSendRecoveryConfirm"
+            :disabled="recoveryModal.loading"
+            class="flex-1 px-4 py-2.5 bg-cyan-500 text-white rounded-lg text-sm font-medium hover:bg-cyan-600 hover:shadow-lg hover:shadow-cyan-500/25 transition disabled:opacity-50"
+          >
+            {{ recoveryModal.loading ? 'Sending...' : 'Send Email' }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Delete Blog Post Modal -->
+    <div v-if="deleteBlogModal.show" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" @click.self="deleteBlogModal.show = false">
+      <div class="bg-white rounded-2xl p-6 w-full max-w-md shadow-xl border-2 border-cyan-500">
+        <h3 class="text-lg font-bold text-red-600 mb-1">Delete Blog Post</h3>
+        <p class="text-sm text-gray-600 mb-2">Are you sure you want to delete this blog post?</p>
+        <p class="text-sm font-medium text-gray-900 mb-1">{{ deleteBlogModal.post?.title }}</p>
+        <p class="text-xs text-gray-400 font-mono mb-6">{{ deleteBlogModal.post?.slug }}</p>
+        <p class="text-xs text-red-500 mb-6">This action cannot be undone.</p>
+
+        <div v-if="deleteBlogModal.error" class="bg-red-50 text-red-700 text-sm rounded-lg p-3 mb-4">{{ deleteBlogModal.error }}</div>
+
+        <div class="flex gap-3">
+          <button @click="deleteBlogModal.show = false" class="flex-1 px-4 py-2.5 border-2 border-cyan-300 rounded-lg text-sm font-medium hover:bg-cyan-50 hover:border-cyan-400 hover:shadow-lg hover:shadow-cyan-400/25 transition">
+            Cancel
+          </button>
+          <button
+            @click="handleDeleteBlogPost"
+            :disabled="deleteBlogModal.loading"
+            class="flex-1 px-4 py-2.5 bg-red-600 text-white rounded-lg text-sm font-medium hover:bg-red-700 hover:shadow-lg hover:shadow-red-600/25 transition disabled:opacity-50"
+          >
+            {{ deleteBlogModal.loading ? 'Deleting...' : 'Delete Post' }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Delete FAQ Modal -->
+    <div v-if="deleteFaqModal.show" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" @click.self="deleteFaqModal.show = false">
+      <div class="bg-white rounded-2xl p-6 w-full max-w-md shadow-xl border-2 border-cyan-500">
+        <h3 class="text-lg font-bold text-red-600 mb-1">Delete FAQ</h3>
+        <p class="text-sm text-gray-600 mb-2">Are you sure you want to delete this FAQ?</p>
+        <p class="text-sm font-medium text-gray-900 mb-1">{{ deleteFaqModal.faq?.question }}</p>
+        <p class="text-xs text-red-500 mb-6">This action cannot be undone.</p>
+
+        <div v-if="deleteFaqModal.error" class="bg-red-50 text-red-700 text-sm rounded-lg p-3 mb-4">{{ deleteFaqModal.error }}</div>
+
+        <div class="flex gap-3">
+          <button @click="deleteFaqModal.show = false" class="flex-1 px-4 py-2.5 border-2 border-cyan-300 rounded-lg text-sm font-medium hover:bg-cyan-50 hover:border-cyan-400 hover:shadow-lg hover:shadow-cyan-400/25 transition">
+            Cancel
+          </button>
+          <button
+            @click="handleDeleteFaq"
+            :disabled="deleteFaqModal.loading"
+            class="flex-1 px-4 py-2.5 bg-red-600 text-white rounded-lg text-sm font-medium hover:bg-red-700 hover:shadow-lg hover:shadow-red-600/25 transition disabled:opacity-50"
+          >
+            {{ deleteFaqModal.loading ? 'Deleting...' : 'Delete FAQ' }}
+          </button>
+        </div>
+      </div>
+    </div>
+
     <WebFooter />
   </div>
 </template>
@@ -811,6 +887,27 @@ const assignModal = ref({
 const deleteModal = ref({
   show: false,
   user: null as any,
+  loading: false,
+  error: '',
+});
+
+const recoveryModal = ref({
+  show: false,
+  user: null as any,
+  loading: false,
+  error: '',
+});
+
+const deleteBlogModal = ref({
+  show: false,
+  post: null as any,
+  loading: false,
+  error: '',
+});
+
+const deleteFaqModal = ref({
+  show: false,
+  faq: null as any,
   loading: false,
   error: '',
 });
@@ -1029,12 +1126,20 @@ const handleDeleteUser = async () => {
 };
 
 const handleSendRecovery = async (u: any) => {
-  if (!confirm(`Send password recovery email to ${u.email}?`)) return;
+  recoveryModal.value = { show: true, user: u, loading: false, error: '' };
+};
+
+const handleSendRecoveryConfirm = async () => {
+  recoveryModal.value.loading = true;
+  recoveryModal.value.error = '';
   try {
-    await adminCall('send_recovery', { email: u.email });
-    alert(`Recovery email sent to ${u.email}`);
+    await adminCall('send_recovery', { email: recoveryModal.value.user.email });
+    recoveryModal.value.show = false;
+    alert(`Recovery email sent to ${recoveryModal.value.user.email}`);
   } catch (err: any) {
-    alert(`Failed: ${err.message}`);
+    recoveryModal.value.error = err.message;
+  } finally {
+    recoveryModal.value.loading = false;
   }
 };
 
@@ -1196,16 +1301,24 @@ const toggleBlogPublish = async (post: any) => {
 };
 
 const deleteBlogPost = async (post: any) => {
-  if (!confirm(`Delete "${post.title}"? This cannot be undone.`)) return;
+  deleteBlogModal.value = { show: true, post, loading: false, error: '' };
+};
+
+const handleDeleteBlogPost = async () => {
+  deleteBlogModal.value.loading = true;
+  deleteBlogModal.value.error = '';
   try {
     const { error } = await supabase
       .from('blog_posts')
       .delete()
-      .eq('id', post.id);
+      .eq('id', deleteBlogModal.value.post.id);
     if (error) throw error;
+    deleteBlogModal.value.show = false;
     await loadBlogPosts();
   } catch (err: any) {
-    alert('Failed to delete post: ' + err.message);
+    deleteBlogModal.value.error = err.message;
+  } finally {
+    deleteBlogModal.value.loading = false;
   }
 };
 
@@ -1341,16 +1454,24 @@ const moveFaq = async (faq: any, direction: number) => {
 };
 
 const deleteFaq = async (faq: any) => {
-  if (!confirm(`Delete this FAQ? This cannot be undone.`)) return;
+  deleteFaqModal.value = { show: true, faq, loading: false, error: '' };
+};
+
+const handleDeleteFaq = async () => {
+  deleteFaqModal.value.loading = true;
+  deleteFaqModal.value.error = '';
   try {
     const { error } = await supabase
       .from('faqs')
       .delete()
-      .eq('id', faq.id);
+      .eq('id', deleteFaqModal.value.faq.id);
     if (error) throw error;
+    deleteFaqModal.value.show = false;
     await loadFaqs();
   } catch (err: any) {
-    alert('Failed to delete FAQ: ' + err.message);
+    deleteFaqModal.value.error = err.message;
+  } finally {
+    deleteFaqModal.value.loading = false;
   }
 };
 
