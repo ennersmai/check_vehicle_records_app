@@ -66,33 +66,26 @@
         </section>
 
         <section>
-          <h2 class="text-2xl font-semibold text-gray-900 mb-4">4. Subscriptions and Payments</h2>
-          <h3 class="text-xl font-semibold text-gray-800 mb-3">4.1 Premium Subscriptions</h3>
+          <h2 class="text-2xl font-semibold text-gray-900 mb-4">4. Payments</h2>
+          <h3 class="text-xl font-semibold text-gray-800 mb-3">4.1 Premium Search</h3>
           <p class="mb-4">
-            CVR offers premium subscription plans that provide additional features and benefits. Subscription details:
+            CVR offers premium searches that provide additional features and benefits.
           </p>
           <ul class="list-disc list-inside space-y-2 ml-4">
-            <li>Subscriptions are billed on a recurring basis (monthly or annually)</li>
+            <li>Purchases are billed as one off purchases or as a multi purchase bundle.</li>
             <li>Prices are displayed in the app and may vary by region</li>
-            <li>Payment is processed through Apple App Store or Google Play Store</li>
-            <li>Subscriptions automatically renew unless cancelled</li>
+            <li>Payment is processed through Apple App Store, Google Play Store and Stripe</li>
           </ul>
 
-          <h3 class="text-xl font-semibold text-gray-800 mb-3 mt-6">4.2 Cancellation and Refunds</h3>
+          <h3 class="text-xl font-semibold text-gray-800 mb-3 mt-6">4.2 Refunds</h3>
           <p class="mb-4">
-            You may cancel your subscription at any time through your device's subscription settings. Cancellation policies:
+            Once a purchase voucher has been redeemed a refund is not possible. However if you are unsatisfied with the information 
+            provided please contact us.
           </p>
-          <ul class="list-disc list-inside space-y-2 ml-4">
-            <li>Cancellation takes effect at the end of the current billing period</li>
-            <li>No refunds for partial subscription periods</li>
-            <li>Refund requests are handled according to Apple and Google's refund policies</li>
-            <li>We reserve the right to issue refunds at our discretion</li>
-          </ul>
 
           <h3 class="text-xl font-semibold text-gray-800 mb-3 mt-6">4.3 Free Trial</h3>
           <p>
-            We may offer free trial periods for premium subscriptions. If you do not cancel before the trial ends, 
-            you will be automatically charged for the subscription.
+            We may offer free trial periods for premium searches. Trial searches cannot be refunded.
           </p>
         </section>
 
@@ -100,7 +93,7 @@
           <h2 class="text-2xl font-semibold text-gray-900 mb-4">5. Acceptable Use</h2>
           <p class="mb-4">You agree NOT to:</p>
           <ul class="list-disc list-inside space-y-2 ml-4">
-            <li>Use the app for any illegal or unauthorized purpose</li>
+            <li>Use the app and or website for any illegal or unauthorized purpose</li>
             <li>Attempt to gain unauthorized access to our systems</li>
             <li>Interfere with or disrupt the app's functionality</li>
             <li>Use automated systems (bots, scrapers) to access the app</li>
